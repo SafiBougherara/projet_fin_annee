@@ -771,13 +771,13 @@ graph LR
     E --> F[Juin<br/>Livraison Finale]
     F --> G[Soutenance<br/>Jury]
     
-    style A fill:#e1f5ff
-    style B fill:#d4edff
-    style C fill:#c7e5ff
-    style D fill:#baddff
-    style E fill:#add5ff
-    style F fill:#a0cdff
-    style G fill:#93c5ff
+    style A fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+    style B fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+    style C fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+    style D fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+    style E fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+    style F fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+    style G fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
 ```
 
 ---
@@ -801,4 +801,4 @@ graph LR
 
 ---
 
-> 💪 **Bon courage !** Ce projet est exigeant mais c'est une occasion unique de synthétiser tout votre apprentissage. En suivant ce cahier des charges et en respectant les jalons, vous mettrez toutes les chances de votre côté pour réussir devant le jury !
+> 💪 **Bon courage les frères !** made with ❤️ by SAFI BOUGHERARA
