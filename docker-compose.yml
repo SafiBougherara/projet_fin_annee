@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: calendria_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: calendria
+      POSTGRES_USER: calendria_user
+      POSTGRES_PASSWORD: calendria_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./docker/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - calendria_network
+
+  # Backend Symfony
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/backend/Dockerfile
+    container_name: calendria_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://calendria_user:calendria_pass@db:5432/calendria?serverVersion=15&charset=utf8
+      APP_ENV: dev
+      APP_SECRET: change_me_in_production
+    volumes:
+      - ./backend:/var/www/html
+    networks:
+      - calendria_network
+
+  # Frontend React
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend/Dockerfile
+    container_name: calendria_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: http://localhost:8000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - calendria_network
+
+volumes:
+  db_data:
+
+networks:
+  calendria_network:
+    driver: bridge

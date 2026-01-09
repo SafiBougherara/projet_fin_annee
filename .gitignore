@@ -1,0 +1,37 @@
+# Backend (Symfony)
+/backend/vendor/
+/backend/var/
+/backend/.env.local
+/backend/.env.local.php
+/backend/.env.*.local
+/backend/public/bundles/
+/backend/composer.lock
+
+# Frontend (React)
+/frontend/node_modules/
+/frontend/dist/
+/frontend/build/
+/frontend/.env.local
+/frontend/.env.production.local
+/frontend/package-lock.json
+/frontend/yarn.lock
+
+# Docker
+/docker/database/data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
