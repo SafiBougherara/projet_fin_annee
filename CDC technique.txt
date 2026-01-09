@@ -1,0 +1,376 @@
+
+
+
+Cahier des Charges Technique - Projet Fil Rouge CDA (Concepteur D�veloppeur d'Applications)
+Contexte et Objectifs du Projet
+Dans le cadre de la formation CDA, chaque apprenant r�alisera un projet fil rouge individuel sur 6 mois (janvier � juin). L'objectif est de mener un projet complet, de l'id�e initiale jusqu'au produit final, qui sera pr�sent� devant un jury en fin de formation. Ce projet doit permettre de mettre en pratique l'ensemble des comp�tences acquises (analyse du besoin, conception, d�veloppement front-end/back-end, base de donn�es, tests, d�ploiement, etc.).
+
+Ce cahier des charges technique vous est fourni comme r�f�rence et cadre de travail. Il d�finit les exigences techniques et les �tapes cl�s du projet afin de garantir une base commune de compr�hension et de faciliter la coordination tout au long du projet  . En d'autres termes, tandis que votre cahier des charges fonctionnel (CDCF) d�crira "quoi" r�aliser (besoins et fonctionnalit�s attendues), ce cahier des charges technique se concentre sur "comment" le r�aliser - en pr�cisant les choix d'architecture, de technologies et les contraintes � respecter . Chaque �tudiant devra s'y conformer lors de la r�alisation de son projet.
+
+Organisation g�n�rale : Le projet est d�coup� en 6 jalons mensuels (fin de chaque mois de janvier � juin). Pour chaque jalon, des livrables pr�cis sont attendus (documents, code, etc., d�taill�s ci-dessous). Les travaux sont individuels, toutefois l'entraide entre apprenants est encourag�e pour surmonter les difficult�s techniques. Chaque livraison fera l'objet d'une �valuation et de retours. Le respect des �ch�ances est crucial pour �taler la charge de travail et assurer l'avancement du projet dans les temps impartis.
+
+Contraintes Techniques et Socle Technologique Impos�
+Afin d'harmoniser les projets et de couvrir le p�rim�tre technique attendu, le socle technologique est impos� pour tous les apprenants (vous n'avez pas le choix des technologies principales). Vous devrez justifier vos choix d'impl�mentation (par exemple monolithique vs API s�par�e, choix du framework front) dans votre cahier des charges fonctionnel initial � l'aide d'une courte analyse comparative. Les exigences techniques sont les suivantes :
+
+� Back-end : Framework Symfony (PHP). Le c�ur de l'application sera d�velopp� en Symfony (version r�cente LTS de pr�f�rence). Vous pouvez r�aliser une application full-stack Symfony (Symfony g�rant le back-end et le front avec Twig) ou bien d�velopper une API Symfony RESTful consomm�e par un front-end s�par�. Dans le second cas, le front-end devra �tre une application web moderne (React ou Angular principalement). Quel que soit l'option, indiquez dans votre CDCF le choix retenu et pourquoi il est adapt� � votre projet.
+
+� Front-end :
+
+� Si vous optez pour une application full Symfony : vous utiliserez Twig/HTML, CSS (framework CSS au choix, par ex. Bootstrap) et Javascript pour l'interface utilisateur.
+
+� Si vous optez pour un front-end s�par� : ce sera une Single Page Application en React ou
+Angular (au choix, en derni�re version stable).
+� Dans tous les cas, l'interface devra �tre responsive (adapt�e desktop et mobile) et soign�e en termes d'UX/UI (charte graphique coh�rente, ergonomie travaill�e).
+
+� Base de donn�es : Syst�me de gestion de base de donn�es relationnel obligatoire. Au choix : MySQL/MariaDB, PostgreSQL ou SQL Server. NoSQL est exclu. Le sch�ma devra �tre con�u et normalis� (Merise, voir jalon 3) et impl�ment� via un ORM (ex : Doctrine) ou SQL.
+
+� API externe : Int�grez au moins une API tierce externe dans votre application (exemples d'APIs possibles : services Google Maps, OpenWeatherMap, API d'authentification OAuth Google/ Facebook, API de paiement, etc. en fonction de votre sujet). Cette int�gration vise � vous familiariser avec la consommation de services web externes. Pr�voyez les appels � l'API et le traitement des r�ponses, et assurez-vous de g�rer les cl�s d'API de mani�re s�curis�e (configur�es dans des variables d'environnement, non cod�es en dur).
+
+� Containerisation (Docker) : Le projet devra �tre dockeris�. Fournissez des conteneurs Docker pour votre application (serveur web + PHP, base de donn�es, etc.). L'utilisation de Docker garantit un environnement uniforme du d�veloppement � la production (fini les "�a marche sur ma machine" ) . En effet, "l'utilisation de Docker avec Symfony r�duit la complexit� du d�ploiement, permet une standardisation entre les environnements de d�veloppement, de test et de production, facilite la reproductibilit� des environnements, et offre une automatisation compl�te des processus de d�ploiement"  . Vous exploiterez Docker Compose pour orchestrer vos services (par ex, un conteneur pour Symfony + PHP, un pour la BD, etc.), ce qui facilitera �galement les tests et la CI/ CD.
+
+� Contr�le de version (Git) : H�bergez votre code sur une plateforme Git (GitHub, GitLab... repo priv� ou public selon pr�f�rence). Adoptez une strat�gie de versionnement professionnelle : travaillez sur des branches (par fonctionnalit�, ou branches develop/main, etc.), mergez via des pull requests si possible. Le r�f�rentiel Git devra refl�ter l'historique du projet (commits fr�quents et significatifs, messages de commit clairs).
+
+� Int�gration Continue (CI) : Mettez en place une pipeline CI pour automatiser l'int�gration du code. � chaque push sur le repo, au minimum les tests automatiques doivent s'ex�cuter et le build/packaging de l'application peut �tre r�alis�. Par exemple, configurez GitHub Actions ou GitLab CI pour lancer les tests unitaires et fonctionnels automatiquement. Une int�gration continue efficace valide chaque changement de code par une compilation et une batterie de tests automatis�s, garantissant que les modifications n'ont pas introduit de r�gression . L'objectif est d'identifier rapidement les bugs apr�s chaque commit plut�t qu'en fin de projet.
+
+� D�ploiement Continu (CD) : Id�alement, compl�tez la CI par un volet CD (Continuous Delivery/ Deployment) pour automatiser le d�ploiement de l'application. Par exemple, la pipeline pourrait b�tir une image Docker de l'application et (si vous avez un serveur cible) la d�ployer automatiquement sur un environnement de pr�production ou production. Ce volet peut �tre mis en �uvre selon vos moyens (d�p�t Docker Hub, d�ploiement sur un PaaS, etc.). L'important est de montrer que vous avez r�fl�chi � la mise en production du projet. Nota: le d�ploiement continu n'est pas forc�ment vers un serveur r�el dans notre contexte p�dagogique, mais au minimum, vous devez �tre en mesure de fournir une proc�dure claire de mise en production (script de d�ploiement, ou commandes Docker � ex�cuter, etc.).
+
+� Tests automatis�s : Le projet doit comporter des tests automatis�s � plusieurs niveaux :
+
+� Tests unitaires (sur les composants m�tier, utils, etc. � l'aide de PHP Unit par exemple).
+� Tests fonctionnels ou d'int�gration (simulateurs de requ�tes HTTP pour tester vos API/ contr�leurs, tests end-to-end sur le front si SPA, par ex. avec Jest, Selenium, etc.).
+� D'autres types de tests sont appr�ci�s si pertinents : tests de performance (mesurer le temps de r�ponse de certaines fonctionnalit�s), tests de s�curit� (scans de vuln�rabilit�s basiques), tests d'UI (par ex. v�rification que l'interface rend bien sur mobile)... L'approche CI/CD implique d'automatiser un maximum de ces v�rifications � chaque changement de code afin d'assurer la fiabilit� continue du logiciel  .
+
+� S�curit� : Votre application devra respecter les bonnes pratiques de s�curit� web. En particulier, assurez-vous de vous pr�munir contre les failles courantes du Top 10 OWASP	:
+
+� Injection SQL : utiliser des requ�tes pr�par�es ou l'ORM pour �viter toute injection de code SQL malveillant.
+� XSS (Cross-Site Scripting) : ne jamais ins�rer d'entr�e utilisateur non filtr�e dans les pages rendues, �chapper les caract�res sp�ciaux, utiliser les m�canismes fournis par Twig/Symfony pour la sortie s�curis�e. (Les failles XSS et injections font partie des attaques les plus critiques, permettant � des attaquants d'injecter des scripts malveillants ou des commandes non pr�vues pouvant voler des donn�es sensibles)	.
+� CSRF : prot�ger les formulaires sensibles par des tokens CSRF (Symfony le propose nativement),
+afin d'emp�cher les soumissions frauduleuses depuis un site tiers	.
+� Authentification et mots de passe : si votre application g�re des comptes utilisateurs, les mots de passe devront �tre hach�s correctement (algorithme robuste comme bcrypt/Argon2, ne jamais stocker de mots de passe en clair). La politique de mot de passe doit �tre s�rieuse (longueur minimale, �ventuellement complexit�). Envisagez de limiter les tentatives de connexion pour �viter le brute force (ex : temporisation ou captcha apr�s X �checs).
+� Protection des donn�es personnelles (RGPD) : si votre projet manipule des donn�es personnelles (nom, email, etc.), il doit �tre conforme au RGPD. Cela implique transparence sur la collecte des donn�es, possibilit� pour un utilisateur de demander la suppression de ses donn�es, stockage s�curis� des informations sensibles, etc. (Le RGPD est une directive l�gale europ�enne � respecter pour la protection des donn�es personnelles .) Incluez dans votre documentation les mentions l�gales n�cessaires (politique de confidentialit� simplifi�e pour votre appli, m�me si fictive).
+
+� Architecture logicielle : Adoptez une architecture multi-couche propre (pattern MVC pour la partie logicielle, architecture n-tiers pour la partie d�ploiement). Respectez la s�paration des responsabilit�s : vue vs contr�leur vs mod�le, couche API vs couche m�tier vs couche d'acc�s aux donn�es, etc. �vitez de m�ler du code de logique m�tier dans les vues ou vice-versa. Votre code doit suivre les bonnes pratiques de d�veloppement (lisibilit�, modularit�, DRY/KISS, respect des conventions de codage PSR pour PHP, etc.). Documentez ces aspects d'architecture dans vos livrables de conception (voir jalon 4).
+
+M�thodologie et Organisation du Projet
+Chaque apprenant est responsable de la gestion de son projet du d�but � la fin. Pour cela, il est attendu que vous appliquiez une m�thodologie de gestion de projet appropri�e, et que vous vous outilliez pour organiser votre travail efficacement :
+
+� M�thode de gestion de projet : Vous pouvez suivre une approche classique (cycle en V) ou agile (Scrum/Kanban) en fonction de ce qui est le plus adapt� � votre fa�on de travailler en solo. L'approche agile est recommand�e, �tant donn� que vous aurez des livraisons mensuelles it�ratives (chaque jalon correspondant � une version enrichie du projet). Par exemple, vous pouvez planifier des sprints correspondant aux jalons, avec des objectifs clairs pour chacun. Si vous optez pour Scrum, vous serez � la fois Product Owner, Scrum Master et Dev de votre projet - ce qui est un d�fi d'organisation ! Dans tous les cas, d�finissez d�s le d�but un planning pr�visionnel du projet (d�coupage des t�ches par mois/sprint) et mettez-le � jour en fonction de l'avancement r�el.
+
+� Planning et suivi : Utilisez des outils pour planifier et suivre vos t�ches. Un diagramme de Gantt global peut �tre r�alis� pour visualiser les phases du projet et les dates de rendus  . En parall�le (ou � la place), vous pouvez tenir un tableau de bord Kanban (via Trello, Jira, GitHub Projects...) listant toutes les t�ches � faire, en cours, termin�es. Cela vous aidera � prioriser et � ne rien oublier. Identifiez les t�ches critiques et leurs �ch�ances (ex: conception termin�e d'ici fin mars, d�veloppement de telle fonctionnalit� en avril, etc.)  . N'oubliez pas d'anticiper du temps pour les impr�vus et les tests.
+
+� Gestion de configuration et branches Git : Mettez en place une organisation claire de votre d�p�t Git. Par exemple, vous pouvez adopter GitFlow ou une variante simplifi�e :
+
+
+� Une branche principale ( jalons).
+
+ou
+
+) contenant les versions stables (livrables aux
+
+� Une branche de d�veloppement ( stabilisation.
+
+) o� s'int�grent les fonctionnalit�s en cours avant
+
+� Des branches feature pour chaque nouvelle fonctionnalit� ou user story, qui seront fusionn�es (merge) une fois termin�es et test�es.
+� Pensez � utiliser des messages de commit explicites, et � versionner �galement vos fichiers de configuration (Docker, CI, etc.).
+
+� Outils de collaboration : M�me en travaillant seul, traitez votre projet de mani�re professionnelle. Par exemple, utilisez les issues GitHub/GitLab pour tracer les fonctionnalit�s/ bugs, utilisez la wiki ou le README du repo pour documenter l'installation, etc. Cela vous aidera � structurer votre travail et constituera un plus pour la soutenance (capacit� � utiliser les outils de gestion de projet).
+
+� DevOps - CI/CD : Comme mentionn� dans le socle technique, planifiez la mise en place de votre pipeline CI/CD. Choisissez la plateforme (GitHub Actions, GitLab CI, etc.) et d�crivez quelles �tapes seront automatis�es (tests, build, d�ploiement). Par exemple : "� chaque push sur la branche develop, GitHub Actions ex�cute les tests PHP Unit et b�tit l'image Docker de l'application; sur push de tag release en main, d�ploiement automatique de l'image sur le serveur de prod." M�me si tout n'est pas impl�ment� d�s le d�but, ayez cette vision d�s le cahier des charges. Vous devrez configurer progressivement ces automatisations au fil des jalons.
+
+En synth�se, soyez organis� et proactif. Ce projet au long cours n�cessite r�gularit� et rigueur. N'attendez pas le dernier moment pour d�velopper : suivez les jalons, ce d�coupage est l� pour vous guider et �viter l'effet "tunnel". Documentez bien � chaque �tape, conservez les traces (commits Git, documentation des choix, etc.) afin de pouvoir justifier vos d�cisions techniques lors de la soutenance.
+
+Calendrier des Jalons et Livrables Attendus
+Le projet est structur� en 6 jalons, correspondant aux 6 mois de d�veloppement. Chaque fin de mois, vous devrez remettre les livrables attendus via la plateforme Teams (section Devoirs), de pr�f�rence avant le dernier jour ouvrable du mois concern�. Les livrables pourront �tre des documents PDF, des liens vers votre d�p�t Git, des archives de code, etc., selon la nature demand�e. Sauf indication contraire, chaque rendu est �crit (un document, �ventuellement accompagn� de fichiers annexes). Des soutenances orales interm�diaires pourront �tre organis�es sur certains jalons pour faire un point d'avancement (vous en serez inform�s en amont si c'est le cas), mais partons du principe que l'�valuation se fait sur pi�ces �crites/logiciels rendus.
+
+Voici le d�tail des six jalons, avec leur �ch�ance et le contenu attendu :
+
+Jalon 1 - Janvier : Cahier des Charges Fonctionnel
+�ch�ance : Dernier jour ouvrable de janvier 2026 (31/01/2026).
+Livrable : Cahier des charges fonctionnel (document PDF).
+Contenu attendu : Ce document doit pr�senter de mani�re structur�e votre projet tel que con�u au niveau m�tier et fonctionnel. Il correspond au chapitre III. Cahier des charges du rapport final. Il devra inclure :
+
+� Contexte m�tier : Pr�sentez le sujet que vous avez choisi pour votre application. D�crivez le domaine ou le secteur d'activit� concern�, le probl�me � r�soudre ou le besoin auquel r�pondra votre application, et qui seront les utilisateurs cibles. Par exemple, s'il s'agit d'une application de gestion de biblioth�que en ligne, expliquez bri�vement la situation actuelle des biblioth�ques et l'int�r�t d'une solution num�rique. Cette section " Contexte " plante le d�cor et justifie l'existence du projet.
+
+� Objectifs du projet : �noncez clairement les objectifs principaux de votre application. Que permettra-t-elle de faire ? Quels b�n�fices ou valeur ajout�e apportera-t-elle aux utilisateurs ou � l'organisation ? Vous pouvez formuler cela sous forme de bullet points. Par exemple : "Permettre aux utilisateurs de cr�er un compte et de r�server des livres en ligne", "Digitaliser le suivi des emprunts pour r�duire les t�ches manuelles du biblioth�caire", etc. Les objectifs doivent �tre SMART (Sp�cifiques, Mesurables, Atteignables, R�alistes, Temporellement d�finis).
+
+� P�rim�tre fonctionnel (exigences fonctionnelles) : D�taillez les fonctionnalit�s attendues de l'application. Il s'agit des exigences fonctionnelles majeures. Listez les fonctionnalit�s sous forme de liste num�rot�e ou de sous-sections, en d�crivant pour chacune ce qu'elle fait. Par exemple :
+
+� Fonctionnalit� 1 : Gestion des utilisateurs (inscription, connexion, profils, r�les...).
+� Fonctionnalit� 2 : Recherche de livres par titre/auteur.
+� Fonctionnalit� 3 : Emprunt et r�servation de livres en ligne.
+
+� Fonctionnalit� 4 : Interface d'administration pour le biblioth�caire (gestion du catalogue, suivi des emprunts, etc.).
+... etc.
+Il est important de couvrir tous les cas d'utilisation principaux. N'entrez pas encore dans les d�tails d'impl�mentation technique ici, restez orient� "besoin utilisateur". Si certaines fonctionnalit�s sont hors scope (pas pr�vues dans le temps imparti), vous pouvez le mentionner pour cadrer le p�rim�tre.
+
+� Exigences techniques : Dans un cahier des charges fonctionnel, cette partie sert � lister les contraintes et choix techniques globaux du projet (sans rentrer dans la r�alisation d�taill�e qui sera trait�e plus tard). Ici, r�capitulez le socle technique impos� en l'adaptant � votre projet :
+
+� Indiquez le choix d'architecture : application Symfony monolithique ou Symfony API + front Angular/React ? Pr�cisez votre option.
+� Pr�cisez les principaux composants techniques : langage (PHP 8+), framework (Symfony), biblioth�que front (React 18 ou Angular 15, etc. si applicable), base de donn�es (nommez le SGBD choisi, par ex. MySQL 8 ou PostgreSQL 15), outils de conteneurisation (Docker), etc.
+� Justifiez bri�vement ces choix par rapport aux besoins de votre projet. Par exemple : pourquoi
+un front s�par� en React est pertinent (ex : application � usage grand public n�cessitant une UX tr�s r�active) ou pourquoi au contraire un full Symfony suffit (ex : back-office interne, simplicit� de d�veloppement). Si vous h�sitez entre plusieurs solutions, expliquez en une phrase le r�sultat de votre benchmark ou comparaison (par ex. "Symfony a �t� retenu plut�t que Laravel car la promotion est form�e sur Symfony et pour garantir une homog�n�it� technique").
+� Indiquez les contraintes impos�es : utilisation de Docker, CI/CD, tests, s�curit� (listez-les sans forc�ment d�tailler, car c'est dans le CDC technique qu'on les explique - n�anmoins, assurez-vous que le destinataire du CDCF sache qu'il y a ces exigences techniques � satisfaire).
+� Contraintes de qualit� : vous pouvez mentionner bri�vement des attentes comme "code maintenable, respect des normes PSR, documentation du code".
+(Note : Bien que le CDCF se concentre sur le quoi, il peut inclure une section d'exigences techniques pour cadrer le comment de haut niveau, surtout dans un contexte p�dagogique o� le socle est impos�. Veillez cependant � ne pas trop d�tailler d'embl�e la solution technique - gardez cela pour la conception technique ult�rieure. Ici on attend surtout que vous confirmiez utiliser Symfony, une BD SQL, etc., en montrant que vous avez compris ces choix.)
+
+� Contraintes et enjeux du projet : D�crivez les contraintes temporelles et autres contraintes du projet. Par exemple, pr�cisez la dur�e (6 mois de d�veloppement, avec pr�sentation finale en fin de formation), les jalons mensuels (vous pouvez mentionner que le projet sera d�coup� en 6 phases correspondant � ce document). Indiquez le temps dont vous disposez chaque semaine si pertinent (ex : si c'est un projet en alternance, X jours par semaine).
+� Mentionnez d'�ventuelles contraintes r�glementaires ou normatives li�es au sujet (ex : pour un projet manipulant des donn�es de sant�, mention de la r�glementation HIPAA ou RGPD ; pour un site e-commerce, conformit� PCI-DSS si paiements en ligne, etc.).
+� Abordez les risques majeurs identifi�s en amont : par exemple, "d�pendance � une API tierce
+pouvant changer", "d�lai court pour impl�menter toutes les fonctionnalit�s souhait�es", etc., ainsi que les hypoth�ses prises (par ex. "on suppose que l'API Google Maps restera gratuite pour nos volumes").
+� Enfin, vous pouvez inclure ici les crit�res de succ�s du projet : comment saura-t-on � la fin que
+le projet est une r�ussite ? (Ex: l'ensemble des fonctionnalit�s impl�ment�es et test�es, performance acceptable <1s par requ�te, interface valid�e par des utilisateurs tests, etc.)
+
+En r�sum�, le Jalon 1 consiste � produire un CDCF complet et valid�. Ce document sera votre r�f�rence fonctionnelle tout au long du d�veloppement. Il doit id�alement �tre valid� par le r�f�rent (votre formateur) avant d'entamer la conception d�taill�e, afin de s'assurer que le sujet et le p�rim�tre sont coh�rents et r�alisables dans le temps imparti. Une fois valid�, vous pourrez passer � la phase de design au jalon suivant.
+
+Jalon 2 - F�vrier : M�thodologie de Projet & Conception UI/UX
+�ch�ance : Dernier jour ouvrable de f�vrier 2026 (28/02/2026).
+Livrables : Deux livrables principaux sont attendus ce mois-ci (vous pouvez les combiner ou les s�parer selon votre pr�f�rence) :
+1. Documentation de m�thodologie et organisation du projet (PDF).
+2. Livrables de conception UX/UI (maquettes, PDF de pr�sentation, etc.).
+
+Ce jalon correspond principalement aux chapitres IV. M�thodologie et organisation et V. Conception UI/UX de votre documentation finale. Voici le d�tail de ce qui est attendu :
+
+1. Document M�thodologie et Organisation (Gestion de projet) :
+Ce document doit expliquer comment vous planifiez et pilotez votre projet. Il s'appuie sur les directives de la section IV du cahier des charges technique. Incluez notamment :
+
+� M�thode de gestion de projet : Pr�cisez la m�thodologie adopt�e (Agile Scrum, Kanban, cycle en V, etc.) et justifiez ce choix par rapport � votre contexte. Par exemple : "M�thode Scrum utilis�e sur 5 sprints mensuels, car elle permet des ajustements continus et correspond bien au d�coupage en jalons". Si vous �tes seul, expliquez comment vous adaptez la m�thode (sprints all�g�s, r�unions Scrum simul�es via un journal de bord, etc.).
+
+� Planning (macro-planning) : Fournissez un planning global du projet jusqu'en juin. Id�alement, ins�rez un diagramme de Gantt ou un calendrier mentionnant les grandes phases et les jalons. Chaque jalon (fin Janv, fin F�v, ...) devrait y appara�tre avec les livrables correspondants. Indiquez aussi les principales t�ches ou lots de travaux pour chaque phase. Par exemple, en f�vrier : "Design UI/UX", en mars : "Mod�lisation BD", avril : "D�veloppement backend", mai : "Int�gration et tests", juin : "Finalisation et d�ploiement".  Si vous utilisez un outil (MS Project, TeamGantt, etc.), vous pouvez exporter une image du planning dans le PDF.
+
+� Outils de suivi : D�crivez comment vous suivez l'avancement. Par exemple : "Utilisation d'un tableau Trello pour g�rer les t�ches, avec des colonnes � faire/En cours/Fait", ou "Suivi des t�ches via les issues GitLab". Mentionnez la fr�quence de vos mises � jour (ex: revue hebdomadaire des progr�s, adaptation du planning si retard/priorit�s chang�es).
+
+� Gestion du code source (Git) : Pr�sentez la strat�gie de versioning Git mise en place	.
+D�crivez les branches que vous comptez utiliser (ex: "une branche	pour les releases jalons,
+une branche	pour l'int�gration continue des features, et des branches individuelles par
+fonctionnalit� ou correctif"). Expliquez comment vous g�rez les merges et �ventuellement les revues de code (m�me en solo, s'obliger � relire son code). Si vous avez d�j� initialis� le d�p�t Git et fait quelques commits (par exemple, cr�ation du projet Symfony, structure de base), c'est tr�s bien - mentionnez-le et fournissez le lien du d�p�t dans le document.
+
+� CI/CD planifi� : D�crivez votre plan pour la pipeline CI/CD. M�me si l'impl�mentation effective interviendra plus tard, indiquez par exemple : "Mise en place d'une int�gration continue via GitHub
+
+Actions : chaque push lance les tests PHPunit et ESLint. Envisageable d'ajouter un d�ploiement auto Docker sur Heroku � partir de mai." L'objectif est de montrer que vous avez anticip� l'automatisation. Vous pouvez aussi citer les outils que vous pr�voyez d'utiliser (ex: GitHub Actions pour CI, Docker Hub pour stocker les images, etc.). Cette partie d�montre votre compr�hension de la d�marche DevOps m�me si tout n'est pas encore en place.
+
+(Astuce : Vous pouvez structurer ce document m�thodo en reprenant les sous-parties 4.a, 4.b, 4.c du CDC technique afin d'�tre s�r de tout couvrir : 4.a Gestion de projet (m�thode + planning), 4.b Versionning Git (organisation du repo), 4.c DevOps (CI/CD).)
+
+2. Conception UX/UI :
+Parall�lement � la partie organisationnelle, le jalon 2 est consacr� � la conception de l'interface utilisateur et de l'exp�rience utilisateur (UX). C'est le contenu du chapitre V. Conception UI/UX de votre dossier final. Les livrables attendus sont :
+
+� Zoning / Sitemap : Fournissez un sch�ma de zoning qui pr�sente la structure globale de votre application (disposition des zones principales � l'�cran) ou un plan de site indiquant les diff�rentes pages/�crans envisag�s et la navigation entre eux. Cela peut �tre un dessin ou sch�ma simple montrant, par exemple, le header, menu, zone de contenu, footer pour la page type, ou une carte des �crans (Accueil -> Page X -> Page Y, etc.).
+
+� Wireframes (maquettes fil de fer) : Pour les principales pages de l'application, r�alisez des wireframes basse fid�lit�. Ces maquettes en noir et blanc d�finissent l'agencement des �l�ments sans le design final. Concentrez-vous sur le fonctionnel : o� seront les menus, les boutons, les champs, comment l'information est structur�e. Vous pouvez utiliser des outils comme Figma, Balsamiq, Adobe XD, ou m�me dessiner � la main du moment que c'est proprement num�ris�. Les wireframes doivent couvrir les �crans cl�s (ex : page d'accueil, page de liste d'un �l�ment, page de d�tail, formulaires principaux, etc., y compris la version mobile si l'agencement diff�re notablement).
+
+� Charte graphique : D�finissez l'identit� visuelle de votre application. Pr�sentez dans une courte section la charte graphique retenue : couleurs principales et secondaires (avec codes hexad�cimaux), polices de caract�res utilis�es (titres, texte courant), style d'ic�nes ou illustrations, �ventuellement le ton g�n�ral (moderne, �pur�, fun, professionnel, etc.). Expliquez en quelques phrases les choix (par ex. "Couleurs bleu et blanc pour inspirer confiance et rappeler le logo de l'entreprise X"). Cette charte servira de r�f�rence pour la r�alisation des maquettes graphiques et du front-end.
+
+� Maquettes graphiques haute fid�lit� : R�alisez des mockups ou prototypes graphiques repr�sentant l'apparence finale de votre application pour au moins 2 �crans : un �cran en version desktop et le m�me en version mobile (smartphone), afin de d�montrer la responsivit�. Vous pouvez en faire pour plusieurs pages si possible (ex: page d'accueil et page de profil utilisateur). Ces maquettes doivent appliquer la charte graphique d�finie (couleurs, polices, etc.) et �tre le plus proche possible du rendu final pr�vu. Utilisez Figma, Adobe XD, Sketch ou autre outil graphique. Int�grez les images de vos maquettes dans le PDF (ou fournissez un lien si interactif via Figma). On doit pouvoir visualiser � quoi ressemblera l'application une fois d�velopp�e.
+
+� Prototype (optionnel) : Si vous le souhaitez et en avez la ma�trise, vous pouvez fournir un prototype cliquable (par exemple via Figma ou Adobe XD) permettant de simuler quelques
+
+interactions de navigation entre vos �crans. Ceci n'est pas obligatoire, mais serait un plus pour valider l'ergonomie.
+
+� Consid�rations UX : Ajoutez quelques notes sur les choix UX : comment vous assurez une bonne exp�rience utilisateur (simplicit� d'utilisation, accessibilit�, parcours utilisateur fluide). Par exemple, mentionnez si vous appliquez des principes Mobile First, ou si vous avez pr�vu des retours visuels clairs (messages de validation/erreur), etc. L'interface doit respecter les standards pour ne pas d�router l'utilisateur.
+
+Au terme de ce jalon 2, tous les aspects "design" et "organisation" du projet doivent �tre valid�s avant d'entamer r�ellement le d�veloppement. En pratique, cela signifie que vous (et votre r�f�rent) avez une vision claire de ce que l'appli fera, � quoi elle ressemblera, et comment vous allez vous organiser pour la construire. Vous aurez ainsi toutes les cl�s en main pour d�marrer la phase de conception technique et de d�veloppement d�s le mois suivant.
+
+(Conseil : Profitez de ce travail de maquettes pour recueillir des avis - par exemple, montrez vos maquettes � d'autres �tudiants comme de futurs utilisateurs, et int�grez leurs retours si pertinents. Il vaut mieux ajuster l'UI � ce stade qu'en toute fin de projet.)
+
+Jalon 3 - Mars : Mod�lisation de la Base de Donn�es
+�ch�ance : Dernier jour ouvrable de mars 2026 (31/03/2026).
+Livrable : Dossier de conception de la base de donn�es (PDF, pouvant contenir des sch�mas import�s
++ explications).
+
+Ce jalon correspond au chapitre VI. Mod�lisation de la base de donn�es de votre rapport. L'objectif est de produire l'ensemble des livrables relatifs � la conception de la base de donn�es, en suivant une d�marche MERISE (ou �quivalent UML si vous pr�f�rez, mais MERISE est explicitement mentionn� dans le programme).
+
+Contenu attendu :
+
+� Introduction � la m�thode (MERISE) : En quelques phrases, rappelez la d�marche que vous suivez pour la mod�lisation. Par exemple : "Conform�ment � MERISE, nous abordons la mod�lisation en trois �tapes : Mod�le Conceptuel de Donn�es (MCD), Mod�le Logique (MLD) puis Mod�le Physique (MPD). Cette progression du conceptuel vers le physique permet de s'assurer que la base de donn�es r�pondra aux besoins fonctionnels identifi�s, tout en �tant optimis�e pour le SGBD choisi." (Cette introduction montre votre compr�hension, mais reste br�ve pour ne pas alourdir inutilement.)
+
+� Dictionnaire des donn�es : Pr�sentez un dictionnaire des donn�es listant l'ensemble des entit�s (futures tables) identifi�es, avec pour chacune les principaux attributs et leur signification. Par exemple, pour une entit� Utilisateur, lister les attributs : id, nom, pr�nom, email, mot_de_passe, date_inscription, etc., avec une description de chacun (et �ventuellement le type de donn�e attendu, sans encore aller jusqu'au type SQL pr�cis). Le dictionnaire aide � clarifier le sens de chaque donn�e et � �viter les ambigu�t�s. Il peut �tre fait sous forme de tableau.
+
+� Mod�le Conceptuel de Donn�es (MCD) : Fournissez un diagramme Entit�-Association complet correspondant � votre application. Le MCD doit repr�senter toutes les entit�s m�tiers identifi�es (objets principaux du domaine) reli�es par des associations. Indiquez bien les
+
+cardinalit�s (0,1,N) de chaque c�t� de chaque association, les �ventuelles entit�s associatives, etc. Par exemple, on s'attend dans un projet type biblioth�que � voir des entit�s comme Utilisateur, Livre, Emprunt (cette derni�re pouvant �tre une association entre Utilisateur et Livre) etc., avec leurs attributs cl�s. Votre MCD peut �tre r�alis� avec un outil (MySQL Workbench, PowerAMC, Dia, LucidChart, etc.) ou dessin� proprement. Veillez � la lisibilit�. Incluez-le dans le PDF (en bonne r�solution). Si le diagramme est trop grand, il est possible de le r�partir en sous- domaines ou de le mettre en annexe, mais en g�n�ral pour un projet de cette taille il devrait tenir sur une page.
+
+� Mod�le Logique de Donn�es (MLD) : Il s'agit de la traduction du MCD en mod�le relationnel (tables). Pr�sentez le MLD sous une forme structur�e, par exemple : pour chaque future table, donnez son nom, sa cl� primaire, ses attributs avec types g�n�riques, et cl�s �trang�res vers d'autres tables. Vous pouvez pr�senter cela sous forme textuelle ou par un diagramme relationnel (type chenille ou UML class diagram st�r�otyp� table). Par exemple : Table UTILISATEUR (id_utilisateur PK, nom, prenom, email, mot_de_passe, ...); Table LIVRE (id_livre PK, titre, auteur, ...); Table EMPRUNT (id_emprunt PK, date_emprunt, date_retour, id_utilisateur FK -> UTILISATEUR, id_livre FK -> LIVRE, ...). Assurez-vous que toutes les entit�s du MCD se retrouvent en tables, que les associations ont �t� transform�es correctement (tables de liaison si besoin), et que les cardinalit�s sont respect�es via les cl�s �trang�res (ex: une association 0,n devient une FK nullable dans la table c�t� N, etc.). Mentionnez les contraintes d'int�grit� : unicit�s, not null, etc., d�coulant du mod�le.
+
+� Mod�le Physique de Donn�es (MPD) : Ici vous sp�cifiez le sch�ma pour le SGBD choisi. Donnez, pour chaque table, les types de colonnes concrets (types SQL), la taille des champs si applicable, les index, etc. Vous pouvez pr�senter le MPD sous forme de script SQL de cr�ation de la base
+(extraits des commandes	comment�es), ou bien sous forme de tableau listant
+les colonnes avec type SQL exact. Par exemple : id_utilisateur : INT(11) AUTO_INCREMENT, PK; email : VARCHAR(255), INDEX unique, etc. Si vous avez des triggers, proc�dures, pr�cisez-les (peu probable � ce stade). Le MPD doit tenir compte des sp�cificit�s du SGBD (par ex. types
+sur PostgreSQL, moteur InnoDB sur MySQL, etc.).
+
+� Justifications et v�rification : Expliquez en quelques lignes comment votre mod�le r�pond aux besoins fonctionnels du projet. Par exemple : "Le MCD montre qu'un utilisateur peut emprunter plusieurs livres simultan�ment (association 0,n), et qu'un livre peut �tre emprunt� plusieurs fois au cours du temps (plusieurs emprunts distincts) mais pas par deux utilisateurs � la fois (d'o� l'attribut date_retour pour savoir si un emprunt est en cours)." Mentionnez si vous avez fait des choix de mod�lisation particuliers : e.g., "Nous avons inclu une table de correspondance pour les cat�gories de livres afin de normaliser la base et �viter les redondances". Assurez-vous d'avoir �limin� les principales redondances (forme normale 3NF g�n�ralement) et que chaque donn�e a sa place logique.
+
+Au terme du jalon 3, la conception de votre base de donn�es doit �tre finalis�e et valid�e. Cela servira de fondation pour le d�veloppement back-end (entit�s, ORM, etc.). Vous devriez id�alement cr�er cette base sur votre SGBD � ce stade (voire g�n�rer les entit�s Doctrine si vous �tes dans Symfony) pour v�rifier la coh�rence. Toutefois, le livrable attendu reste le document de mod�lisation. N'h�sitez pas � tester quelques requ�tes ou � ins�rer des donn�es factices pour valider les relations.
+
+(Note : La qualit� de cette mod�lisation est cruciale - une base mal con�ue entra�ne de grandes difficult�s par la suite. Prenez le temps de bien la penser en fonction des op�rations que devra r�aliser votre application.)
+
+Jalon 4 - Avril : Conception de l'application & Architecture
+�ch�ance : Dernier jour ouvrable d'avril 2026 (30/04/2026).
+Livrable : Dossier de conception technique de l'application (PDF avec sch�mas UML, description d'architecture).
+
+Ce jalon correspond au chapitre VII. Conception de l'application et contribue �galement au chapitre
+VIII. Architecture multi-couches de la documentation finale. L'objectif est de produire l'ensemble des diagrammes UML et descriptions techniques qui vont guider le d�veloppement et documenter la structure interne de votre application. En parall�le de ce livrable, le d�veloppement du backend et du frontend va d�buter - id�alement, vous commencerez � coder en suivant ces plans.
+
+Contenu attendu :
+
+� Diagrammes de cas d'utilisation (Use case UML) : �labor�s � partir des exigences fonctionnelles du CDCF, les use cases UML offrent une vue d'ensemble des interactions utilisateurs-syst�me. Fournissez un ou des diagrammes de cas d'utilisation couvrant l'ensemble des fonctionnalit�s principales. Chaque cas d'utilisation repr�sente un sc�nario utilisateur (ex: "G�rer l'emprunt d'un livre" ou "S'inscrire et cr�er un compte"). Les acteurs (utilisateur, admin, etc.) doivent �tre identifi�s. Assurez-vous que chaque fonctionnalit� mentionn�e en Jalon 1 est repr�sent�e par au moins un use case. Montrez �ventuellement les relations include/extend s'il y en a (ce n'est pas obligatoire d'en avoir). Ces diagrammes permettent de v�rifier que rien n'a �t� omis niveau fonctionnalit�s et que l'on sait qui fait quoi dans le syst�me.
+
+� Diagrammes de s�quence : Choisissez 2 � 3 cas d'utilisation principaux et d�taillez-les via des diagrammes de s�quence. Un diagramme de s�quence illustre l'encha�nement des messages entre objets ou composants pour r�aliser une fonctionnalit� donn�e, au fil du temps. Par exemple, un diagramme de s�quence "Emprunter un livre" pourrait impliquer : l'utilisateur envoie une requ�te via l'UI, le contr�leur Symfony re�oit la requ�te HTTP, appelle un service m�tier EmpruntManager, qui interagit avec le d�p�t LivreRepository pour v�rifier la disponibilit�, puis cr�e un objet Emprunt, le sauvegarde via l'ORM, etc., et retourne une r�ponse ou vue � l'utilisateur. Montrez les principaux �changes entre front-end et back-end (si appli s�par�e, montrez l'appel API), entre contr�leurs, services m�tiers, mod�les et base de donn�es. Ces s�quences aideront � clarifier la d�coupe en couches et la logique d'ex�cution. Respectez la syntaxe UML (obligation conditionnelle, boucles �ventuelles, etc., si n�cessaire pour la compr�hension).
+
+� Diagramme de classes : Fournissez un diagramme de classes UML couvrant les principales classes de votre application c�t� back-end (et �ventuellement c�t� front si vous voulez montrer des structures de composants front). Concentrez-vous notamment sur les classes m�tier et les relations entre elles. Par exemple, classes Utilisateur, Livre, Emprunt avec leurs attributs et op�rations principales, et relations (association, composition, agr�gation, h�ritage) �ventuelles. Incluez aussi les classes importantes du domaine applicatif ou des design patterns utilis�s (par ex. si vous impl�mentez un pattern Observateur, montre-le). Il n'est pas n�cessaire de d�tailler toutes les classes du framework Symfony (vous n'allez pas dessiner la classe Controller du framework ), mais vous pouvez inclure vos classes contr�leurs sp�cifiques si vous en avez plusieurs et que leurs interactions m�ritent d'�tre montr�es. Mettez l'accent sur la structure de donn�es et la logique : par ex. "une classe Emprunt est compos�e d'un Utilisateur et d'un Livre (composition), la classe Livre peut exister ind�pendamment (agr�gation sur Emprunt)", etc. Mentionnez les cardinalit�s sur les associations si utile (ex: 1 Utilisateur peut avoir N Emprunts). Vous pouvez �galement repr�senter la s�paration en couches via des packages UML ou des
+
+annotations (ex: groupe de classes "Controllers", groupe "Services", groupe "Entities/Models"). Astuce : vous pouvez partir de votre MCD/MLD comme base pour le diagramme de classes c�t� donn�es (les entit�s ORM correspondent aux tables) puis ajouter les classes de logique applicative.
+
+� Description de l'architecture multi-couches : R�digez une section expliquant l'architecture logicielle de votre application :
+
+� Pattern MVC : D�crivez comment vous impl�mentez MVC avec Symfony. Par exemple : "Nous utilisons le pattern MVC : les Contr�leurs Symfony re�oivent les requ�tes et pr�parent les donn�es, la
+logique m�tier est encapul�e dans des Services (classes du dossier	), qui font appel
+aux Mod�les (Entit�s JPA/Repositories pour la BD). Les vues sont g�r�es soit par Twig (templates MVC c�t� serveur) soit par l'application front React."
+� Architecture n-tiers : Exposez la structure physique en n-tier. Typiquement : client (navigateur
+web ou appli front JS) - serveur web/app (Symfony sur serveur Apache/Nginx ou PHP interne) - base de donn�es (MySQL/Postgres). Indiquez si vous pr�voyez des s�parations suppl�mentaires (ex: serveur d'authentification tiers, service externe). Montrez �ventuellement un petit sch�ma
+d'architecture d�ploy�e (pas obligatoire, une description texte peut suffire). Pr�cisez sur quels tiers physiques tournent les composants : par exemple, "L'application sera conteneuris�e : un conteneur Docker pour l'application Symfony (comprenant serveur web Apache + PHP + code), un conteneur s�par� pour la base de donn�es MySQL. En production ces conteneurs pourraient tourner sur un m�me h�te ou �tre r�partis." Attention � la distinction entre couche logique et tiers physique : expliquez que vous comprenez la diff�rence (on peut tr�s bien d�ployer toutes les couches logiques sur un m�me serveur physique, �a reste une archi 3-tiers logique).
+� S�paration des responsabilit�s / bonnes pratiques : Indiquez comment vous avez veill� �
+garder un code propre et modulaire. Par exemple : "Nous avons suivi le principe SOLID de Single Responsibility : chaque classe a une responsabilit� d�finie (ex: le service EmpruntService g�re la logique d'emprunt uniquement). La configuration sensible est isol�e (fichiers .env pour les secrets). Le routage Symfony est centralis� dans les controllers, etc." Mentionnez l'utilisation potentielle de design patterns sp�cifiques si c'est le cas (Factory, Singleton, Strategy... seulement si vous en utilisez).
+� Composants externes/biblioth�ques : Pr�cisez si vous int�grez des bundles ou librairies additionnelles dans Symfony (ex: API Platform, LexikJWT for auth, etc.) ou des packages npm c�t� front. Expliquez comment ils s'int�grent � l'architecture globale.
+
+� Sch�mas compl�mentaires (si n�cessaires) : Vous pouvez ajouter tout sch�ma aidant � comprendre votre conception technique. Par exemple, un sch�ma des composants d�ployables, un sch�ma d'�tat (state machine) si vous avez des workflows complexes, etc. Ce n'est pas obligatoire, ajoutez seulement si cela apporte de la valeur � expliquer un aspect particulier.
+
+Apr�s ce jalon 4, la phase de conception s'ach�ve : vous devriez disposer de toute la documentation n�cessaire pour coder efficacement, et avoir valid� l'architecture aupr�s du formateur. Concr�tement, � l'issue d'avril, le d�veloppement logiciel doit �tre bien entam�. Id�alement, vous aurez d�j� cod� certains �l�ments de base : cr�ation du projet Symfony, configuration de la base (entit�s g�n�r�es), peut-�tre impl�ment� 1 ou 2 fonctionnalit�s simples en suivant vos diagrammes, et un squelette d'interface si front s�par�. Cela vous permettra de v�rifier que votre conception tient la route et d'ajuster si besoin (il est fr�quent de faire �voluer l�g�rement le mod�le ou les classes une fois confront�s au code r�el ; si tel est le cas, pensez � mettre � jour vos diagrammes pour qu'ils restent coh�rents avec l'impl�mentation finale).
+
+(Note : Ce jalon 4 est dense car il n�cessite une bonne ma�trise d'UML et de l'architecture. Ne le n�gligez pas - un investissement s�rieux dans la conception fait gagner beaucoup de temps sur le d�veloppement et r�duit le nombre de bugs. N'h�sitez pas � demander des validations interm�diaires de vos diagrammes.)
+
+Jalon 5 - Mai : D�veloppement, S�curit� & Tests (version B�ta)
+�ch�ance : Dernier jour ouvrable de mai 2026 (29/05/2026).
+Livrables : � ce stade, on s'attend � un premier aboutissement fonctionnel de votre application, accompagn� de livrables techniques sur la s�curit� et les tests. Concr�tement, les �l�ments � remettre sont :
+
+� Code source de l'application (version b�ta) : Votre r�f�rentiel Git doit �tre � jour avec l'impl�mentation de la majorit� des fonctionnalit�s pr�vues. Fournissez dans votre rendu le lien vers votre d�p�t Git et indiquez le commit/tag de r�f�rence correspondant � la version livr�e en mai. Le code sera �valu� (qualit�, bonnes pratiques, structure). � ce stade, l'application devrait �tre d�ployable et testable par le formateur :
+� Assurez-vous d'inclure dans le repo tous les fichiers n�cessaires (code source Symfony/React,
+Dockerfile, docker-compose, documentation d'installation si besoin).
+� Le docker-compose doit permettre de lancer l'application en local (ou � d�faut, fournissez des instructions claires pour lancer le backend, la base de donn�es, et le front).
+� Toutes les fonctionnalit�s principales doivent �tre impl�ment�es ou en passe de l'�tre. Il peut rester quelques ajustements mineurs ou bugs connus, mais l'ensemble doit former une version coh�rente (une b�ta proche du produit fini).
+� Int�gration de l'API externe : Celle-ci doit id�alement �tre op�rationnelle d'ici ce jalon. Par exemple, si vous utilisez l'API Google Maps pour g�olocaliser des biblioth�ques, la fonctionnalit� correspondante doit �tre impl�ment�e et test�e.
+
+� Preuve de mise en place de la CI : Montrez que l'int�gration continue est en fonctionnement sur votre projet. Vous pouvez par exemple inclure une capture d'�cran d'une ex�cution de pipeline (sur GitHub Actions ou autre) indiquant la r�ussite des tests. Ou bien un badge dans votre README "build: passing". L'essentiel est de prouver que chaque commit est v�rifi� automatiquement. Rappel : une bonne pipeline CI compile le code et ex�cute les tests unitaires et d'int�gration � minima  . Si vous avez ajout� des analyses statiques (linters, analyse de s�curit�) dans la CI, mentionnez-le �galement.
+
+� Rapport de tests automatis�s* : Fournissez un document (ou int�grez au rapport principal) qui d�crit votre *politique de tests et en pr�sente les r�sultats actuels. Ce volet correspond au chapitre X. Politique de tests. Points � aborder :
+
+� Couverture de tests unitaires : D�crivez quelles parties du code sont couvertes par des tests unitaires (et �ventuellement quel pourcentage du code est couvert si vous avez la m�trique via un outil). Donnez un exemple de cas de test unitaire pertinent que vous avez �crit (par ex, tester qu'une m�thode de calcul renvoie le bon r�sultat dans telle condition).
+� Tests fonctionnels : Expliquez comment vous avez test� les cas d'usage de bout en bout. Par
+exemple, "Nous avons �crit des tests Behat qui simulent un utilisateur empruntant un livre, du login � la validation de l'emprunt", ou "Des tests Postman/Newman v�rifient que les endpoints de l'API renvoient les r�ponses attendues". Si c'est une SPA, mentionnez tout test UI (par ex. tests Jest/React Testing Library, ou Selenium).
+� Autres tests : Indiquez si vous avez r�alis� des tests d'int�gration (ex: tester la connexion r�elle
+� la base de donn�es, ou un appel r�el � l'API externe pour voir la r�action du syst�me).
+
+Mentionnez aussi d'�ventuels tests de performance simples : par ex, "nous avons mesur� le temps de chargement de la page X avec 1000 entr�es en base - r�sultat : < 2s, ce qui est acceptable". Ou "test� avec JMeter 50 requ�tes concurrentes sur l'API - pas d'erreurs, temps moyen 500ms". Ce ne sont pas obligatoires, mais montrent une d�marche qualit�.
+� Outils utilis�s : Listez les frameworks de tests que vous avez employ�s (PHPUnit, Behat,
+PHPUnit + Panther, Jest, etc.) et comment ils s'ex�cutent (via CI ou local).
+� R�sultats actuels : Donnez le statut � date : "Actuellement, 20 tests unitaires passent avec succ�s (vert). 2 tests fonctionnels �chouent encore concernant la cr�ation d'emprunt - ces bugs sont en cours de correction." L'honn�tet� est importante : si tout n'est pas vert, expliquez le plan d'action d'ici la fin.
+� Exemples de sorties : Vous pouvez inclure un extrait de log de tests ou une capture de rapport de tests pour illustrer.
+
+� Analyse de s�curit� & conformit� : Ce volet correspond au chapitre IX. S�curit�. D�taillez les mesures de s�curit� que vous avez impl�ment�es dans le code. Pour chaque point list� dans les contraintes de s�curit� plus haut, montrez comment il est adress� :
+
+� Injection SQL : Expliquez que vous utilisez Doctrine ORM ou des requ�tes pr�par�es PDO, �liminant ainsi les risques d'injections SQL (les entr�es utilisateur ne sont jamais ins�r�es directement dans des requ�tes). Si vous avez fait des requ�tes DQL/SQL manuelles, assurez-vous d'avoir utilis� des param�tres.
+� XSS : Indiquez que toutes les sorties vers l'interface sont �chapp�es via Twig (par d�faut Twig �chappe les variables, sauf indication contraire). Mentionnez que vous avez test� en injectant
+des	dans des formulaires pour v�rifier qu'ils ne s'ex�cutent pas. Rappelez que les
+attaques XSS font partie des vuln�rabilit�s majeures � �viter	.
+� CSRF : Notez que vous utilisez les tokens CSRF de Symfony sur les formulaires sensibles (ajout/ suppression de donn�es, actions d'�tat). Si API REST sans interface server-side, mentionnez l'utilisation d'un m�canisme de protection (jetons anti-CSRF ou au moins l'utilisation du header Origin + v�rification c�t� serveur, etc.). L'id�e est de montrer que vous en �tes conscient.
+� Gestion des comptes : Les mots de passe sont stock�s hach�s (pr�cisez l'algorithme, ex Bcrypt via la fonction password_hash de PHP ou les outils Symfony). Ajoutez que vous avez �ventuellement mis en place une politique de complexit� ou un syst�me de r�initialisation de mot de passe s�curis� (lien expirant par email, etc.) si c'est dans votre p�rim�tre.
+� Brute force : Si votre appli a une auth, avez-vous impl�ment� une limitation des tentatives de login ? Par ex, via le composant Symfony Rate Limiter ou un simple compteur en session apr�s X �checs, ou Google reCAPTCHA. Si ce n'est pas fait, mentionnez-le comme am�lioration possible mais pas impos�e.
+� Donn�es personnelles & RGPD : D�crivez comment l'utilisateur peut contr�ler ses donn�es. Par exemple : "Conform�ment au RGPD, l'utilisateur peut supprimer son compte et donc ses donn�es personnelles de la plateforme. Une politique de confidentialit� est r�dig�e et disponible dans l'application." Si votre appli envoie des emails, assurez-vous de respecter opt-in/out. Mentionnez que les donn�es sensibles (ex: mot de passe) sont chiffr�es/hach�es	, que les communications sont pr�vues pour se faire en HTTPS en production (m�me si en dev c'est du HTTP). Bref, montrez que le volet l�gal n'est pas oubli�	.
+� Autres s�curit�s : Selon votre projet, mentionnez par exemple la d�sactivation de l'indexation par robots (fichier robots.txt) si pertinent, la mise en place de r�les et permissions (partie contr�le d'acc�s de Symfony, pour qu'un utilisateur normal ne puisse pas acc�der � l'admin, etc.), la validation syst�matique des donn�es en entr�e (contraintes de validation Symfony sur les entit�s/formulaires, emp�chant par exemple qu'un champ "num�ro de t�l�phone" accepte autre chose que des chiffres   ). Vous pouvez citer l'utilisation de librairies ou bonnes pratiques pour
+
+s�curiser les en-t�tes HTTP (CORS configur� correctement, Protection contre le clickjacking via le header X-Frame-Options, etc., seulement si vous l'avez fait).
+
+� Bilan d'avancement : Enfin, faites un petit point sur l'�tat global du projet � la fin Mai. Quelles fonctionnalit�s sont termin�es, lesquelles restent � finaliser en juin ? �tes-vous en avance/retard sur le planning initial ? Ce bilan peut �tre inclus dans le rapport ou dans le commentaire de rendu. L'objectif est de pr�parer le terrain pour le dernier mois et d'anticiper les derniers d�fis.
+
+En r�sum�, le jalon 5 doit d�montrer que votre application fonctionne d�j� dans sa quasi-totalit�, qu'elle est de qualit� (tests OK, s�curit� OK) et qu'elle se rapproche d'une version candidate � la mise en production. On doit pouvoir lancer votre application et l'utiliser pour la plupart des cas d'usage pr�vus. C'est en quelque sorte une version b�ta publique. Le retour du formateur � ce stade vous permettra de corriger les ultimes points en juin.
+
+(Note : Pensez � bien documenter le lancement de votre application dans un README ou dans le rapport - par exemple, "comment lancer le docker-compose et sur quelle URL acc�der � l'appli, comptes de test �ventuels". Cela facilitera la validation. Aussi, si certains tests ou fonctionnalit�s ne sont pas encore finalis�s, indiquez clairement vos plans pour les achever en juin.)
+
+Jalon 6 - Juin : D�ploiement et Mise en Production (Livrable final)
+�ch�ance : Dernier jour ouvrable de juin 2026 (30/06/2026).
+Livrables : C'est le livrable final du projet fil rouge, comprenant : - Le produit logiciel final (code complet, paquet d�ployable, conteneurs Docker finalis�s). - La documentation finale consolid�e. - �ventuellement une pr�sentation (slides) pour la soutenance - ceci sera pr�cis� en temps voulu, mais en g�n�ral vous aurez � pr�parer un support pour le jury, toutefois ce n'est pas � remettre sur Teams,
+c'est pour l'oral.
+
+Ce jalon couvre principalement le chapitre XI. D�ploiement et mise en production de votre rapport, tout en r�unissant et finalisant tous les chapitres pr�c�dents. Les attentes sont d�taill�es ci-dessous.
+
+Produit final pr�t � d�ployer :
+
+� Code source tagg� "release" : Sur votre d�p�t Git, cr�ez un tag ou une release correspondant � la version finale 1.0 de votre application. Cette version doit int�grer toutes les modifications finales, corrections de bugs suite aux tests de la b�ta, optimisations �ventuelles. Indiquez le tag dans le rendu. Le code sera gel� � cette version pour l'�valuation finale.
+
+� Conteneurs Docker pr�ts : Fournissez tous les �l�ments pour d�ployer facilement l'application :
+
+� Un fichier	final (et �ventuellement Dockerfiles) permettant de lancer
+l'application compl�te en un coup. Par exemple, un service pour le backend Symfony (contenant l'application PHP), un service pour la base de donn�es initialis�e avec un dump des donn�es de base (ou volumes), et un service pour le front si application s�par�e (ou on peut aussi servir le front statique via un nginx container).
+� Instructions de d�ploiement : Dans votre documentation ou README, incluez une section
+"Mise en production" d�taillant comment passer de l'application telle qu'elle est sur Git � une application d�ploy�e. Si vous avez mis en place du d�ploiement continu, expliquez le processus (ex: "Une action GitHub permet de construire l'image Docker et la pousser sur DockerHub, puis sur le serveur de prod un script pull la nouvelle image et red�marre les containers"). Sinon, d�crivez une
+
+proc�dure manuelle claire : "Lancer	sur le serveur avec les fichiers
+fournis, configurer les variables d'environnement X, Y, importer le dump SQL fourni, etc.". L'id�e est que le jury ou un d�veloppeur tiers pourrait d�ployer votre appli � partir de vos instructions sans avoir � vous poser de questions.
+� Environnements de d�ploiement : Mentionnez les diff�rents environnements possibles (dev,
+test, prod) et comment vous g�rez les diff�rences. Par exemple : fichier	de Symfony
+adapt� (APP_ENV=prod en prod, avec debug d�sactiv�), usage de Docker pour simuler la prod en local, etc. Si vous avez un environnement de d�mo en ligne, fournissez l'URL (c'est un plus mais pas obligatoire). Certains �tudiants par exemple h�bergent leur projet sur un cloud gratuit (Heroku, Netlify, AWS free tier...) - si vous l'avez fait, indiquez-le et d�crivez l'architecture d�ploy�e.
+� Strat�gie de mise en production : Expliquez (th�oriquement) quelle strat�gie de d�ploiement vous utiliseriez pour minimiser les interruptions de service lors d'une mise � jour du logiciel. Par exemple : d�ploiement bleu/vert (blue/green) o� une nouvelle version est d�ploy�e en parall�le puis on bascule le routage , ou rolling update (mise � jour progressive conteneur par conteneur), etc., ou tout simplement d�ploiement manuel pendant une fen�tre de maintenance pour ce projet. Montrez que vous connaissez ces concepts, m�me si dans la pratique de ce projet p�dagogique, une interruption de service n'est pas vraiment un probl�me.
+
+� Documentation finale (PDF) : Compilez un rapport final complet, � remettre au format PDF, qui servira de support � l'�valuation par le jury. Celui-ci reprendra l'ensemble des livrables documentaires produits durant les jalons, mis � jour pour correspondre � l'�tat final du projet. Ce document final devrait contenir, dans un format bien structur� (avec table des mati�res) :
+
+� III. Cahier des charges : votre CDCF initial �ventuellement ajust� si le projet a �volu� (par exemple, si vous avez modifi� certaines fonctionnalit�s en cours de route, mettez � jour la liste pour qu'elle soit coh�rente avec ce qui a �t� effectivement fait).
+� IV. M�thodologie et organisation : mise � jour du planning r�el vs pr�visionnel (indiquer ce qui
+a chang�, le cas �ch�ant), retour d'exp�rience sur la m�thode de projet, etc.
+� V. Conception UI/UX : inclure les maquettes finales si elles ont �volu�, �ventuellement des captures d'�cran de l'interface r�elle de votre application mise en �uvre pour montrer le r�sultat par rapport aux maquettes.
+� VI. Mod�lisation de la BD : le MCD/MLD/MPD final (par ex, si vous avez ajust� le mod�le de donn�es en cours de dev - cela arrive - pr�sentez la version finale r�elle).
+� VII. Conception de l'application (UML) : idem, mettre � jour les diagrammes de classes ou s�quence si votre impl�mentation finale diff�re de ce qui avait �t� pr�vu (par ex, des classes en plus ou en moins, etc.). Le diagramme de classes final doit refl�ter le code.
+� VIII. Architecture multi-couches : description de l'architecture finale (vous pouvez y inclure un
+sch�ma d'architecture d�ploy�e illustrant votre Docker-compose par exemple, montrant les conteneurs et leurs interactions).
+� IX. S�curit� : r�sum� des mesures de s�curit� appliqu�es, �ventuellement r�sultats de scans de
+vuln�rabilit� si vous en avez fait, etc.
+� X. Tests : bilan sur les tests (taux de couverture final, r�sultats finaux - par ex. "100% des tests passent, couverture 85% des classes m�tier").
+� XI. D�ploiement et mise en production : instructions de d�ploiement (peuvent �tre r�sum�es si d�j� dans README, mais il faut en parler), et retour d'exp�rience DevOps (par ex: difficult�s rencontr�es lors de la containerisation, etc.).
+� Annexes : incluez en annexe tout �l�ment trop volumineux pour le corps du doc (ex : code
+source de tests cl�s, extrait du fichier de pipeline CI, etc., captures d'�cran de la CI, etc. d�j� fournis s�par�ment mais ici pour trace).
+
+� Guide utilisateur (si applicable) : il peut �tre bienvenu d'ajouter une petite section pour l'utilisateur final (hors jury) expliquant comment utiliser l'application (par ex, "Pour tester l'application : connectez-vous avec tel compte... voici le parcours pour emprunter un livre... etc."). Le jury jouera le r�le d'un utilisateur durant la d�mo, donc ce guide peut �tre utile.
+� Conclusion et perspectives : Terminez votre document avec un bilan global : ce que vous avez appris, les d�fis surmont�s, et quelles am�liorations pourraient �tre apport�es si le projet continuait (ex: nouvelles fonctionnalit�s envisageables, optimisation possibles, etc.). Cela montre votre capacit� d'analyse critique sur le travail r�alis�.
+
+� Soutenance orale (pr�paration) : M�me si cela sort du cadre du document, pr�voyez de pr�parer une pr�sentation orale (~15 minutes) pour la fin juin/d�but juillet devant le jury. Celle-ci consistera g�n�ralement � d�montrer l'application en live (ou via une vid�o si d�monstration trop risqu�e) et � pr�senter les points forts du projet (originalit�, difficult�s techniques surmont�es, r�sultats obtenus). Vous pourrez vous appuyer sur le rapport �crit, mais il est conseill� de faire des slides synth�tiques. Entra�nez-vous � expliquer votre architecture, vos choix techniques, etc., de mani�re p�dagogique. Le jury pourrait poser des questions pointues (ex: "Comment avez-vous impl�ment� la s�curit� contre XSS ?") - vous serez pr�ts gr�ce � tout le travail document� pr�c�demment.
+
+Au terme du jalon 6, votre projet doit �tre 100% fonctionnel et complet. Cela signifie : toutes les fonctionnalit�s annonc�es dans le cahier des charges fonctionnel sont impl�ment�es et test�es, toutes les exigences techniques sont respect�es (Docker, tests, CI, s�curit�, API externe...), la documentation est � jour et exhaustive, et l'application peut �tre d�ploy�e/ex�cut�e sans encombre. C'est cette version finale qui sera �valu�e par le jury national.
+
+F�licitations, si vous parvenez � tout mener � bien, vous aurez acquis une exp�rience pr�cieuse de conduite de projet de A � Z !
+
+Modalit�s de remise des livrables
+Chaque jalon donnera lieu � un rendu � d�poser sur Microsoft Teams, section Devoirs de votre promotion. Respectez bien les dates limites (dernier jour ouvr� de chaque mois). Les formats attendus sont g�n�ralement : - Documents : en PDF de pr�f�rence (pour les rapports, pr�sentations, etc.). Veillez � une pr�sentation professionnelle (page de titre, sommaire, num�rotation...). - Code source : pas de d�p�t de code en archive sur Teams sauf indication contraire ; fournissez l'URL de votre d�p�t Git dans un document texte ou dans le champ commentaires du devoir. Assurez-vous que le formateur ait acc�s (repo public, ou priv� avec acc�s donn�). - Sch�mas, maquettes : int�grez-les dans les PDFs ou fournissez-les en images attach�es si n�cessaire, en veillant � la qualit�. Les maquettes interactives peuvent �tre partag�es via un lien (Figma etc.). - Docker images : si vous avez publi� des images Docker (sur DockerHub par ex), vous pouvez l'indiquer mais ce n'est pas obligatoire de le remettre � part. - Autres : tout �l�ment non-textuel important (par ex, une vid�o de d�monstration si vous en faites une) peut �tre remis en annexe �galement.
+
+Chaque rendu fera l'objet d'une �valuation et de feedback de la part de l'�quipe p�dagogique, afin que vous puissiez vous am�liorer pour le jalon suivant. En cas de difficult� majeure vous emp�chant de remettre un jalon dans les temps, pr�venez en amont - un l�ger am�nagement pourra �tre envisag� au cas par cas, mais n'en abusez pas (les d�lais du projet final sont serr�s).
+
+Enfin, n'oubliez pas que l'originalit� de votre travail est importante : vous avez tous un socle technique commun, mais le sujet fonctionnel, l'approche, la cr�ativit� dans l'UX, etc., sont libres. Deux projets ne
+
+doivent pas �tre identiques. Inspirez-vous �ventuellement de ressources ou de projets existants, mais
+pas de plagiat - le code �crit doit �tre le v�tre, et vous devez �tre capable de l'expliquer.
+
+Bon courage � tous ! Ce projet fil rouge est exigeant, mais c'est une occasion unique de synth�tiser tout votre apprentissage. En suivant ce cahier des charges technique et en respectant les jalons, vous mettrez toutes les chances de votre c�t� pour d�livrer un projet abouti et r�ussir votre passage devant le jury. Nous sommes impatients de d�couvrir vos r�alisations.
+
+
+
+Cahier des charges technique : mod�le & conseils
+https://axonesconsulting.fr/cahier-des-charges-technique/
+
+Cahier de charges fonctionnel : guide complet - Softyflow
+https://www.softyflow.io/cahier-de-charges-fonctionnel/
+
+Strat�gies de D�ploiement pour Symfony avec Docker - W3r.one Magazine
+https://w3r.one/fr/blog/web/symfony/deploiement-integration-continue-symfony/strategies-deploiement-symfony-docker
+
+L'approche CI/CD, qu'est-ce que c'est ?
+https://www.redhat.com/fr/topics/devops/what-is-ci-cd
+
+What is OWASP? Intro to OWASP Top 10 Vulnerabilities and Risks | F5
+https://www.f5.com/glossary/owasp
+
+Cross site request forgery (CSRF) attack - Imperva
+https://www.imperva.com/learn/application-security/csrf-cross-site-request-forgery/
+
+Cross Site Request Forgery | Kontra Application Security Training
+https://application.security/free-application-security-training/owasp-top-10-cross-site-request-forgery
+
+CORS, XSS and CSRF with examples in 10 minutes - DEV Community
+https://dev.to/maleta/cors-xss-and-csrf-with-examples-in-10-minutes-35k3
+
+
