@@ -96,4 +96,18 @@ class Service
 
         return $this;
     }
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
 }
