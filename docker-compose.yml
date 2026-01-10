@@ -55,6 +55,18 @@ services:
     networks:
       - calendria_network
 
+  # Adminer - Interface web pour gérer la base de données
+  adminer:
+    image: adminer:latest
+    container_name: calendria_adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - calendria_network
+
 volumes:
   db_data:
 
