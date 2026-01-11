@@ -7,13 +7,33 @@ use App\Entity\Reservation;
 use App\Entity\Restaurant;
 use App\Entity\Service;
 use App\Entity\Table;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
+
     public function load(ObjectManager $manager): void
     {
+        // Créer un administrateur
+        $admin = new User();
+        $admin->setEmail('admin@calendria.com');
+        $admin->setRoles(['ROLE_ADMIN']);
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $admin,
+            'password123'
+        );
+        $admin->setPassword($hashedPassword);
+        $manager->persist($admin);
+
         // Créer un restaurant
         $restaurant = new Restaurant();
         $restaurant->setNom('Le Gourmet Parisien');
