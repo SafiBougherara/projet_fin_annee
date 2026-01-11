@@ -66,6 +66,9 @@ calendria/
 ## 📚 Documentation
 
 Voir le dossier `/documentation` pour :
+- [Guide d'Installation](documentation/INSTALLATION.md)
+- [Plan du Projet](documentation/Plan.md)
+- [Structure Détaillée](documentation/STRUCTURE.md)
 - CDCF complet (Jalon 1) ✅
 - Maquettes UI/UX (Jalon 2)
 - Modélisation BDD (Jalon 3)
