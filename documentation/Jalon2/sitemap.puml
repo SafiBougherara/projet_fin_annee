@@ -1,0 +1,97 @@
+@startuml
+title CALENDRIA – Sitemap / Architecture des Écrans
+skinparam backgroundColor #FEFEFE
+skinparam defaultFontName Inter
+skinparam packageStyle rectangle
+skinparam ArrowColor #1A5276
+skinparam RectangleBorderColor #2C3E50
+
+' Force le ratio vertical
+skinparam dpi 150
+skinparam pageMargin 10
+
+rectangle "Connexion\n/login" as login #FCF3CF
+
+' === LIGNE 1 : Modules principaux ===
+rectangle "Dashboard\n/dashboard" as dashboard #D5F5E3 {
+  rectangle "Réservations du jour" as dash_resa
+  rectangle "Statistiques clés" as dash_stats
+  rectangle "Prochaines arrivées" as dash_alerts
+}
+
+rectangle "Réservations\n/reservations" as reservations #D5F5E3 {
+  rectangle "Liste des réservations" as resa_list
+  rectangle "Détail + Modifier" as resa_detail
+  rectangle "Annuler / No-show" as resa_actions
+  rectangle "Recherche et Filtres" as resa_search
+}
+
+rectangle "Calendrier\n/calendar" as calendar #D6EAF8 {
+  rectangle "Vue jour" as cal_day
+  rectangle "Vue semaine" as cal_week
+  rectangle "Vue mois" as cal_month
+}
+
+' === LIGNE 2 : Modules secondaires ===
+rectangle "Clients\n/clients" as clients #E8DAEF {
+  rectangle "Liste des clients" as clients_list
+  rectangle "Fiche client" as client_detail
+  rectangle "Historique réservations" as client_history
+}
+
+rectangle "Statistiques\n/stats" as stats #FDEBD0 {
+  rectangle "Taux remplissage" as stats_fill
+  rectangle "Analyse no-show" as stats_noshow
+  rectangle "Export CSV/PDF" as stats_export
+}
+
+rectangle "Plan de Salle\n/floor-plan" as floorplan #D4EFDF {
+  rectangle "Vue en direct des tables" as fp_live
+  rectangle "Timeline du service" as fp_timeline
+  rectangle "Configuration Turnover" as fp_turnover
+  rectangle "Statuts : Free / Occ. / Imm. / Res." as fp_status
+}
+
+rectangle "Paramètres\n/settings" as settings #F5EEF8 {
+  rectangle "Infos restaurant" as set_info
+  rectangle "Horaires et Services" as set_hours
+  rectangle "Notifications" as set_notif
+  rectangle "RGPD / Confidentialité" as set_rgpd
+}
+
+' === CÔTÉ CLIENT ===
+rectangle "Canaux Client" as channels #FEF9E7 {
+  rectangle "WhatsApp\nChatbot IA" as whatsapp #D5F5E3
+  rectangle "Widget Web\nChatbot intégré" as widget #D6EAF8
+  rectangle "SMS\nRéservation SMS" as sms #FCF3CF
+}
+
+rectangle "Moteur IA\nAPI Chatbot" as ai_engine #F2D7D5 {
+  rectangle "Collecte infos" as ai_collect
+  rectangle "Vérif. disponibilité" as ai_check
+  rectangle "Confirmation auto" as ai_confirm
+  rectangle "Propositions alternatives" as ai_alt
+}
+
+rectangle "Notifications Clients" as notifications #FEF9E7 {
+  rectangle "SMS Confirmation" as notif_confirm
+  rectangle "SMS Rappel 24h" as notif_remind
+  rectangle "SMS Annulation" as notif_cancel
+}
+
+' Navigation principale
+login --> dashboard
+dashboard --> reservations
+dashboard --> calendar
+dashboard --> clients
+dashboard --> stats
+dashboard --> floorplan
+dashboard --> settings
+
+' Flux client
+channels --> ai_engine
+ai_engine --> notifications
+ai_engine --> reservations : "Nouvelle réservation"
+notifications --> channels : "Confirmations"
+
+@enduml

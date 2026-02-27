@@ -1,0 +1,61 @@
+@startgantt
+title CALENDRIA – Planning Global du Projet (Janvier – Juin 2026)
+
+projectscale weekly
+Project starts 2026-01-05
+
+-- Sprint 1 - Cadrage - Jalon 1 --
+[Rédaction du CDCF] starts 2026-01-06 and ends 2026-01-24
+[Initialisation dépôt Git] starts 2026-01-09 and ends 2026-01-09
+[Setup Symfony + React] starts 2026-01-10 and ends 2026-01-11
+[Configuration Docker] starts 2026-01-11 and ends 2026-01-11
+[Création entités Doctrine] starts 2026-01-12 and ends 2026-01-13
+[Configuration JWT Auth] starts 2026-01-14 and ends 2026-01-14
+[Livrable Jalon 1 : CDCF] happens at 2026-01-31
+
+-- Sprint 2 - Méthodologie et Design - Jalon 2 --
+[Document méthodologie] starts 2026-02-03 and ends 2026-02-07
+[Charte graphique] starts 2026-02-03 and ends 2026-02-05
+[Sitemap / Zoning] starts 2026-02-06 and ends 2026-02-06
+[Wireframes fil de fer] starts 2026-02-07 and ends 2026-02-12
+[Maquettes Figma haute fidélité] starts 2026-02-13 and ends 2026-02-21
+[Considérations UX] starts 2026-02-17 and ends 2026-02-19
+[Compilation PDF final] starts 2026-02-24 and ends 2026-02-26
+[Livrable Jalon 2] happens at 2026-02-28
+
+-- Sprint 3 - Conception Technique et API - Jalon 3 --
+[Modélisation MCD MERISE] starts 2026-03-02 and ends 2026-03-04
+[Dérivation MLD / MPD] starts 2026-03-05 and ends 2026-03-06
+[Implémentation schéma SQL] starts 2026-03-09 and ends 2026-03-10
+[Développement API REST CRUD] starts 2026-03-09 and ends 2026-03-18
+[Algorithme attribution tables] starts 2026-03-16 and ends 2026-03-25
+[Tests unitaires API] starts 2026-03-23 and ends 2026-03-26
+[Documentation API] starts 2026-03-27 and ends 2026-03-27
+[Livrable Jalon 3] happens at 2026-03-31
+
+-- Sprint 4 - Développement Coeur - Jalon 4 --
+[Intégration Twilio WhatsApp] starts 2026-04-01 and ends 2026-04-03
+[Chatbot IA] starts 2026-04-06 and ends 2026-04-14
+[Logique conversationnelle] starts 2026-04-13 and ends 2026-04-21
+[Dashboard React] starts 2026-04-14 and ends 2026-04-23
+[Diagrammes UML] starts 2026-04-24 and ends 2026-04-28
+[Livrable Jalon 4] happens at 2026-04-30
+
+-- Sprint 5 - Compléments - Jalon 5 --
+[Widget Web] starts 2026-05-04 and ends 2026-05-12
+[Canal SMS] starts 2026-05-11 and ends 2026-05-13
+[Tests] starts 2026-05-13 and ends 2026-05-20
+[Sécurité] starts 2026-05-18 and ends 2026-05-21
+[Tests E2E] starts 2026-05-22 and ends 2026-05-26
+[Livrable Jalon 5] happens at 2026-05-29
+
+-- Sprint 6 - Finalisation - Jalon 6 --
+[Déploiement] starts 2026-06-01 and ends 2026-06-03
+[Optimisation] starts 2026-06-04 and ends 2026-06-05
+[Doc technique] starts 2026-06-05 and ends 2026-06-12
+[Dossier projet] starts 2026-06-12 and ends 2026-06-17
+[Soutenance] starts 2026-06-17 and ends 2026-06-20
+[Buffer] starts 2026-06-22 and ends 2026-06-25
+[Livrable Jalon 6] happens at 2026-06-30
+
+@endgantt
