@@ -77,7 +77,7 @@ Voir le dossier `/documentation` pour :
 ## 📅 Jalons
 
 - [x] **Jalon 1** (31/01) : CDCF ✅
-- [ ] **Jalon 2** (28/02) : Méthodologie + Maquettes
+- [x] **Jalon 2** (28/02) : Méthodologie + Maquettes ✅
 - [ ] **Jalon 3** (31/03) : MCD/MLD/MPD + API
 - [ ] **Jalon 4** (30/04) : Chatbot WhatsApp + Dashboard
 - [ ] **Jalon 5** (29/05) : Widget Web + Tests
