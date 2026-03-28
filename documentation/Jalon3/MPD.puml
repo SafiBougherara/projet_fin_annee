@@ -1,0 +1,209 @@
+@startuml MPD_CALENDRIA
+title **CALENDRIA – Modèle Physique de Données (MPD)**\nSGBD : PostgreSQL 15 – Types SQL concrets, index et contraintes
+
+skinparam backgroundColor #FEFEFE
+skinparam defaultFontName "JetBrains Mono"
+skinparam defaultFontSize 11
+skinparam roundCorner 6
+
+skinparam class {
+    BackgroundColor #FAFBFC
+    BorderColor #2E86C1
+    HeaderBackgroundColor #2E86C1
+    HeaderFontColor White
+    FontColor #2C3E50
+    AttributeFontSize 10
+    StereotypeFontColor White
+}
+
+' ─────────────────────────────────────────────
+' TABLES PHYSIQUES PostgreSQL
+' ─────────────────────────────────────────────
+
+class "restaurant" as restaurant << (T,#1A5276) TABLE >> {
+    <b>PK</b> id : SERIAL
+    --
+    nom : VARCHAR(255) NOT NULL
+    adresse : TEXT NOT NULL
+    telephone : VARCHAR(20) NOT NULL
+    email : VARCHAR(255) NOT NULL
+    capacite_totale : INTEGER NOT NULL CHECK (> 0)
+    duree_repas : INTEGER NOT NULL CHECK (> 0)
+    buffer_nettoyage : INTEGER NOT NULL CHECK (>= 0)
+    created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    --
+    <i>INDEX idx_restaurant_nom ON (nom)</i>
+}
+
+class "\"user\"" as user << (T,#1A5276) TABLE >> {
+    <b>PK</b> id : SERIAL
+    --
+    <b>FK</b> restaurant_id : INTEGER REFERENCES restaurant(id)
+    email : VARCHAR(180) NOT NULL
+    roles : JSONB NOT NULL DEFAULT '["ROLE_USER"]'
+    password : VARCHAR(255) NOT NULL
+    --
+    <i>UNIQUE (email)</i>
+    <i>INDEX idx_user_restaurant ON (restaurant_id)</i>
+}
+
+class "\"table\"" as table_rest << (T,#1A5276) TABLE >> {
+    <b>PK</b> id : SERIAL
+    --
+    <b>FK</b> restaurant_id : INTEGER NOT NULL REFERENCES restaurant(id) ON DELETE CASCADE
+    numero_table : VARCHAR(10) NOT NULL
+    capacite : INTEGER NOT NULL CHECK (> 0)
+    type : VARCHAR(50) NOT NULL CHECK (IN ('interieur','terrasse','vip','prive'))
+    statut : VARCHAR(20) NOT NULL DEFAULT 'disponible' CHECK (IN ('disponible','hors_service'))
+    created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    --
+    <i>UNIQUE (restaurant_id, numero_table)</i>
+    <i>INDEX idx_table_restaurant ON (restaurant_id)</i>
+    <i>INDEX idx_table_statut ON (statut)</i>
+}
+
+class "service" as service << (T,#1A5276) TABLE >> {
+    <b>PK</b> id : SERIAL
+    --
+    <b>FK</b> restaurant_id : INTEGER NOT NULL REFERENCES restaurant(id) ON DELETE CASCADE
+    type : VARCHAR(20) NOT NULL CHECK (IN ('midi','soir'))
+    heure_debut : TIME NOT NULL
+    heure_fin : TIME NOT NULL
+    jours_ouverture : JSONB NOT NULL
+    created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    --
+    <i>CHECK (heure_fin > heure_debut)</i>
+    <i>INDEX idx_service_restaurant ON (restaurant_id)</i>
+}
+
+class "fermeture_exceptionnelle" as fermeture << (T,#1A5276) TABLE >> {
+    <b>PK</b> id : SERIAL
+    --
+    <b>FK</b> restaurant_id : INTEGER NOT NULL REFERENCES restaurant(id) ON DELETE CASCADE
+    date_fermeture : DATE NOT NULL
+    motif : VARCHAR(255)
+    created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    --
+    <i>UNIQUE (restaurant_id, date_fermeture)</i>
+    <i>INDEX idx_fermeture_date ON (date_fermeture)</i>
+}
+
+class "client" as client << (T,#27AE60) TABLE >> {
+    <b>PK</b> id : SERIAL
+    --
+    nom : VARCHAR(255) NOT NULL
+    telephone : VARCHAR(20) NOT NULL
+    email : VARCHAR(255)
+    preferences : JSONB
+    consentement_rgpd : BOOLEAN NOT NULL DEFAULT FALSE
+    date_consentement : TIMESTAMPTZ
+    taux_noshow : NUMERIC(3,2) CHECK (>= 0 AND <= 1)
+    created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    --
+    <i>UNIQUE (telephone)</i>
+    <i>INDEX idx_client_telephone ON (telephone)</i>
+    <i>INDEX idx_client_nom ON (nom)</i>
+    <i>INDEX idx_client_preferences ON preferences USING GIN</i>
+}
+
+class "reservation" as reservation << (T,#E74C3C) TABLE >> {
+    <b>PK</b> id : SERIAL
+    --
+    <b>FK</b> client_id : INTEGER NOT NULL REFERENCES client(id)
+    <b>FK</b> restaurant_id : INTEGER NOT NULL REFERENCES restaurant(id)
+    <b>FK</b> table_id : INTEGER REFERENCES "table"(id) ON DELETE SET NULL
+    date_reservation : DATE NOT NULL
+    heure_reservation : TIME NOT NULL
+    nombre_personnes : INTEGER NOT NULL CHECK (> 0)
+    statut : VARCHAR(20) NOT NULL DEFAULT 'confirmee' CHECK (IN ('confirmee','annulee','noshow','terminee'))
+    demandes_speciales : TEXT
+    created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at : TIMESTAMPTZ
+    --
+    <i>INDEX idx_resa_client ON (client_id)</i>
+    <i>INDEX idx_resa_restaurant ON (restaurant_id)</i>
+    <i>INDEX idx_resa_table ON (table_id)</i>
+    <i>INDEX idx_resa_date ON (date_reservation)</i>
+    <i>INDEX idx_resa_statut ON (statut)</i>
+    <i>INDEX idx_resa_date_statut ON (date_reservation, statut)</i>
+}
+
+class "conversation_ia" as conversation << (T,#F39C12) TABLE >> {
+    <b>PK</b> id : SERIAL
+    --
+    <b>FK</b> client_id : INTEGER REFERENCES client(id) ON DELETE SET NULL
+    <b>FK</b> reservation_id : INTEGER REFERENCES reservation(id) ON DELETE SET NULL
+    telephone_appelant : VARCHAR(20) NOT NULL
+    canal : VARCHAR(20) NOT NULL CHECK (IN ('whatsapp','widget','sms'))
+    date_debut : TIMESTAMPTZ NOT NULL
+    date_fin : TIMESTAMPTZ
+    transcription : TEXT
+    donnees_collectees : JSONB
+    statut : VARCHAR(20) NOT NULL DEFAULT 'incomplete' CHECK (IN ('complete','incomplete','erreur'))
+    created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    --
+    <i>INDEX idx_conv_client ON (client_id)</i>
+    <i>INDEX idx_conv_reservation ON (reservation_id)</i>
+    <i>INDEX idx_conv_canal ON (canal)</i>
+    <i>INDEX idx_conv_date ON (date_debut)</i>
+}
+
+class "notification_sms" as notification << (T,#F39C12) TABLE >> {
+    <b>PK</b> id : SERIAL
+    --
+    <b>FK</b> reservation_id : INTEGER NOT NULL REFERENCES reservation(id) ON DELETE CASCADE
+    telephone_destinataire : VARCHAR(20) NOT NULL
+    message : TEXT NOT NULL
+    type : VARCHAR(20) NOT NULL CHECK (IN ('confirmation','rappel','annulation','proposition'))
+    statut_envoi : VARCHAR(20) NOT NULL DEFAULT 'en_attente' CHECK (IN ('en_attente','envoye','echec'))
+    date_envoi : TIMESTAMPTZ
+    id_externe_twilio : VARCHAR(50)
+    created_at : TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    --
+    <i>UNIQUE (id_externe_twilio) WHERE id_externe_twilio IS NOT NULL</i>
+    <i>INDEX idx_notif_reservation ON (reservation_id)</i>
+    <i>INDEX idx_notif_statut ON (statut_envoi)</i>
+    <i>INDEX idx_notif_type ON (type)</i>
+}
+
+' ─────────────────────────────────────────────
+' RELATIONS PHYSIQUES
+' ─────────────────────────────────────────────
+
+restaurant "1" -- "0..*" user : restaurant_id
+restaurant "1" -- "1..*" table_rest : restaurant_id [CASCADE]
+restaurant "1" -- "1..*" service : restaurant_id [CASCADE]
+restaurant "1" -- "0..*" fermeture : restaurant_id [CASCADE]
+restaurant "1" -- "1..*" reservation : restaurant_id
+
+client "1" -- "0..*" reservation : client_id
+table_rest "0..1" -- "0..*" reservation : table_id [SET NULL]
+
+reservation "1" -- "0..*" notification : reservation_id [CASCADE]
+client "0..1" -- "0..*" conversation : client_id [SET NULL]
+conversation "0..1" -- "0..1" reservation : reservation_id [SET NULL]
+
+' ─────────────────────────────────────────────
+' LÉGENDE
+' ─────────────────────────────────────────────
+
+legend bottom
+  **Spécificités PostgreSQL 15 utilisées :**
+  |= Feature |= Usage |
+  | SERIAL | Auto-incrémentation des PK |
+  | TIMESTAMPTZ | Timestamps avec timezone (fuseau horaire) |
+  | JSONB | Données semi-structurées indexables (preferences, roles, jours_ouverture) |
+  | GIN Index | Index inversé sur champs JSONB (recherche dans preferences) |
+  | CHECK | Contraintes de domaine (statut, type, bornes numériques) |
+  | ON DELETE CASCADE | Suppression en cascade (tables, services, fermetures, notifications) |
+  | ON DELETE SET NULL | Préservation des données liées (réservation si table supprimée) |
+  | Partial UNIQUE | UNIQUE conditionnel sur id_externe_twilio (WHERE NOT NULL) |
+  ---
+  <b>Couleurs</b> :
+  <color:#1A5276>█</color> Tables de configuration (Restaurant, User, Table, Service, Fermeture)
+  <color:#27AE60>█</color> Table métier client
+  <color:#E74C3C>█</color> Table métier centrale (Reservation)
+  <color:#F39C12>█</color> Tables de traçabilité (Conversation, Notification)
+endlegend
+
+@enduml

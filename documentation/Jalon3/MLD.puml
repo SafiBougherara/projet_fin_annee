@@ -1,0 +1,170 @@
+@startuml MLD_CALENDRIA
+title **CALENDRIA – Modèle Logique de Données (MLD)**\nTransformation MCD → Modèle Relationnel
+
+skinparam backgroundColor #FEFEFE
+skinparam defaultFontName Inter
+skinparam roundCorner 8
+skinparam classFontSize 12
+skinparam classAttributeFontSize 11
+
+skinparam class {
+    BackgroundColor #FAFBFC
+    BorderColor #2E86C1
+    HeaderBackgroundColor #2E86C1
+    HeaderFontColor White
+    FontColor #2C3E50
+    StereotypeFontColor White
+}
+
+' ─────────────────────────────────────────────
+' TABLES RELATIONNELLES
+' ─────────────────────────────────────────────
+
+class "restaurant" as restaurant {
+    <b>PK</b> id : INT AUTO_INCREMENT
+    --
+    nom : VARCHAR(255) NOT NULL
+    adresse : TEXT NOT NULL
+    telephone : VARCHAR(20) NOT NULL
+    email : VARCHAR(255) NOT NULL
+    capacite_totale : INT NOT NULL
+    duree_repas : INT NOT NULL
+    buffer_nettoyage : INT NOT NULL
+    created_at : DATETIME NOT NULL
+}
+
+class "user" as user {
+    <b>PK</b> id : INT AUTO_INCREMENT
+    --
+    <b>FK</b> restaurant_id : INT → restaurant(id)
+    email : VARCHAR(180) NOT NULL <<UNIQUE>>
+    roles : JSON NOT NULL
+    password : VARCHAR(255) NOT NULL
+}
+
+class "table_restaurant" as table_rest {
+    <b>PK</b> id : INT AUTO_INCREMENT
+    --
+    <b>FK</b> restaurant_id : INT NOT NULL → restaurant(id)
+    numero_table : VARCHAR(10) NOT NULL
+    capacite : INT NOT NULL
+    type : VARCHAR(50) NOT NULL
+    statut : VARCHAR(20) NOT NULL
+    created_at : DATETIME NOT NULL
+}
+
+class "service" as service {
+    <b>PK</b> id : INT AUTO_INCREMENT
+    --
+    <b>FK</b> restaurant_id : INT NOT NULL → restaurant(id)
+    type : VARCHAR(20) NOT NULL
+    heure_debut : TIME NOT NULL
+    heure_fin : TIME NOT NULL
+    jours_ouverture : JSON NOT NULL
+    created_at : DATETIME NOT NULL
+}
+
+class "fermeture_exceptionnelle" as fermeture {
+    <b>PK</b> id : INT AUTO_INCREMENT
+    --
+    <b>FK</b> restaurant_id : INT NOT NULL → restaurant(id)
+    date_fermeture : DATE NOT NULL
+    motif : VARCHAR(255)
+    created_at : DATETIME NOT NULL
+}
+
+class "client" as client {
+    <b>PK</b> id : INT AUTO_INCREMENT
+    --
+    nom : VARCHAR(255) NOT NULL
+    telephone : VARCHAR(20) NOT NULL <<UNIQUE>>
+    email : VARCHAR(255)
+    preferences : JSON
+    consentement_rgpd : BOOLEAN NOT NULL
+    date_consentement : DATETIME
+    taux_noshow : DECIMAL(3,2)
+    created_at : DATETIME NOT NULL
+}
+
+class "reservation" as reservation {
+    <b>PK</b> id : INT AUTO_INCREMENT
+    --
+    <b>FK</b> client_id : INT NOT NULL → client(id)
+    <b>FK</b> restaurant_id : INT NOT NULL → restaurant(id)
+    <b>FK</b> table_id : INT → table_restaurant(id)
+    date_reservation : DATE NOT NULL
+    heure_reservation : TIME NOT NULL
+    nombre_personnes : INT NOT NULL
+    statut : VARCHAR(20) NOT NULL
+    demandes_speciales : TEXT
+    created_at : DATETIME NOT NULL
+    updated_at : DATETIME
+}
+
+class "conversation_ia" as conversation {
+    <b>PK</b> id : INT AUTO_INCREMENT
+    --
+    <b>FK</b> client_id : INT → client(id)
+    <b>FK</b> reservation_id : INT → reservation(id)
+    telephone_appelant : VARCHAR(20) NOT NULL
+    canal : VARCHAR(20) NOT NULL
+    date_debut : DATETIME NOT NULL
+    date_fin : DATETIME
+    transcription : TEXT
+    donnees_collectees : JSON
+    statut : VARCHAR(20) NOT NULL
+    created_at : DATETIME NOT NULL
+}
+
+class "notification_sms" as notification {
+    <b>PK</b> id : INT AUTO_INCREMENT
+    --
+    <b>FK</b> reservation_id : INT NOT NULL → reservation(id)
+    telephone_destinataire : VARCHAR(20) NOT NULL
+    message : TEXT NOT NULL
+    type : VARCHAR(20) NOT NULL
+    statut_envoi : VARCHAR(20) NOT NULL
+    date_envoi : DATETIME
+    id_externe_twilio : VARCHAR(50) <<UNIQUE>>
+    created_at : DATETIME NOT NULL
+}
+
+' ─────────────────────────────────────────────
+' RELATIONS (CLÉS ÉTRANGÈRES)
+' ─────────────────────────────────────────────
+
+restaurant "1" -- "0..*" user : restaurant_id
+restaurant "1" -- "1..*" table_rest : restaurant_id
+restaurant "1" -- "1..*" service : restaurant_id
+restaurant "1" -- "0..*" fermeture : restaurant_id
+restaurant "1" -- "1..*" reservation : restaurant_id
+
+client "1" -- "0..*" reservation : client_id
+table_rest "0..1" -- "0..*" reservation : table_id
+
+reservation "1" -- "0..*" notification : reservation_id
+client "0..1" -- "0..*" conversation : client_id
+conversation "0..1" -- "0..1" reservation : reservation_id
+
+' ─────────────────────────────────────────────
+' LÉGENDE
+' ─────────────────────────────────────────────
+
+legend bottom
+  **Règles de transformation MCD → MLD appliquées :**
+  |= Règle |= Application |
+  | Association 1:N | La clé primaire du côté "1" migre en FK vers le côté "N" |
+  | Association 0,1:0,1 | FK nullable placée côté le moins fréquent |
+  | Contrainte UNIQUE | Appliquée sur : user.email, client.telephone, notification.id_externe_twilio |
+  | JSON | Utilisé pour données semi-structurées : roles, jours_ouverture, preferences, donnees_collectees |
+endlegend
+
+note top of reservation
+  **Table pivot** du système
+  3 clés étrangères :
+  client_id (obligatoire)
+  restaurant_id (obligatoire)
+  table_id (nullable → attribution différée)
+end note
+
+@enduml

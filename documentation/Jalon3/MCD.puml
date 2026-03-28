@@ -1,0 +1,198 @@
+@startuml MCD_CALENDRIA
+title **CALENDRIA – Modèle Conceptuel de Données (MCD)**\nDémarche MERISE – Diagramme Entité-Association
+
+skinparam backgroundColor #FEFEFE
+skinparam defaultFontName Inter
+skinparam roundCorner 12
+skinparam classFontSize 13
+skinparam classAttributeFontSize 11
+
+' ─────────────────────────────────────────────
+' STYLE – Police BLANCHE sur fonds sombres
+' ─────────────────────────────────────────────
+skinparam entity {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    FontColor #2C3E50
+}
+
+skinparam class {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    HeaderBackgroundColor #2E86C1
+    HeaderFontColor White
+    FontColor #2C3E50
+    StereotypeFontColor White
+}
+
+' ─────────────────────────────────────────────
+' ENTITÉS
+' ─────────────────────────────────────────────
+
+class "RESTAURANT" as restaurant << (E,#2E86C1) >> {
+    * <color:White>**id_restaurant** : identifiant</color>
+    --
+    nom
+    adresse
+    telephone
+    email
+    capacite_totale
+    duree_repas
+    buffer_nettoyage
+    created_at
+}
+
+class "USER" as user << (E,#2E86C1) >> {
+    * <color:White>**id_user** : identifiant</color>
+    --
+    email
+    roles
+    password
+}
+
+class "TABLE_RESTAURANT" as table_rest << (E,#2E86C1) >> {
+    * <color:White>**id_table** : identifiant</color>
+    --
+    numero_table
+    capacite
+    type
+    statut
+    created_at
+}
+
+class "SERVICE" as service << (E,#2E86C1) >> {
+    * <color:White>**id_service** : identifiant</color>
+    --
+    type
+    heure_debut
+    heure_fin
+    jours_ouverture
+    created_at
+}
+
+class "FERMETURE\nEXCEPTIONNELLE" as fermeture << (E,#2E86C1) >> {
+    * <color:White>**id_fermeture** : identifiant</color>
+    --
+    date_fermeture
+    motif
+    created_at
+}
+
+class "CLIENT" as client << (E,#27AE60) >> {
+    * <color:White>**id_client** : identifiant</color>
+    --
+    nom
+    telephone
+    email
+    preferences
+    consentement_rgpd
+    date_consentement
+    taux_noshow
+    created_at
+}
+
+class "RESERVATION" as reservation << (E,#E74C3C) >> {
+    * <color:White>**id_reservation** : identifiant</color>
+    --
+    date_reservation
+    heure_reservation
+    nombre_personnes
+    statut
+    demandes_speciales
+    created_at
+    updated_at
+}
+
+class "CONVERSATION_IA" as conversation << (E,#F39C12) >> {
+    * <color:White>**id_conversation** : identifiant</color>
+    --
+    telephone_appelant
+    canal
+    date_debut
+    date_fin
+    transcription
+    donnees_collectees
+    statut
+    created_at
+}
+
+class "NOTIFICATION_SMS" as notification << (E,#F39C12) >> {
+    * <color:White>**id_notification** : identifiant</color>
+    --
+    telephone_destinataire
+    message
+    type
+    statut_envoi
+    date_envoi
+    id_externe_twilio
+    created_at
+}
+
+' ─────────────────────────────────────────────
+' ASSOCIATIONS AVEC CARDINALITÉS MERISE
+' ─────────────────────────────────────────────
+
+' Restaurant possède des tables
+restaurant ||--|{ table_rest : "POSSEDER\n1,1 ── 1,N"
+
+' Restaurant définit des services
+restaurant ||--|{ service : "DEFINIR\n1,1 ── 1,N"
+
+' Restaurant a des fermetures exceptionnelles
+restaurant ||--o{ fermeture : "PLANIFIER\n1,1 ── 0,N"
+
+' Restaurant emploie des utilisateurs du dashboard
+restaurant ||--o{ user : "EMPLOYER\n0,1 ── 0,N"
+
+' Restaurant reçoit des réservations
+restaurant ||--|{ reservation : "RECEVOIR\n1,1 ── 1,N"
+
+' Client effectue des réservations
+client ||--o{ reservation : "EFFECTUER\n1,1 ── 0,N"
+
+' Table est attribuée à des réservations (optionnel)
+table_rest ||--o{ reservation : "ATTRIBUER\n0,1 ── 0,N"
+
+' Réservation génère des notifications SMS
+reservation ||--o{ notification : "GENERER\n1,1 ── 0,N"
+
+' Client participe à des conversations IA
+client |o--o{ conversation : "PARTICIPER\n0,1 ── 0,N"
+
+' Conversation IA peut aboutir à une réservation
+conversation |o--o| reservation : "ABOUTIR\n0,1 ── 0,1"
+
+' ─────────────────────────────────────────────
+' LÉGENDE
+' ─────────────────────────────────────────────
+
+legend bottom
+  |= Notation |= Signification |
+  | **PK** (*) | Clé primaire / identifiant |
+  | 1,1 | Exactement un (obligatoire) |
+  | 0,1 | Zéro ou un (optionnel) |
+  | 1,N | Un ou plusieurs (obligatoire) |
+  | 0,N | Zéro ou plusieurs (optionnel) |
+  | ── | Association entre entités |
+  ---
+  <color:#2E86C1>█</color> Configuration   <color:#27AE60>█</color> Client   <color:#E74C3C>█</color> Réservation   <color:#F39C12>█</color> Traçabilité
+endlegend
+
+note bottom of reservation
+  Entité **centrale** du système.
+  Toutes les conversations, notifications
+  et attributions de tables s'y rattachent.
+end note
+
+note bottom of client
+  Identifié par son **téléphone** (unique).
+  Pas de mot de passe – seuls les Users
+  s'authentifient sur le dashboard.
+end note
+
+note right of conversation
+  Couvre les 3 canaux :
+  WhatsApp, Widget Web, SMS
+end note
+
+@enduml
