@@ -1,0 +1,118 @@
+@startuml SEQ_Gestion_Reservation
+title CALENDRIA - Diagramme de Sequence\nUC8 & UC9 : Gestion des reservations (Dashboard)
+
+skinparam backgroundColor #FEFEFE
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam roundCorner 6
+skinparam sequenceMessageFontSize 11
+skinparam sequenceParticipantFontSize 12
+
+skinparam participant {
+    BackgroundColor #FAFBFC
+    BorderColor #2E86C1
+    FontColor #2C3E50
+}
+
+skinparam sequence {
+    ArrowColor #2E86C1
+    LifeLineBorderColor #2E86C1
+    LifeLineBackgroundColor #EBF5FB
+    GroupBorderColor #E67E22
+    GroupHeaderFontColor #E67E22
+}
+
+' ─────────────────────────────────────────────
+' PARTICIPANTS
+' ─────────────────────────────────────────────
+
+actor "Restaurateur" as rest #D6EAF8
+participant "React Dashboard" as view #FDEBD0
+participant "Axios Interceptor" as axios #FDEBD0
+participant "API Platform (Symfony)" as api #D5F5E3
+participant "ReservationService" as service #D5F5E3
+participant "NotificationService" as notif #D5F5E3
+database "PostgreSQL" as db #D5F5E3
+
+' ─────────────────────────────────────────────
+' FLUX 1 : AFFICHAGE DU DASHBOARD
+' ─────────────────────────────────────────────
+
+== Phase 1 : Chargement des Donnees ==
+
+rest -> view : Accede au Dashboard
+activate view
+
+view -> axios : GET /api/reservations?date=today
+activate axios
+
+axios -> axios : Injecter JWT Header\n(Authorization: Bearer <token>)
+
+axios -> api : Requete HTTP GET
+activate api
+
+api -> api : JWT Validator (Check Signature)
+api -> db : SELECT * FROM reservation\nJOIN client ON ...\nWHERE date = today
+activate db
+db --> api : Liste des reservations (JSON)
+deactivate db
+
+api --> axios : 200 OK
+deactivate api
+
+axios --> view : Data Collection
+deactivate axios
+
+view --> rest : Affiche la liste + Plan de salle dynamique
+
+' ─────────────────────────────────────────────
+' FLUX 2 : ACTION SUR UNE RÉSERVATION
+' ─────────────────────────────────────────────
+
+== Phase 2 : Action "No-Show" et Libération ==
+
+rest -> view : Clique sur "Marquer No-Show"\n(Resa ID: 42)
+
+view -> axios : PATCH /api/reservations/42\n{ "statut": "noshow" }
+activate axios
+
+axios -> api : Requete HTTP PATCH
+activate api
+
+api -> service : handleNoShow(42)
+activate service
+
+service -> db : UPDATE reservation SET statut = 'noshow'
+service -> db : UPDATE table SET statut = 'disponible'
+service -> db : UPDATE client SET taux_noshow = recalculated
+
+service -> notif : sendStatusUpdate(clientId, 'noshow')
+activate notif
+notif -> notif : Appel externe Twilio API
+notif --> service : SMS Envoyé
+deactivate notif
+
+service --> api : Success
+deactivate service
+
+api --> axios : 200 OK (Updated Object)
+deactivate api
+
+axios --> view : UI Update Event
+deactivate axios
+
+view --> rest : La table est liberee et l'UI rafraichie
+deactivate view
+
+' ─────────────────────────────────────────────
+' LEGENDE
+' ─────────────────────────────────────────────
+
+legend bottom
+  **Conceptscles :**
+  1. Le token JWT est injecte par l'intercepteur a chaque requete.
+  2. L'API est protegee (Stateless) : le serveur verifie le token avant d'acceder aux DB.
+  3. Le changement de statut declenche des effets de bord complexes (SMS + MAJ BDD).
+endlegend
+
+@enduml

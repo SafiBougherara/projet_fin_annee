@@ -1,0 +1,107 @@
+@startuml SEQ_Reservation_Chatbot
+title CALENDRIA - Diagramme de Sequence\nUC2 : Reservation via Chatbot IA
+
+skinparam backgroundColor #FEFEFE
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 6
+skinparam sequenceMessageFontSize 10
+skinparam sequenceParticipantFontSize 11
+
+skinparam participant {
+    BackgroundColor #FAFBFC
+    BorderColor #2E86C1
+    FontColor #2C3E50
+}
+
+skinparam sequence {
+    ArrowColor #2E86C1
+    LifeLineBorderColor #2E86C1
+    LifeLineBackgroundColor #EBF5FB
+    GroupBorderColor #E67E22
+    GroupHeaderFontColor #E67E22
+}
+
+' ─────────────────────────────────────────────
+' PARTICIPANTS
+' ─────────────────────────────────────────────
+
+actor "Client" as client #D5F5E3
+participant "Channel (WhatsApp/Web)" as canal #FDEBD0
+participant "ChatbotController" as controller #D6EAF8
+participant "ChatbotService" as chatbot_svc #D6EAF8
+participant "OpenAI API" as openai #F2D7D5
+participant "DisponibiliteService" as dispo_svc #D6EAF8
+participant "ReservationService" as resa_svc #D6EAF8
+participant "NotificationService" as notif_svc #D6EAF8
+participant "Twilio / Meta" as provider #F2D7D5
+database "PostgreSQL" as db #D5F5E3
+
+' ─────────────────────────────────────────────
+' FLUX
+' ─────────────────────────────────────────────
+
+== Phase 1 : Collecte Dynamique (NLP) ==
+
+client -> canal : "Je veux une table pour 4 demain"
+activate canal
+
+canal -> controller : POST /api/chatbot/message
+activate controller
+
+controller -> chatbot_svc : traiterMessage(msg, tel)
+activate chatbot_svc
+
+chatbot_svc -> openai : analyzeIntention(message)
+activate openai
+openai --> chatbot_svc : { "intent": "reservation", "data": {...} }
+deactivate openai
+
+chatbot_svc -> db : saveConversationState(data)
+
+loop Tant que infos manquantes
+    chatbot_svc --> controller : askNextQuestion()
+    controller --> canal : "A quelle heure ?"
+    canal --> client : Question chatbot
+    client -> canal : "20h"
+    canal -> controller : ...
+end
+
+== Phase 2 : Verification & Persistence ==
+
+chatbot_svc -> dispo_svc : checkAvailability(restId, date, time, nb)
+activate dispo_svc
+
+dispo_svc -> db : queryCapacity(date, time)
+db --> dispo_svc : tables available
+deactivate dispo_svc
+
+alt Dispo OK
+    chatbot_svc -> resa_svc : confirmReservation(clientData)
+    activate resa_svc
+    resa_svc -> db : INSERT Reservation (statut=confirmee)
+    resa_svc --> chatbot_svc : reservation_id
+    deactivate resa_svc
+    
+    chatbot_svc -> notif_svc : notifySuccess(reservation_id)
+    activate notif_svc
+    notif_svc -> provider : Send SMS Confirmation
+    notif_svc --> chatbot_svc : Sent
+    deactivate notif_svc
+    
+    chatbot_svc --> controller : Response Success
+    controller --> canal : "C'est reserve ! ✅"
+    canal --> client : Confirmation
+    
+else Complet
+    chatbot_svc -> dispo_svc : getSuggestions()
+    chatbot_svc --> controller : Proposer alternatives
+    controller --> canal : "Complet à 20h, dispos à 21h ?"
+    canal --> client : Alternatives
+end
+
+deactivate chatbot_svc
+deactivate controller
+deactivate canal
+
+@enduml

@@ -1,0 +1,97 @@
+@startuml SEQ_Authentification
+title CALENDRIA - Diagramme de Sequence\nUC6 : Authentification du Restaurateur (JWT)
+
+skinparam backgroundColor #FEFEFE
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam roundCorner 6
+skinparam sequenceMessageFontSize 11
+skinparam sequenceParticipantFontSize 12
+
+skinparam participant {
+    BackgroundColor #FAFBFC
+    BorderColor #2E86C1
+    FontColor #2C3E50
+}
+
+skinparam sequence {
+    ArrowColor #2E86C1
+    LifeLineBorderColor #2E86C1
+    LifeLineBackgroundColor #EBF5FB
+    GroupBorderColor #E67E22
+    GroupHeaderFontColor #E67E22
+}
+
+' ─────────────────────────────────────────────
+' PARTICIPANTS
+' ─────────────────────────────────────────────
+
+actor "Restaurateur" as user #D6EAF8
+participant "React Frontend" as react #FDEBD0
+participant "Axios Client" as axios #FDEBD0
+participant "Symfony Security" as sec #D5F5E3
+participant "LexikJWT Bundle" as jwt #D5F5E3
+database "PostgreSQL" as db #D5F5E3
+
+' ─────────────────────────────────────────────
+' FLUX : SOUMISSION DU FORMULAIRE
+' ─────────────────────────────────────────────
+
+user -> react : Saisit email + password\nClique sur "Se connecter"
+activate react
+
+react -> axios : post('/api/login', {email, password})
+activate axios
+
+axios -> sec : HTTP POST /api/login\n(Payload JSON)
+activate sec
+
+' ─────────────────────────────────────────────
+' FLUX : VERIFICATION DES IDENTIFIANTS
+' ─────────────────────────────────────────────
+
+sec -> db : findUserByEmail(email)
+activate db
+db --> sec : user object
+deactivate db
+
+alt user exists
+    sec -> sec : password_verify(password, hash)
+    
+    alt password OK
+        sec -> jwt : createToken(user)
+        activate jwt
+        jwt --> sec : JWT String
+        deactivate jwt
+        
+        sec --> axios : 200 OK\n{ "token": "ey..." }
+        
+        axios -> react : Response(token)
+        
+        react -> react : storage.save('jwt', token)
+        react -> user : Redirection /dashboard
+        
+    else password invalid
+        sec --> axios : 401 Unauthorized
+        axios -> react : Error 401
+        react -> user : "Identifiants invalides"
+    end
+    
+else user not found
+    sec --> axios : 401 Unauthorized
+    deactivate sec
+    axios -> react : Error 401
+    deactivate axios
+    react -> user : "Identifiants invalides"
+    deactivate react
+end
+
+' ─────────────────────────────────────────────
+' NOTES
+' ─────────────────────────────────────────────
+
+note over sec : L'endpoint /api/login est\ngere par Symfony Security\n(config stateless json_login)
+
+note over jwt : Le token signe contient\nl'email, les roles et\nla date d'expiration.
+
+@enduml

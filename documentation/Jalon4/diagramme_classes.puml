@@ -1,0 +1,227 @@
+@startuml Class_Diagram
+title **CALENDRIA – Diagramme de Classes (UML Focus Back-end)**\nArchitecture par packages (MVC / Doctrine)
+
+skinparam backgroundColor #FEFEFE
+skinparam roundCorner 8
+skinparam classFontSize 12
+skinparam packageFontSize 14
+
+' Couleurs pour lisibilité
+skinparam class {
+    BackgroundColor #FAFBFC
+    BorderColor #2E86C1
+    HeaderBackgroundColor #2E86C1
+    HeaderFontColor White
+    FontColor #2C3E50
+    StereotypeFontColor White
+}
+
+skinparam package {
+    BackgroundColor #F8F9F9
+    BorderColor #1A5276
+}
+
+' ─────────────────────────────────────────────
+' PACKAGE ENTITIES (Modèle ORM)
+' ─────────────────────────────────────────────
+package "src/Entity" {
+    
+    class Restaurant {
+        - id: int
+        - nom: string
+        - adresse: string
+        - telephone: string
+        - email: string
+        - capaciteTotale: int
+        - dureeRepas: int
+        - bufferNettoyage: int
+        --
+        + addTable()
+        + addService()
+        + getTables()
+    }
+
+    class User {
+        - id: int
+        - email: string
+        - roles: array
+        - password: string
+        --
+        + getRoles()
+        + eraseCredentials()
+    }
+
+    class TableRestaurant {
+        - id: int
+        - numeroTable: int
+        - capacite: int
+        - type: string
+        - statut: string
+        --
+        + getStatut()
+        + setStatut()
+    }
+
+    class Service {
+        - id: int
+        - type: string
+        - heureDebut: datetime
+        - heureFin: datetime
+        - joursOuverture: array
+    }
+
+    class FermetureExceptionnelle {
+        - id: int
+        - dateFermeture: date
+        - motif: string
+    }
+
+    class Client {
+        - id: int
+        - nom: string
+        - telephone: string
+        - email: string
+        - preferences: array
+        - consentementRgpd: bool
+        - tauxNoshow: float
+        --
+        + recalculerNoshow()
+    }
+
+    class Reservation {
+        - id: int
+        - dateReservation: date
+        - heureReservation: time
+        - nombrePersonnes: int
+        - statut: string
+        - demandesSpeciales: text
+        --
+        + getStatut()
+        + setStatut()
+    }
+
+    class ConversationIA {
+        - id: int
+        - telephoneAppelant: string
+        - canal: string
+        - dateDebut: datetime
+        - transcription: text
+        - donneesCollectees: json
+        - statut: string
+    }
+
+    class NotificationSMS {
+        - id: int
+        - telephoneDestinataire: string
+        - message: text
+        - type: string
+        - statutEnvoi: string
+        - dateEnvoi: datetime
+        - idExterneTwilio: string
+    }
+
+    ' Relations ORM
+    Restaurant "1" *-- "0..*" TableRestaurant
+    Restaurant "1" *-- "0..*" Service
+    Restaurant "1" *-- "0..*" FermetureExceptionnelle
+    Restaurant "1" *-- "0..*" User
+    Restaurant "1" -- "0..*" Reservation
+    Client "1" -- "0..*" Reservation
+    Client "1" -- "0..*" ConversationIA
+    Reservation "1" -- "0..*" NotificationSMS
+    Reservation "0..1" -- "0..1" ConversationIA
+    TableRestaurant "0..1" -- "0..*" Reservation
+}
+
+' ─────────────────────────────────────────────
+' PACKAGE REPOSITORIES (Accès Données)
+' ─────────────────────────────────────────────
+package "src/Repository" {
+    class RestaurantRepository <<Repository>> {
+        + findActif()
+    }
+    class ReservationRepository <<Repository>> {
+        + findByDate(date)
+        + findConflits(date, heure, table)
+    }
+    class ClientRepository <<Repository>> {
+        + findByTelephone(tel)
+    }
+    class "..." as autresRep <<Repository>> {
+        + (Autres Repositories)
+    }
+
+    ReservationRepository .up.> Reservation : manipule >
+    RestaurantRepository .up.> Restaurant : manipule >
+    ClientRepository .up.> Client : manipule >
+}
+
+' ─────────────────────────────────────────────
+' PACKAGE SERVICES (Logique Métier métier)
+' ─────────────────────────────────────────────
+package "src/Service" {
+    
+    class ChatbotService <<Service>> {
+        - openaiClient
+        --
+        + traiterMessage(tel, canal, message)
+    }
+
+    class DisponibiliteService <<Service>> {
+        --
+        + verifierDisponibilite(rest_id, date, heure, nb)
+        + proposerAlternatives()
+    }
+
+    class ReservationService <<Service>> {
+        --
+        + creerReservation(data)
+        + changerStatut(id, nv_statut)
+    }
+
+    class NotificationService <<Service>> {
+        - twilioClient
+        --
+        + envoyerConfirmation(resa_id)
+        + envoyerRappel(resa_id)
+    }
+
+    ' Dépendances Services -> Repositories
+    ChatbotService ..> ClientRepository : utilise >
+    DisponibiliteService ..> ReservationRepository : utilise >
+    ReservationService ..> ReservationRepository : utilise >
+}
+
+' ─────────────────────────────────────────────
+' PACKAGE CONTROLLERS (API REST)
+' ─────────────────────────────────────────────
+package "src/Controller" {
+    class AuthController <<Controller>> {
+        + register()
+        + login()
+    }
+
+    class ChatbotController <<Controller>> {
+        + webhookWhatsApp()
+        + apiWidget()
+    }
+
+    class ApiPlatformControllers <<API>> {
+        + (Générés par API Platform)
+    }
+
+    ' Dépendances Controllers -> Services
+    ChatbotController ..> ChatbotService : injecte >
+    ApiPlatformControllers ..> ReservationService : events >
+}
+
+' LÉGENDE
+legend bottom
+  **Architecture Multi-Couches :**
+  **Controllers** : Expose l'API REST et route les requêtes (API Platform s'en charge pour le CRUD standard).
+  **Services** : Contient toute la logique métier complexe (algorithmes de dispo, appel IA, Twilio), évitant les "Fat Controllers".
+  **Repositories** : Couche d'accès exclusive à la BDD (requêtes DQL/SQL).
+  **Entities** : POJO (Plain Old Java/PHP Object) mappés à la base de données.
+endlegend
+
+@enduml

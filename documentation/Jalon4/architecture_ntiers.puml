@@ -1,0 +1,109 @@
+@startuml Architecture_N_Tiers
+title **CALENDRIA – Architecture n-tiers & Infrastructure Docker**\nDéploiement Physique et Logique
+
+skinparam backgroundColor #FEFEFE
+skinparam roundCorner 8
+skinparam nodeFontSize 14
+skinparam componentFontSize 12
+
+skinparam node {
+    BackgroundColor #FAFBFC
+    BorderColor #2E86C1
+    HeaderBackgroundColor #2E86C1
+    HeaderFontColor White
+    FontColor #2C3E50
+}
+
+skinparam component {
+    BackgroundColor #EBF5FB
+    BorderColor #2980B9
+    FontColor #2C3E50
+}
+
+skinparam cloud {
+    BackgroundColor #FDEDEC
+    BorderColor #E74C3C
+    FontColor #C0392B
+}
+
+' ─────────────────────────────────────────────
+' VUE INFRASTRUCTURE (DOCKER)
+' ─────────────────────────────────────────────
+
+node "Tier 1 : Client Devices" as tier1_client {
+    node "Navigateur Web\n(Responsable de salle)" as nav
+    node "Smartphone\n(Client Web/WhatsApp)" as tel
+}
+
+node "Infrastructure Calendria (Serveur / Local)" as infra {
+    
+    component "Réseau Docker (calendria_network)" as docker_net <<Docker>> {
+        
+        node "Tier 2 : Frontend (Port 8000)" as tier2_front {
+            component "Conteneur React / Vite" as react {
+                [UI Dashboard]
+                [React Router]
+                [Axios Interceptor]
+            }
+        }
+        
+        node "Tier 3 : Backend (Port 9000)" as tier3_back {
+            component "Conteneur PHP / Symfony 6" as symfony {
+                [API Platform (CRUD)]
+                [Lexik JWT Security]
+                [Services Métier (Chatbot, Dispo)]
+                [Doctrine ORM]
+            }
+        }
+        
+        node "Tier 4 : Données (Port 5432)" as tier4_db {
+            database "Conteneur PostgreSQL 15" as pgsql {
+                [Schéma Calendria_DB]
+            }
+        }
+        
+        node "Utilitaires (Port 8080)" as utils {
+            component "Conteneur Adminer" as adminer
+        }
+    }
+}
+
+cloud "Services Externes (API)" as api_externes {
+    [API Twilio (SMS)] as twilio
+    [API OpenAI (IA)] as openai
+    [API Cloud API WhatsApp] as whatsapp
+}
+
+' ─────────────────────────────────────────────
+' FLUX DE COMMUNICATION
+' ─────────────────────────────────────────────
+
+nav .down.> react : HTTP GET (Assets)
+nav .down.> symfony : HTTP JSON (API protégée par JWT)
+tel .down.> symfony : HTTP JSON (Widget Chat)
+
+react -right-> symfony : Requêtes Axios REST
+symfony -down-> pgsql : TCP/IP (Driver PDO_PGSQL)
+adminer .up.> pgsql : Administration
+
+' APIs Externes
+tel .down.> whatsapp : Chat WhatsApp
+whatsapp .up.> symfony : Webhooks (POST)
+symfony .down.> twilio : Reqs HTTP (Envoi SMS)
+symfony .down.> openai : Reqs HTTP (Analyse NLP)
+
+' ─────────────────────────────────────────────
+' LÉGENDE
+' ─────────────────────────────────────────────
+
+legend bottom
+  **Conteneurisation (Docker Compose) :**
+  L'application est découpée en micro-services conteneurisés garantissant l'isomérisation 
+  (environnement dev/prod identique).
+  
+  **Séparation Front/Back :**
+  L'application est une SPA (Single Page Application) communicant exclusivement 
+  via une API REST Stateless sécurisée par JWT.
+endlegend
+
+@enduml

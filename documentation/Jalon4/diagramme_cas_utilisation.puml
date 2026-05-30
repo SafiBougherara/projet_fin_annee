@@ -1,0 +1,136 @@
+@startuml UC_CALENDRIA
+title CALENDRIA - Diagramme de Cas d'Utilisation
+
+left to right direction
+
+skinparam backgroundColor #FEFEFE
+skinparam actorFontSize 13
+skinparam usecaseFontSize 11
+skinparam packageFontSize 13
+
+skinparam usecase {
+    BackgroundColor #EBF5FB
+    BorderColor #2E86C1
+    FontColor #2C3E50
+}
+
+skinparam actor {
+    FontColor #2C3E50
+    BorderColor #2E86C1
+}
+
+skinparam package {
+    BackgroundColor #FAFBFC
+    BorderColor #2E86C1
+    FontColor #1A5276
+}
+
+' ─────────────────────────────────────────────
+' ACTEURS
+' ─────────────────────────────────────────────
+
+actor "Client" as client #D5F5E3
+actor "Restaurateur" as restaurateur #D6EAF8
+actor "Systeme IA" as systeme_ia #FDEBD0
+
+' ─────────────────────────────────────────────
+' PACKAGE : MODULE IA MULTI-CANAL
+' ─────────────────────────────────────────────
+
+package "Module IA Multi-Canal (CDCF 3.1.1)" as pkg_ia {
+    usecase "UC1 : Converser avec le chatbot IA" as UC1
+    usecase "UC2 : Creer une reservation" as UC2
+    usecase "UC3 : Recevoir confirmation SMS" as UC3
+    usecase "UC4 : Annuler une reservation" as UC4
+    usecase "UC5 : Recevoir rappel 24h" as UC5
+}
+
+' ─────────────────────────────────────────────
+' PACKAGE : DASHBOARD RESTAURATEUR
+' ─────────────────────────────────────────────
+
+package "Dashboard Restaurateur (CDCF 3.1.3)" as pkg_dashboard {
+    usecase "UC6 : S'authentifier (JWT)" as UC6
+    usecase "UC7 : Consulter le dashboard" as UC7
+    usecase "UC8 : Gerer les reservations" as UC8
+    usecase "UC9 : Gerer le plan de salle" as UC9
+    usecase "UC10 : Configurer services et horaires" as UC10
+    usecase "UC11 : Gerer les clients" as UC11
+    usecase "UC12 : Consulter les statistiques" as UC12
+    usecase "UC13 : Parametrer le restaurant" as UC13
+}
+
+' ─────────────────────────────────────────────
+' PACKAGE : TRAITEMENT AUTOMATIQUE
+' ─────────────────────────────────────────────
+
+package "Traitement Automatique (CDCF 3.1.2 & 3.1.4)" as pkg_auto {
+    usecase "UC14 : Attribuer une table automatiquement" as UC14
+    usecase "UC15 : Envoyer notifications SMS" as UC15
+}
+
+' ─────────────────────────────────────────────
+' RELATIONS : ACTEUR -> USE CASE
+' ─────────────────────────────────────────────
+
+' Client initie
+client --> UC1
+client --> UC2
+client --> UC4
+
+' Restaurateur initie
+restaurateur --> UC6
+restaurateur --> UC7
+restaurateur --> UC8
+restaurateur --> UC9
+restaurateur --> UC10
+restaurateur --> UC11
+restaurateur --> UC12
+restaurateur --> UC13
+
+' Systeme IA : participe et gere les automatismes
+systeme_ia --> UC1
+systeme_ia --> UC3
+systeme_ia --> UC5
+systeme_ia --> UC14
+systeme_ia --> UC15
+
+' ─────────────────────────────────────────────
+' RELATIONS INCLUDE / EXTEND
+' ─────────────────────────────────────────────
+
+' Converser peut aboutir a une reservation (resultat possible)
+UC1 ..> UC2 : <<extend>>
+
+' Creer une reservation inclut toujours l'attribution de table
+UC2 ..> UC14 : <<include>>
+
+' Creer une reservation inclut toujours la confirmation SMS
+UC2 ..> UC3 : <<include>>
+
+' Consulter le dashboard necessite d'etre authentifie
+UC7 ..> UC6 : <<include>>
+
+' Gerer les reservations peut declencher une notification
+UC8 ..> UC15 : <<extend>>
+
+' Envoyer notifications inclut le rappel 24h
+UC15 ..> UC5 : <<include>>
+
+' Gerer les reservations peut afficher la fiche client
+UC8 ..> UC11 : <<extend>>
+
+' ─────────────────────────────────────────────
+' LEGENDE
+' ─────────────────────────────────────────────
+
+legend bottom
+| Acteur | Role |
+| Client | Reserve via chatbot multi-canal (WhatsApp, Widget, SMS) |
+| Restaurateur | Gere son restaurant via le dashboard web |
+| Systeme IA | Traitement automatique (chatbot, tables, notifications) |
+| <<include>> | UC source declenche OBLIGATOIREMENT le UC cible |
+| <<extend>> | UC source peut OPTIONNELLEMENT declencher le UC cible |
+endlegend
+
+@enduml
