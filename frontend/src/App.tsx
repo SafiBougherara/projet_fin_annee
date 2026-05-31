@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, Link, useLocation, useNavigate 
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import RestaurantManagement from './pages/RestaurantManagement';
+import ChatWidget from './pages/ChatWidget';
 import { authService } from './services/auth.service';
 import { Box, AppBar, Toolbar, Typography, Button, Container } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -187,6 +188,9 @@ function AppContent() {
     <Routes>
       {/* Route publique : Connexion */}
       <Route path="/login" element={<Login />} />
+
+      {/* Route publique : Widget Chat IA */}
+      <Route path="/widget" element={<ChatWidget />} />
 
       {/* Routes privées avec NavigationLayout */}
       <Route

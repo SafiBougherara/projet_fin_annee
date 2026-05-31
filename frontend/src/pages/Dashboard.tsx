@@ -32,6 +32,8 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import TelegramIcon from '@mui/icons-material/Telegram';
+import axios from 'axios';
 import '../App.css';
 
 const initialForm = {
@@ -49,6 +51,7 @@ const initialForm = {
 export default function Dashboard() {
   const [restaurants, setRestaurants] = useState<RestaurantItem[]>([]);
   const [reservations, setReservations] = useState<ReservationItem[]>([]);
+  const [telegramBotUsername, setTelegramBotUsername] = useState<string | null>(null);
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -99,6 +102,17 @@ export default function Dashboard() {
             ...prev,
             restaurantId: prev.restaurantId || String(restaurantsData[0].id),
           }));
+        }
+
+        // Charger la config Telegram
+        try {
+          const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
+          const configRes = await axios.get(`${apiUrl}/api/chatbot/config`);
+          if (configRes.data.telegramBotUsername) {
+            setTelegramBotUsername(configRes.data.telegramBotUsername);
+          }
+        } catch (e) {
+          console.error("Impossible de charger la config Telegram", e);
         }
       } catch (err) {
         setError('Impossible de charger les données.');
@@ -391,6 +405,56 @@ export default function Dashboard() {
               </Box>
             </CardContent>
           </Card>
+
+          {telegramBotUsername && telegramBotUsername !== 'your_telegram_bot_username_here' && (
+            <Card sx={{ boxShadow: 3, mt: 3, background: 'linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%)', border: '1px solid rgba(79, 70, 229, 0.1)' }}>
+              <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                <Box display="flex" justifyContent="center" alignItems="center" gap={1} mb={1}>
+                  <TelegramIcon sx={{ color: '#0088cc', fontSize: '2rem' }} />
+                  <Typography variant="h6" fontWeight="bold" sx={{ color: '#0f172a' }}>
+                    Réservation par Bot Telegram
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary" mb={2}>
+                  Scannez ce QR Code avec votre smartphone pour tester la réservation par intelligence artificielle !
+                </Typography>
+                <Box 
+                  sx={{ 
+                    display: 'inline-block', 
+                    p: 1.5, 
+                    bgcolor: 'white', 
+                    borderRadius: 3, 
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                    mb: 2
+                  }}
+                >
+                  <img 
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://t.me/${telegramBotUsername}`}
+                    alt="Telegram Bot QR Code"
+                    style={{ display: 'block', width: 140, height: 140 }}
+                  />
+                </Box>
+                <Button 
+                  href={`https://t.me/${telegramBotUsername}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  variant="contained" 
+                  fullWidth 
+                  sx={{ 
+                    bgcolor: '#0088cc', 
+                    fontWeight: 'bold',
+                    textTransform: 'none',
+                    '&:hover': { bgcolor: '#0077b5' }
+                  }}
+                >
+                  Discuter avec le Bot (@{telegramBotUsername})
+                </Button>
+                <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1.5 }}>
+                  Commandes : <strong>/start</strong> pour débuter, <strong>/reset</strong> pour réinitialiser la session.
+                </Typography>
+              </CardContent>
+            </Card>
+          )}
         </Grid>
 
         {/* Tableau des réservations */}
