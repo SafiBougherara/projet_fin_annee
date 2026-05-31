@@ -20,6 +20,8 @@ import {
   MenuItem,
   Paper,
   Select,
+  Slider,
+  Tooltip,
   type SelectChangeEvent,
   Table,
   TableBody,
@@ -33,6 +35,8 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TelegramIcon from '@mui/icons-material/Telegram';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 import axios from 'axios';
 import '../App.css';
 
@@ -53,6 +57,96 @@ export default function Dashboard() {
   const [reservations, setReservations] = useState<ReservationItem[]>([]);
   const [telegramBotUsername, setTelegramBotUsername] = useState<string | null>(null);
   const [form, setForm] = useState(initialForm);
+  
+  // States for interactive room plan (Plan de Salle)
+  const [activeRestaurantId, setActiveRestaurantId] = useState<number>(1);
+  const [mapDate, setMapDate] = useState<string>(() => {
+    return new Date().toISOString().split('T')[0];
+  });
+  const [mapTimeMinutes, setMapTimeMinutes] = useState<number>(() => {
+    const now = new Date();
+    return Math.max(660, Math.min(1410, now.getHours() * 60 + now.getMinutes()));
+  });
+
+  const mapTimeStr = useMemo(() => {
+    const hrs = Math.floor(mapTimeMinutes / 60);
+    const mins = mapTimeMinutes % 60;
+    return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
+  }, [mapTimeMinutes]);
+
+  const activeRestaurant = useMemo(() => {
+    return restaurants.find((r) => r.id === activeRestaurantId) || restaurants[0] || null;
+  }, [activeRestaurantId, restaurants]);
+
+  const getTableStatus = (tableId: number) => {
+    if (!activeRestaurant) return { status: 'free', reservation: null };
+
+    const [sliderHrs, sliderMins] = mapTimeStr.split(':').map(Number);
+    const sliderTimeSeconds = (sliderHrs * 60 + sliderMins) * 60;
+
+    const tableReservations = reservations.filter((res) => {
+      return (
+        res.restaurant.id === activeRestaurant.id &&
+        res.table?.id === tableId &&
+        res.dateReservation === mapDate &&
+        res.statut !== 'annulée' &&
+        res.statut !== 'annulee'
+      );
+    });
+
+    let isOccupied = false;
+    let isImminent = false;
+    let isReservedLater = false;
+    let activeReservation: ReservationItem | null = null;
+    let upcomingReservation: ReservationItem | null = null;
+
+    const mealDuration = activeRestaurant.dureeRepas || 90;
+    const cleaningBuffer = activeRestaurant.bufferNettoyage || 15;
+    const totalDurationSeconds = (mealDuration + cleaningBuffer) * 60;
+
+    for (const res of tableReservations) {
+      if (!res.heureReservation) continue;
+      const [resHrs, resMins] = res.heureReservation.split(':').map(Number);
+      const resStartSeconds = (resHrs * 60 + resMins) * 60;
+      const resEndSeconds = resStartSeconds + totalDurationSeconds;
+
+      if (sliderTimeSeconds >= resStartSeconds && sliderTimeSeconds < resEndSeconds) {
+        isOccupied = true;
+        activeReservation = res;
+        break;
+      }
+
+      const diffMinutes = (resStartSeconds - sliderTimeSeconds) / 60;
+      if (diffMinutes > 0 && diffMinutes <= 30) {
+        isImminent = true;
+        activeReservation = res;
+      }
+
+      if (resStartSeconds > sliderTimeSeconds) {
+        isReservedLater = true;
+        if (!upcomingReservation) {
+          upcomingReservation = res;
+        } else {
+          const [uHrs, uMins] = upcomingReservation.heureReservation.split(':').map(Number);
+          const uStartSeconds = (uHrs * 60 + uMins) * 60;
+          if (resStartSeconds < uStartSeconds) {
+            upcomingReservation = res;
+          }
+        }
+      }
+    }
+
+    if (isOccupied) {
+      return { status: 'occupied', reservation: activeReservation };
+    }
+    if (isImminent) {
+      return { status: 'imminent', reservation: activeReservation };
+    }
+    if (isReservedLater) {
+      return { status: 'reserved', reservation: upcomingReservation };
+    }
+    return { status: 'free', reservation: null };
+  };
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -102,6 +196,7 @@ export default function Dashboard() {
             ...prev,
             restaurantId: prev.restaurantId || String(restaurantsData[0].id),
           }));
+          setActiveRestaurantId(restaurantsData[0].id);
         }
 
         // Charger la config Telegram
@@ -290,6 +385,305 @@ export default function Dashboard() {
       )}
 
       <Grid container spacing={3}>
+        {/* Plan de Salle Interactif */}
+        <Grid size={{ xs: 12 }}>
+          <Card sx={{ boxShadow: 3, mb: 3 }}>
+            <CardContent>
+              <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" gap={2} mb={3} sx={{ borderBottom: '1px solid #eee', pb: 2 }}>
+                <Box display="flex" alignItems="center" gap={1}>
+                  <RestaurantIcon color="primary" />
+                  <Typography variant="h6" fontWeight="bold">
+                    Plan de Salle Interactif
+                  </Typography>
+                </Box>
+                <Box display="flex" gap={2} flexWrap="wrap">
+                  <FormControl size="small" sx={{ minWidth: 180 }}>
+                    <InputLabel id="map-restaurant-label">Restaurant</InputLabel>
+                    <Select
+                      labelId="map-restaurant-label"
+                      value={String(activeRestaurantId)}
+                      label="Restaurant"
+                      onChange={(e) => setActiveRestaurantId(Number(e.target.value))}
+                    >
+                      {restaurants.map((restaurant) => (
+                        <MenuItem key={restaurant.id} value={String(restaurant.id)}>
+                          {restaurant.nom}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+
+                  <TextField
+                    label="Date du plan"
+                    type="date"
+                    value={mapDate}
+                    onChange={(e) => setMapDate(e.target.value)}
+                    size="small"
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Box>
+              </Box>
+
+              {/* Time slider section */}
+              <Box sx={{ px: 2, mb: 4 }}>
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                  <Box display="flex" alignItems="center" gap={0.5}>
+                    <AccessTimeIcon fontSize="small" color="action" />
+                    <Typography variant="body2" fontWeight="medium" color="text.secondary">
+                      Timeline de Service
+                    </Typography>
+                  </Box>
+                  <Typography variant="h6" fontWeight="bold" color="primary.main">
+                    {mapTimeStr.replace(':', 'h')}
+                  </Typography>
+                </Box>
+                <Slider
+                  value={mapTimeMinutes}
+                  min={660} // 11:00
+                  max={1410} // 23:30
+                  step={15}
+                  marks={[
+                    { value: 660, label: '11h00' },
+                    { value: 720, label: '12h00' },
+                    { value: 780, label: '13h00' },
+                    { value: 840, label: '14h00' },
+                    { value: 900, label: '15h00' },
+                    { value: 960, label: '16h00' },
+                    { value: 1020, label: '17h00' },
+                    { value: 1080, label: '18h00' },
+                    { value: 1140, label: '19h00' },
+                    { value: 1200, label: '20h00' },
+                    { value: 1260, label: '21h00' },
+                    { value: 1320, label: '22h00' },
+                    { value: 1380, label: '23h00' },
+                    { value: 1410, label: '23h30' },
+                  ]}
+                  valueLabelDisplay="auto"
+                  valueLabelFormat={(val) => val === 1410 ? '23h30' : `${Math.floor(val / 60)}h${String(val % 60).padStart(2, '0')}`}
+                  onChange={(_, newValue) => setMapTimeMinutes(newValue as number)}
+                  sx={{
+                    color: 'primary.main',
+                    height: 6,
+                    '& .MuiSlider-thumb': {
+                      width: 18,
+                      height: 18,
+                      transition: '0.3s cubic-bezier(.47,1.64,.41,.8)',
+                      '&:before': {
+                        boxShadow: '0 2px 12px 0 rgba(0,0,0,0.4)',
+                      },
+                      '&:hover, &.Mui-focusVisible': {
+                        boxShadow: '0px 0px 0px 8px rgba(79, 70, 229, 0.16)',
+                      },
+                      '&.Mui-active': {
+                        width: 22,
+                        height: 22,
+                      },
+                    },
+                    '& .MuiSlider-markLabel': {
+                      fontSize: '0.75rem',
+                      fontWeight: 500,
+                    },
+                  }}
+                />
+              </Box>
+
+              {/* Interactive room plan grid */}
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
+                  gap: 2,
+                  mt: 4,
+                  mb: 3,
+                }}
+              >
+                {activeRestaurant?.tables && activeRestaurant.tables.length > 0 ? (
+                  activeRestaurant.tables.map((table) => {
+                    const { status, reservation } = getTableStatus(table.id);
+                    
+                    let bgColor = '';
+                    let borderColor = '';
+                    let textColor = '';
+                    let statusLabel = '';
+                    
+                    switch (status) {
+                      case 'occupied':
+                        bgColor = 'rgba(244, 63, 94, 0.08)';
+                        borderColor = '#f43f5e';
+                        textColor = '#e11d48';
+                        statusLabel = 'Occupée';
+                        break;
+                      case 'imminent':
+                        bgColor = 'rgba(245, 158, 11, 0.08)';
+                        borderColor = '#f59e0b';
+                        textColor = '#d97706';
+                        statusLabel = 'Imminent';
+                        break;
+                      case 'reserved':
+                        bgColor = 'rgba(14, 165, 233, 0.08)';
+                        borderColor = '#0ea5e9';
+                        textColor = '#0284c7';
+                        statusLabel = 'Réservée';
+                        break;
+                      default:
+                        bgColor = 'rgba(16, 185, 129, 0.08)';
+                        borderColor = '#10b981';
+                        textColor = '#059669';
+                        statusLabel = 'Libre';
+                        break;
+                    }
+                    
+                    return (
+                      <Tooltip
+                        key={table.id}
+                        title={
+                          <Box sx={{ p: 1 }}>
+                            <Typography variant="subtitle2" fontWeight="bold" sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.2)', pb: 0.5, mb: 0.5 }}>
+                              Table {table.numeroTable} ({table.capacite} pers)
+                            </Typography>
+                            {status === 'occupied' && reservation && (
+                              <>
+                                <Typography variant="body2" sx={{ color: '#fda4af', fontWeight: 'bold' }}>
+                                  🔴 Occupée (repas en cours)
+                                </Typography>
+                                <Typography variant="body2" sx={{ mt: 0.5 }}>
+                                  <strong>Client :</strong> {reservation.client.nom}
+                                </Typography>
+                                <Typography variant="body2">
+                                  <strong>Tél :</strong> {reservation.client.telephone}
+                                </Typography>
+                                <Typography variant="body2">
+                                  <strong>Couverts :</strong> {reservation.nombrePersonnes} pers.
+                                </Typography>
+                                <Typography variant="body2">
+                                  <strong>Heure :</strong> {reservation.heureReservation}
+                                </Typography>
+                                {reservation.demandesSpeciales && (
+                                  <Typography variant="caption" display="block" sx={{ fontStyle: 'italic', mt: 0.5, color: '#cbd5e1' }}>
+                                    Note: {reservation.demandesSpeciales}
+                                  </Typography>
+                                )}
+                              </>
+                            )}
+                            {status === 'imminent' && reservation && (
+                              <>
+                                <Typography variant="body2" sx={{ color: '#fcd34d', fontWeight: 'bold' }}>
+                                  🟠 Arrivée Imminente ({reservation.heureReservation})
+                                </Typography>
+                                <Typography variant="body2" sx={{ mt: 0.5 }}>
+                                  <strong>Client :</strong> {reservation.client.nom}
+                                </Typography>
+                                <Typography variant="body2">
+                                  <strong>Tél :</strong> {reservation.client.telephone}
+                                </Typography>
+                                <Typography variant="body2">
+                                  <strong>Couverts :</strong> {reservation.nombrePersonnes} pers.
+                                </Typography>
+                              </>
+                            )}
+                            {status === 'reserved' && reservation && (
+                              <>
+                                <Typography variant="body2" sx={{ color: '#7dd3fc', fontWeight: 'bold' }}>
+                                  🔵 Réservée plus tard ({reservation.heureReservation})
+                                </Typography>
+                                <Typography variant="body2" sx={{ mt: 0.5 }}>
+                                  <strong>Client :</strong> {reservation.client.nom}
+                                </Typography>
+                                <Typography variant="body2">
+                                  <strong>Tél :</strong> {reservation.client.telephone}
+                                </Typography>
+                                <Typography variant="body2">
+                                  <strong>Couverts :</strong> {reservation.nombrePersonnes} pers.
+                                </Typography>
+                              </>
+                            )}
+                            {status === 'free' && (
+                              <Typography variant="body2" sx={{ color: '#a7f3d0' }}>
+                                🟢 Libre toute la journée
+                              </Typography>
+                            )}
+                          </Box>
+                        }
+                        arrow
+                        placement="top"
+                      >
+                        <Paper
+                          elevation={1}
+                          sx={{
+                            p: 2,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: bgColor,
+                            border: `2px solid ${borderColor}`,
+                            borderRadius: 3,
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease-in-out',
+                            '&:hover': {
+                              transform: 'scale(1.05) translateY(-3px)',
+                              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
+                            },
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              width: 44,
+                              height: 44,
+                              borderRadius: table.capacite > 4 ? '4px' : '50%',
+                              backgroundColor: borderColor,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: 'white',
+                              fontWeight: 'bold',
+                              fontSize: '1.1rem',
+                              mb: 1,
+                              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            }}
+                          >
+                            {table.numeroTable}
+                          </Box>
+                          <Typography variant="body2" fontWeight="bold" sx={{ color: textColor }}>
+                            {table.capacite} pers
+                          </Typography>
+                          <Typography variant="caption" sx={{ color: textColor, opacity: 0.8, fontSize: '0.7rem', textTransform: 'uppercase', mt: 0.5 }}>
+                            {statusLabel}
+                          </Typography>
+                        </Paper>
+                      </Tooltip>
+                    );
+                  })
+                ) : (
+                  <Typography variant="body2" color="text.secondary" sx={{ py: 3, gridColumn: '1 / -1', textAlign: 'center' }}>
+                    Aucune table configurée pour ce restaurant.
+                  </Typography>
+                )}
+              </Box>
+
+              {/* Color Legend */}
+              <Box display="flex" flexWrap="wrap" gap={3} justifyContent="center" sx={{ mt: 2, pt: 2, borderTop: '1px solid #eee' }}>
+                <Box display="flex" alignItems="center" gap={1}>
+                  <Box sx={{ width: 16, height: 16, borderRadius: '50%', bgcolor: 'rgba(16, 185, 129, 0.2)', border: '2px solid #10b981' }} />
+                  <Typography variant="body2" color="text.secondary">Libre</Typography>
+                </Box>
+                <Box display="flex" alignItems="center" gap={1}>
+                  <Box sx={{ width: 16, height: 16, borderRadius: '50%', bgcolor: 'rgba(14, 165, 233, 0.2)', border: '2px solid #0ea5e9' }} />
+                  <Typography variant="body2" color="text.secondary">Réservée plus tard</Typography>
+                </Box>
+                <Box display="flex" alignItems="center" gap={1}>
+                  <Box sx={{ width: 16, height: 16, borderRadius: '50%', bgcolor: 'rgba(245, 158, 11, 0.2)', border: '2px solid #f59e0b' }} />
+                  <Typography variant="body2" color="text.secondary">Arrivée imminente (&lt; 30 min)</Typography>
+                </Box>
+                <Box display="flex" alignItems="center" gap={1}>
+                  <Box sx={{ width: 16, height: 16, borderRadius: '50%', bgcolor: 'rgba(244, 63, 94, 0.2)', border: '2px solid #f43f5e' }} />
+                  <Typography variant="body2" color="text.secondary">Occupée (repas en cours)</Typography>
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
         {/* Formulaire de création */}
         <Grid size={{ xs: 12, lg: 4 }}>
           <Card sx={{ boxShadow: 3 }}>
