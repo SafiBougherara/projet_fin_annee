@@ -254,7 +254,7 @@ export default function RestaurantManagement() {
     <Box sx={{ px: 3, maxWidth: 1400, mx: 'auto' }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
         <Box>
-          <Typography variant="h4" component="h1" fontWeight="bold" gutterBottom>
+          <Typography variant="h4" component="h1" fontWeight="bold" color="text.primary" gutterBottom>
             Gestion des Restaurants et Tables
           </Typography>
           <Typography variant="body1" color="text.secondary">
@@ -286,7 +286,7 @@ export default function RestaurantManagement() {
       <Grid container spacing={3}>
         {/* Liste des restaurants */}
         <Grid size={{ xs: 12, md: 5, lg: 4 }}>
-          <Typography variant="h6" fontWeight="bold" gutterBottom>
+          <Typography variant="h6" fontWeight="bold" color="text.primary" gutterBottom>
             Restaurants ({restaurants.length})
           </Typography>
           <Paper sx={{ boxShadow: 2, maxHeight: '65vh', overflowY: 'auto' }}>
@@ -298,9 +298,10 @@ export default function RestaurantManagement() {
                   onClick={() => setSelectedRestaurant(restaurant)}
                   sx={{
                     cursor: 'pointer',
-                    bgcolor: selectedRestaurant?.id === restaurant.id ? '#e3f2fd' : 'inherit',
-                    borderLeft: selectedRestaurant?.id === restaurant.id ? '5px solid #1976d2' : 'none',
-                    '&:hover': { bgcolor: selectedRestaurant?.id === restaurant.id ? '#e3f2fd' : '#f5f5f5' },
+                    bgcolor: selectedRestaurant?.id === restaurant.id ? 'action.selected' : 'inherit',
+                    borderLeft: selectedRestaurant?.id === restaurant.id ? '5px solid' : 'none',
+                    borderLeftColor: 'primary.main',
+                    '&:hover': { bgcolor: selectedRestaurant?.id === restaurant.id ? 'action.selected' : 'action.hover' },
                     transition: 'all 0.2s',
                   }}
                 >
@@ -356,7 +357,7 @@ export default function RestaurantManagement() {
             <Grid container spacing={3}>
               {/* Infos restaurant */}
               <Grid size={{ xs: 12 }}>
-                <Card sx={{ boxShadow: 2, bgcolor: '#fbfbfb' }}>
+                <Card sx={{ boxShadow: 2 }}>
                   <CardContent>
                     <Typography variant="h5" fontWeight="bold" color="primary" gutterBottom>
                       {selectedRestaurant.nom}
@@ -392,7 +393,7 @@ export default function RestaurantManagement() {
               {/* Liste des tables */}
               <Grid size={{ xs: 12 }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                  <Typography variant="h6" fontWeight="bold">
+                  <Typography variant="h6" fontWeight="bold" color="text.primary">
                     Plan des Tables ({selectedRestaurant.tables.length})
                   </Typography>
                   <Button
@@ -413,7 +414,7 @@ export default function RestaurantManagement() {
                         <CardContent sx={{ pb: 1 }}>
                           <Box display="flex" justifyContent="space-between" alignItems="flex-start">
                             <Box>
-                              <Typography variant="h6" fontWeight="bold">
+                              <Typography variant="h6" fontWeight="bold" color="text.primary">
                                 Table {table.numeroTable}
                               </Typography>
                               <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>

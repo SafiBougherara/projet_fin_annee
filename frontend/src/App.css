@@ -20,7 +20,8 @@ body {
 }
 
 .login-card {
-  background: white;
+  background: var(--card-bg, white);
+  border: 1px solid var(--border-color, rgba(0,0,0,0.1));
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -31,11 +32,11 @@ body {
 
 .login-card h1 {
   margin-bottom: 0.5rem;
-  color: #1a1a1a;
+  color: var(--text-primary, #1a1a1a);
 }
 
 .login-card p {
-  color: #666;
+  color: var(--text-secondary, #666);
   margin-bottom: 2rem;
 }
 
@@ -49,19 +50,22 @@ body {
   margin-bottom: 0.5rem;
   font-weight: 500;
   font-size: 0.9rem;
+  color: var(--text-primary);
 }
 
 .form-group input {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #ddd;
+  background-color: var(--card-bg, white);
+  color: var(--text-primary, #333);
+  border: 1px solid var(--border-color, #ddd);
   border-radius: 6px;
   font-size: 1rem;
   transition: border-color 0.2s;
 }
 
 .form-group input:focus {
-  border-color: #0066cc;
+  border-color: #4f46e5;
   outline: none;
 }
 

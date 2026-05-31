@@ -1,69 +1,95 @@
-import React from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import RestaurantManagement from './pages/RestaurantManagement';
 import ChatWidget from './pages/ChatWidget';
 import { authService } from './services/auth.service';
-import { Box, AppBar, Toolbar, Typography, Button, Container } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography, Button, Container, IconButton } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 
-// Create a premium MUI Theme matching our index.css design system
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#4f46e5', // Indigo
-      light: '#6366f1',
-      dark: '#4338ca',
-    },
-    secondary: {
-      main: '#0ea5e9', // Cyan
-      light: '#38bdf8',
-      dark: '#0284c7',
-    },
-    background: {
-      default: '#f8fafc',
-      paper: '#ffffff',
-    },
-    text: {
-      primary: '#0f172a',
-      secondary: '#475569',
-    },
-  },
-  typography: {
-    fontFamily: "'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-    h5: {
-      fontWeight: 700,
-      letterSpacing: '-0.02em',
-    },
-    h6: {
-      fontWeight: 700,
-      letterSpacing: '-0.01em',
-    },
-    button: {
-      textTransform: 'none',
-      fontWeight: 600,
-    },
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          transition: 'all 0.2s ease-in-out',
-        },
-      },
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: 12,
-          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(226, 232, 240, 0.8)',
-        },
-      },
-    },
-  },
+interface ThemeContextType {
+  darkMode: boolean;
+  toggleDarkMode: () => void;
+}
+
+export const ThemeContext = createContext<ThemeContextType>({
+  darkMode: false,
+  toggleDarkMode: () => {},
 });
+
+export const useAppTheme = () => useContext(ThemeContext);
+
+export function getAppTheme(mode: 'light' | 'dark') {
+  const isDark = mode === 'dark';
+  return createTheme({
+    palette: {
+      mode,
+      primary: {
+        main: '#4f46e5', // Indigo
+        light: '#6366f1',
+        dark: '#4338ca',
+      },
+      secondary: {
+        main: '#0ea5e9', // Cyan
+        light: '#38bdf8',
+        dark: '#0284c7',
+      },
+      background: {
+        default: isDark ? '#0f172a' : '#f8fafc',
+        paper: isDark ? '#1e293b' : '#ffffff',
+      },
+      text: {
+        primary: isDark ? '#f8fafc' : '#0f172a',
+        secondary: isDark ? '#94a3b8' : '#475569',
+      },
+    },
+    typography: {
+      fontFamily: "'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      h5: {
+        fontWeight: 700,
+        letterSpacing: '-0.02em',
+      },
+      h6: {
+        fontWeight: 700,
+        letterSpacing: '-0.01em',
+      },
+      button: {
+        textTransform: 'none',
+        fontWeight: 600,
+      },
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: 8,
+            transition: 'all 0.2s ease-in-out',
+          },
+        },
+      },
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            borderRadius: 12,
+            boxShadow: isDark
+              ? '0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(51, 65, 85, 0.8)'
+              : '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(226, 232, 240, 0.8)',
+          },
+        },
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundImage: 'none',
+          },
+        },
+      },
+    },
+  });
+}
 
 // Composant pour protéger les routes qui nécessitent d'être connecté
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
@@ -77,6 +103,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { darkMode, toggleDarkMode } = useAppTheme();
 
   const handleLogout = () => {
     authService.logout();
@@ -88,10 +115,10 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
       <AppBar 
         position="sticky" 
         sx={{ 
-          background: 'rgba(255, 255, 255, 0.85)', 
+          background: darkMode ? 'rgba(30, 41, 59, 0.85)' : 'rgba(255, 255, 255, 0.85)', 
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(226, 232, 240, 0.8)',
+          borderBottom: darkMode ? '1px solid rgba(51, 65, 85, 0.8)' : '1px solid rgba(226, 232, 240, 0.8)',
           boxShadow: 'none',
           py: 0.5
         }}
@@ -154,6 +181,21 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
               >
                 Restaurants & Tables
               </Button>
+
+              <IconButton 
+                onClick={toggleDarkMode} 
+                sx={{ 
+                  mx: 1, 
+                  color: darkMode ? '#fbbf24' : '#475569',
+                  transition: 'transform 0.3s ease',
+                  '&:hover': {
+                    transform: 'rotate(15deg)',
+                  }
+                }}
+              >
+                {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
+              </IconButton>
+
               <Button 
                 variant="outlined" 
                 color="error" 
@@ -218,12 +260,32 @@ function AppContent() {
 }
 
 function App() {
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    return localStorage.getItem('theme') === 'dark';
+  });
+
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => {
+      const next = !prev;
+      localStorage.setItem('theme', next ? 'dark' : 'light');
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+  }, [darkMode]);
+
+  const theme = useMemo(() => getAppTheme(darkMode ? 'dark' : 'light'), [darkMode]);
+
   return (
-    <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
-    </ThemeProvider>
+    <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </ThemeProvider>
+    </ThemeContext.Provider>
   );
 }
 

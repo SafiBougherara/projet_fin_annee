@@ -365,7 +365,7 @@ export default function Dashboard() {
   return (
     <Box sx={{ px: 3, maxWidth: 1400, mx: 'auto' }}>
       <Box mb={4}>
-        <Typography variant="h4" component="h1" fontWeight="bold" gutterBottom>
+        <Typography variant="h4" component="h1" fontWeight="bold" color="text.primary" gutterBottom>
           Tableau de Bord des Réservations
         </Typography>
         <Typography variant="body1" color="text.secondary">
@@ -392,7 +392,7 @@ export default function Dashboard() {
               <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" gap={2} mb={3} sx={{ borderBottom: '1px solid #eee', pb: 2 }}>
                 <Box display="flex" alignItems="center" gap={1}>
                   <RestaurantIcon color="primary" />
-                  <Typography variant="h6" fontWeight="bold">
+                  <Typography variant="h6" fontWeight="bold" color="text.primary">
                     Plan de Salle Interactif
                   </Typography>
                 </Box>
@@ -688,7 +688,7 @@ export default function Dashboard() {
         <Grid size={{ xs: 12, lg: 4 }}>
           <Card sx={{ boxShadow: 3 }}>
             <CardContent>
-              <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ borderBottom: '1px solid #eee', pb: 1 }}>
+              <Typography variant="h6" fontWeight="bold" color="text.primary" gutterBottom sx={{ borderBottom: '1px solid #eee', pb: 1 }}>
                 Nouvelle réservation
               </Typography>
               <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -855,7 +855,7 @@ export default function Dashboard() {
         <Grid size={{ xs: 12, lg: 8 }}>
           <Card sx={{ boxShadow: 3 }}>
             <CardContent>
-              <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ borderBottom: '1px solid #eee', pb: 1 }}>
+              <Typography variant="h6" fontWeight="bold" color="text.primary" gutterBottom sx={{ borderBottom: '1px solid #eee', pb: 1 }}>
                 Liste des Réservations ({reservations.length})
               </Typography>
               <TableContainer component={Paper} sx={{ mt: 2, maxHeight: '60vh', overflowY: 'auto' }}>
@@ -888,7 +888,7 @@ export default function Dashboard() {
                         <TableCell>{reservation.restaurant.nom}</TableCell>
                         <TableCell>
                           {reservation.table ? (
-                            <Box sx={{ bgcolor: '#e3f2fd', color: '#1e88e5', px: 1, py: 0.5, borderRadius: 1, display: 'inline-block', fontWeight: 'bold' }}>
+                            <Box sx={{ bgcolor: 'rgba(79, 70, 229, 0.08)', color: 'primary.main', px: 1, py: 0.5, borderRadius: 1, display: 'inline-block', fontWeight: 'bold' }}>
                               T. {reservation.table.numeroTable}
                             </Box>
                           ) : (
