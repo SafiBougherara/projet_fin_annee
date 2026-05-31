@@ -1,0 +1,94 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  backend:
+    name: Backend CI (Symfony)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: calendria_test
+          POSTGRES_USER: calendria_user
+          POSTGRES_PASSWORD: calendria_pass
+        ports:
+          - 5432:5432
+        # Wait for postgres to be ready before starting tests
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, pdo_pgsql, pgsql
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: /tmp/composer-cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          composer install --no-progress --no-suggest --prefer-dist
+
+      - name: Setup Test Environment Variables
+        run: |
+          cd backend
+          echo "DATABASE_URL=postgresql://calendria_user:calendria_pass@127.0.0.1:5432/calendria_test?serverVersion=15&charset=utf8" > .env.test
+          echo "APP_ENV=test" >> .env.test
+          echo "APP_SECRET=a3f9e9d28e7c10b27e8a939f82d1b73e" >> .env.test
+          echo "GEMINI_API_KEY=dummy_key_for_tests" >> .env.test
+
+      - name: Run PHPUnit Tests
+        run: |
+          cd backend
+          vendor/bin/phpunit --configuration phpunit.dist.xml
+
+  frontend:
+    name: Frontend CI (React & TypeScript)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Cache Node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Build Application (Typecheck & Compile)
+        run: |
+          cd frontend
+          npm run build

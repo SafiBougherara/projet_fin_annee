@@ -1,5 +1,7 @@
 # CALENDRIA - Assistant de Réservation Intelligent
 
+[![CI/CD Pipeline](https://github.com/SafiBougherara/projet_fin_annee/actions/workflows/ci.yml/badge.svg)](https://github.com/SafiBougherara/projet_fin_annee/actions/workflows/ci.yml)
+
 Assistant de réservation multi-canal pour restaurants utilisant l'IA conversationnelle.
 
 ## 🎯 Fonctionnalités
@@ -78,9 +80,9 @@ Voir le dossier `/documentation` pour :
 
 - [x] **Jalon 1** (31/01) : CDCF ✅
 - [x] **Jalon 2** (28/02) : Méthodologie + Maquettes ✅
-- [ ] **Jalon 3** (31/03) : MCD/MLD/MPD + API
-- [ ] **Jalon 4** (30/04) : Chatbot WhatsApp + Dashboard
-- [ ] **Jalon 5** (29/05) : Widget Web + Tests
+- [x] **Jalon 3** (31/03) : MCD/MLD/MPD + API ✅
+- [x] **Jalon 4** (30/04) : Chatbot WhatsApp + Dashboard ✅
+- [x] **Jalon 5** (29/05) : Widget Web + Tests ✅
 - [ ] **Jalon 6** (30/06) : Livraison finale
 
 ## 👤 Auteur
