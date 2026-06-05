@@ -27,7 +27,7 @@ WORKDIR /var/www/html
 COPY backend/composer.json backend/composer.lock ./
 
 # Install PHP dependencies (production, no dev)
-RUN composer install --no-dev --no-interaction --optimize-autoloader --no-scripts
+RUN composer install --no-dev --no-interaction --optimize-autoloader
 
 # Copy full backend application source
 COPY backend/ .
