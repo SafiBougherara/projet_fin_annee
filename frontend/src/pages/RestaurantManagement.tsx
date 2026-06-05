@@ -215,6 +215,7 @@ export default function RestaurantManagement() {
     if (idToDelete === null || !deleteConfirmType) return;
     setError(null);
     setSuccess(null);
+    setSaving(true);
 
     try {
       if (deleteConfirmType === 'restaurant') {
@@ -231,6 +232,8 @@ export default function RestaurantManagement() {
       setError(err.response?.data?.error || 'Impossible de réaliser la suppression.');
       setDeleteConfirmType(null);
       setIdToDelete(null);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -649,7 +652,7 @@ export default function RestaurantManagement() {
       </Dialog>
 
       {/* CONFIRM DELETE DIALOG */}
-      <Dialog open={deleteConfirmType !== null} onClose={() => setDeleteConfirmType(null)}>
+      <Dialog open={deleteConfirmType !== null} onClose={saving ? undefined : () => setDeleteConfirmType(null)}>
         <DialogTitle sx={{ fontWeight: 'bold' }}>Confirmer la suppression</DialogTitle>
         <DialogContent>
           <Typography>
@@ -662,11 +665,17 @@ export default function RestaurantManagement() {
           </Typography>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button onClick={() => setDeleteConfirmType(null)} variant="outlined">
+          <Button onClick={() => setDeleteConfirmType(null)} variant="outlined" disabled={saving}>
             Annuler
           </Button>
-          <Button onClick={handleConfirmDelete} color="error" variant="contained">
-            Supprimer
+          <Button 
+            onClick={handleConfirmDelete} 
+            color="error" 
+            variant="contained" 
+            disabled={saving}
+            startIcon={saving ? <CircularProgress size={18} color="inherit" /> : null}
+          >
+            {saving ? 'Suppression...' : 'Supprimer'}
           </Button>
         </DialogActions>
       </Dialog>

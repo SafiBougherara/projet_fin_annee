@@ -52,6 +52,21 @@ const initialForm = {
   demandesSpeciales: '',
 };
 
+const formatDateFr = (dateStr: string | undefined | null) => {
+  if (!dateStr) return '';
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) return dateStr;
+  try {
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      const [year, month, day] = parts;
+      return `${day}/${month}/${year}`;
+    }
+  } catch (e) {
+    // fallback
+  }
+  return dateStr;
+};
+
 export default function Dashboard() {
   const [restaurants, setRestaurants] = useState<RestaurantItem[]>([]);
   const [reservations, setReservations] = useState<ReservationItem[]>([]);
@@ -275,14 +290,16 @@ export default function Dashboard() {
         demandesSpeciales: '',
       }));
       await refreshReservations();
-    } catch {
-      setError('Erreur lors de la création de la réservation.');
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Erreur lors de la création de la réservation.');
     } finally {
       setSaving(false);
     }
   };
 
   const handleOpenEdit = (res: ReservationItem) => {
+    setError(null);
+    setSuccess(null);
     setEditForm({
       id: res.id,
       clientName: res.client.nom ?? '',
@@ -327,8 +344,8 @@ export default function Dashboard() {
       setSuccess('Réservation mise à jour avec succès.');
       setEditOpen(false);
       await refreshReservations();
-    } catch {
-      setError('Erreur lors de la modification de la réservation.');
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Erreur lors de la modification de la réservation.');
     } finally {
       setSaving(false);
     }
@@ -343,6 +360,7 @@ export default function Dashboard() {
     if (!reservationToDelete) return;
     setError(null);
     setSuccess(null);
+    setSaving(true);
     try {
       await reservationService.deleteReservation(reservationToDelete.id);
       setSuccess('Réservation supprimée avec succès.');
@@ -351,6 +369,8 @@ export default function Dashboard() {
       await refreshReservations();
     } catch {
       setError('Erreur lors de la suppression de la réservation.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -444,18 +464,9 @@ export default function Dashboard() {
                   step={15}
                   marks={[
                     { value: 660, label: '11h00' },
-                    { value: 720, label: '12h00' },
-                    { value: 780, label: '13h00' },
                     { value: 840, label: '14h00' },
-                    { value: 900, label: '15h00' },
-                    { value: 960, label: '16h00' },
                     { value: 1020, label: '17h00' },
-                    { value: 1080, label: '18h00' },
-                    { value: 1140, label: '19h00' },
                     { value: 1200, label: '20h00' },
-                    { value: 1260, label: '21h00' },
-                    { value: 1320, label: '22h00' },
-                    { value: 1380, label: '23h00' },
                     { value: 1410, label: '23h30' },
                   ]}
                   valueLabelDisplay="auto"
@@ -482,6 +493,9 @@ export default function Dashboard() {
                     '& .MuiSlider-markLabel': {
                       fontSize: '0.75rem',
                       fontWeight: 500,
+                      '@media (max-width: 600px)': {
+                        display: 'none',
+                      },
                     },
                   }}
                 />
@@ -875,7 +889,7 @@ export default function Dashboard() {
                   <TableBody>
                     {reservations.map((reservation) => (
                       <TableRow key={reservation.id} hover>
-                        <TableCell>{reservation.dateReservation}</TableCell>
+                        <TableCell>{formatDateFr(reservation.dateReservation)}</TableCell>
                         <TableCell>{reservation.heureReservation}</TableCell>
                         <TableCell>
                           <Typography variant="body2" fontWeight="medium">
@@ -951,6 +965,11 @@ export default function Dashboard() {
         <DialogTitle sx={{ fontWeight: 'bold' }}>Modifier la réservation</DialogTitle>
         <Box component="form" onSubmit={handleEditSubmit}>
           <DialogContent dividers>
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+                {error}
+              </Alert>
+            )}
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
@@ -1094,22 +1113,28 @@ export default function Dashboard() {
       </Dialog>
 
       {/* Modal Deletion Confirm */}
-      <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
+      <Dialog open={deleteConfirmOpen} onClose={saving ? undefined : () => setDeleteConfirmOpen(false)}>
         <DialogTitle sx={{ fontWeight: 'bold' }}>Confirmer la suppression</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Es-tu sûr de vouloir supprimer la réservation de{' '}
             <strong>{reservationToDelete?.client.nom ?? 'ce client'}</strong> le{' '}
-            <strong>{reservationToDelete?.dateReservation}</strong> à{' '}
+            <strong>{formatDateFr(reservationToDelete?.dateReservation)}</strong> à{' '}
             <strong>{reservationToDelete?.heureReservation}</strong> ? Cette action est irréversible.
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button onClick={() => setDeleteConfirmOpen(false)} variant="outlined">
+          <Button onClick={() => setDeleteConfirmOpen(false)} variant="outlined" disabled={saving}>
             Annuler
           </Button>
-          <Button onClick={handleConfirmDelete} color="error" variant="contained">
-            Supprimer
+          <Button 
+            onClick={handleConfirmDelete} 
+            color="error" 
+            variant="contained" 
+            disabled={saving}
+            startIcon={saving ? <CircularProgress size={18} color="inherit" /> : null}
+          >
+            {saving ? 'Suppression...' : 'Supprimer'}
           </Button>
         </DialogActions>
       </Dialog>

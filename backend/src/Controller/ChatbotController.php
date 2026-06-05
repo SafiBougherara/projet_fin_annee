@@ -2,8 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
+use App\Entity\Reservation;
+use App\Repository\ClientRepository;
 use App\Repository\RestaurantRepository;
 use App\Service\ChatbotService;
+use App\Service\DisponibiliteService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -140,5 +145,134 @@ class ChatbotController extends AbstractController
         }
 
         return $this->json(['status' => 'success', 'response' => $responseText]);
+    }
+
+    #[Route('/call', name: 'call', methods: ['POST'])]
+    public function callWebhook(
+        Request $request,
+        ClientRepository $clientRepository,
+        DisponibiliteService $disponibiliteService,
+        RestaurantRepository $restaurantRepository,
+        EntityManagerInterface $entityManager
+    ): JsonResponse {
+        $data = json_decode($request->getContent(), true);
+        if (!is_array($data)) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Corps JSON invalide'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        // Extraction flexible des paramètres
+        $nom = $data['nom'] ?? $data['name'] ?? $data['clientName'] ?? $data['client_name'] ?? null;
+        $telephone = $data['telephone'] ?? $data['phone'] ?? $data['phoneNumber'] ?? $data['phone_number'] ?? null;
+        $nombrePersonnes = $data['nombrePersonnes'] ?? $data['guests'] ?? $data['guestsCount'] ?? $data['guests_count'] ?? $data['nombre_personnes'] ?? null;
+        $dateStr = $data['date'] ?? null;
+        $heureStr = $data['heure'] ?? $data['time'] ?? $data['hour'] ?? null;
+
+        // Restaurant ID (facultatif, par défaut 1)
+        $restaurantId = (int)($data['restaurantId'] ?? $data['restaurant_id'] ?? $request->query->get('restaurantId') ?? 1);
+
+        if (!$nom || !$telephone || !$nombrePersonnes || !$dateStr || !$heureStr) {
+            $missing = [];
+            if (!$nom) $missing[] = 'nom/name';
+            if (!$telephone) $missing[] = 'telephone/phone';
+            if (!$nombrePersonnes) $missing[] = 'nombrePersonnes/guests';
+            if (!$dateStr) $missing[] = 'date';
+            if (!$heureStr) $missing[] = 'heure/time';
+
+            return $this->json([
+                'success' => false,
+                'message' => 'Champs requis manquants : ' . implode(', ', $missing)
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $restaurant = $restaurantRepository->find($restaurantId);
+        if (!$restaurant) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Restaurant introuvable'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        // Nettoyage/normalisation du nombre de personnes en entier
+        $nombrePersonnes = (int)$nombrePersonnes;
+
+        // Appel du service de disponibilité
+        $resAvailability = $disponibiliteService->verifierDisponibilite(
+            $restaurantId,
+            $dateStr,
+            $heureStr,
+            $nombrePersonnes
+        );
+
+        if (!$resAvailability['disponible']) {
+            $alternatives = [];
+            foreach ($resAvailability['alternatives'] ?? [] as $alt) {
+                $alternatives[] = $alt['heure'];
+            }
+
+            return $this->json([
+                'success' => false,
+                'message' => 'Aucune table disponible pour cet horaire.',
+                'alternatives' => $alternatives
+            ], Response::HTTP_OK);
+        }
+
+        $table = $resAvailability['table'];
+
+        // Recherche ou création du client
+        $client = $clientRepository->findOneBy(['telephone' => $telephone]);
+        if (!$client) {
+            $client = new Client();
+            $client->setNom($nom);
+            $client->setTelephone($telephone);
+            $client->setConsentementRgpd(true);
+            $client->setCreatedAt(new \DateTimeImmutable());
+            $entityManager->persist($client);
+        } else {
+            $client->setNom($nom);
+        }
+
+        // Création de la réservation
+        try {
+            $reservation = new Reservation();
+            $reservation->setClient($client);
+            $reservation->setRestaurant($restaurant);
+            $reservation->setTableReservee($table);
+            $reservation->setDateReservation(new \DateTime($dateStr));
+            $reservation->setHeureReservation(new \DateTime($heureStr));
+            $reservation->setNombrePersonnes($nombrePersonnes);
+            $reservation->setStatut('confirmée');
+            $reservation->setCreatedAt(new \DateTimeImmutable());
+
+            $entityManager->persist($reservation);
+            $entityManager->flush();
+
+            return $this->json([
+                'success' => true,
+                'message' => sprintf(
+                    "Réservation confirmée ! Table n°%s réservée pour le %s à %s au nom de %s pour %s personnes.",
+                    $table->getNumeroTable(),
+                    (new \DateTime($dateStr))->format('d/m/Y'),
+                    $heureStr,
+                    $nom,
+                    $nombrePersonnes
+                ),
+                'reservationId' => $reservation->getId(),
+                'tableNumero' => $table->getNumeroTable(),
+                'client' => [
+                    'id' => $client->getId(),
+                    'nom' => $client->getNom(),
+                    'telephone' => $client->getTelephone()
+                ]
+            ], Response::HTTP_CREATED);
+
+        } catch (\Exception $e) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Erreur lors de la création de la réservation : ' . $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

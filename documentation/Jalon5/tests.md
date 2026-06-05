@@ -17,9 +17,10 @@ La qualité de l'application Calendria est assurée par une approche de test à 
 Nous avons mis en place le framework de test standard **PHPUnit** pour tester la logique métier du serveur de manière isolée.
 
 ### a) Périmètre Couvert
-Les tests unitaires ciblent en priorité les composants cruciaux qui portent la logique métier de l'application :
+Les tests unitaires et d'intégration ciblent en priorité les composants cruciaux qui portent la logique métier de l'application :
 *   **`DisponibiliteService`** : Validation du moteur de calcul d'occupation, détection des conflits de réservations (marge de repas + buffer de nettoyage), et calcul de créneaux alternatifs.
 *   **`ChatbotService`** : Simulation des flux conversationnels avec mock de la réponse Gemini.
+*   **`ChatbotControllerTest`** : Tests d'intégration de la route API publique `/api/chatbot/call` pour le webhook Retell AI (cas d'erreur JSON, absence de paramètres, réussite de la réservation, et suggestion d'alternatives horaires en cas d'indisponibilité).
 
 ### b) Exemple de Cas de Test Unitaire (`DisponibiliteServiceTest.php`)
 Nous testons les scénarios de limite pour garantir la stabilité de notre algorithme d'attribution de table. Par exemple, le test ci-dessous valide le comportement du service lorsque l'identifiant du restaurant fourni est invalide (doit renvoyer `disponible => false`) :

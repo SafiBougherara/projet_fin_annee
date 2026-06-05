@@ -38,9 +38,10 @@ L'application bêta est quasiment complète et comprend les modules opérationne
 1.  **Widget Web Chatbot IA** : Canal de discussion en langage naturel intégrable en `iframe` pour les clients finaux.
 2.  **Assistant IA Conversationnel (Gemini 2.5 Flash)** : Extraction intelligente de données de réservations structurées (nom, téléphone, date, heure, couverts) et contrôle de disponibilité.
 3.  **Bot Telegram Multi-Canal** : Canal de réservation mobile gratuit et fonctionnel connecté par webhook.
-4.  **Gestion Intelligente de la Disponibilité** : Algorithme d'attribution de table par capacité minimale ascendante et recherche automatique d'alternatives horaires.
-5.  **Plan de Salle Interactif & Slider Temporel** : Interface de contrôle en temps réel mise à jour d'après une timeline de service (11h00-23h30).
-6.  **Mode Sombre (Dark Mode)** : Option d'affichage premium et persistante pour les restaurateurs.
+4.  **Intégration d'Appels Vocaux IA (Retell AI)** : Route d'API webhook publique (`/api/chatbot/call`) permettant à un agent vocal externe de réserver une table directement.
+5.  **Gestion Intelligente de la Disponibilité** : Algorithme d'attribution de table par capacité minimale ascendante et recherche automatique d'alternatives horaires.
+6.  **Plan de Salle Interactif & Slider Temporel** : Interface de contrôle en temps réel mise à jour d'après une timeline de service (11h00-23h30).
+7.  **Mode Sombre (Dark Mode)** : Option d'affichage premium et persistante pour les restaurateurs.
 
 ---
 

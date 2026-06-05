@@ -29,7 +29,7 @@ L'architecture de Calendria a été conçue pour respecter rigoureusement les pr
 ### e) Contrôle d'Accès & Firewalls (A01:2021-Broken Access Control)
 L'accès aux ressources est cloisonné au niveau du fichier `config/packages/security.yaml` :
 *   **Firewall Principal (`/api`)** : Protège tous les endpoints d'administration (gestion des restaurants, CRUD de tables et de réservations). Il exige un jeton JWT valide sous peine de renvoyer une erreur HTTP `401 Unauthorized`.
-*   **Firewall Public (`/api/chatbot`)** : Positionné en priorité haute (avant `/api`), il autorise les accès publics (`PUBLIC_ACCESS`) requis pour le bon fonctionnement du Widget de Chat et de la webhook Telegram, tout en restreignant les requêtes à des actions conversationnelles isolées et sans privilèges administratifs.
+*   **Firewall Public (`/api/chatbot`)** : Positionné en priorité haute (avant `/api`), il autorise les accès publics (`PUBLIC_ACCESS`) requis pour le bon fonctionnement du Widget de Chat, du bot Telegram, ainsi que de l'API webhook de réception d'appels Retell AI (`/api/chatbot/call`). Les requêtes y sont limitées à des actions conversationnelles isolées et à la création de réservation sans privilèges administratifs.
 
 ---
 
@@ -41,7 +41,7 @@ Le projet Calendria manipule des données à caractère personnel (nom des clien
 |---|---|
 | **Minimisation des données** | Nous collectons uniquement les informations indispensables à la réservation (Nom, Téléphone, Heure et Nombre de couverts). L'adresse e-mail est optionnelle. |
 | **Consentement Explicite** | Le modèle de données inclut un champ `consentement_rgpd` (valeur booléenne) lié à l'entité Client, validant que l'utilisateur a accepté le traitement de ses données pour sa réservation. |
-| **Sécurisation des Flux** | Toutes les communications transitent par le protocole sécurisé **HTTPS** en production, chiffrant les données entre le navigateur du client, l'API Symfony, et les plateformes tierces (Telegram). |
+| **Sécurisation des Flux** | Toutes les communications transitent par le protocole sécurisé **HTTPS** en production, chiffrant les données entre le navigateur du client, l'API Symfony, et les plateformes tierces (Telegram, Retell AI). |
 | **Droit à l'Oubli & Suppression** | Les restaurateurs ont la possibilité de supprimer les fiches clients et leurs données historiques directement depuis le panneau d'administration, ce qui cascade les suppressions en base. |
 
 ---

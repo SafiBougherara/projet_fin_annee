@@ -70,8 +70,23 @@ class ReservationController extends AbstractController
     }
 
     #[Route('/reservations', name: 'reservations_list', methods: ['GET'])]
-    public function listReservations(ReservationRepository $reservationRepository): JsonResponse
+    public function listReservations(ReservationRepository $reservationRepository, EntityManagerInterface $entityManager): JsonResponse
     {
+        // Suppression automatique des réservations antérieures à la date d'aujourd'hui (00:00)
+        $today = (new \DateTime())->setTime(0, 0, 0);
+        $pastReservations = $reservationRepository->createQueryBuilder('r')
+            ->where('r.dateReservation < :today')
+            ->setParameter('today', $today)
+            ->getQuery()
+            ->getResult();
+
+        foreach ($pastReservations as $pastRes) {
+            $entityManager->remove($pastRes);
+        }
+        if (count($pastReservations) > 0) {
+            $entityManager->flush();
+        }
+
         $reservations = $reservationRepository->findAll();
         $payload = array_map(static function ($reservation) {
             return [
@@ -144,6 +159,16 @@ class ReservationController extends AbstractController
             $table = $tableRepository->find($data['tableId']);
             if (!$table) {
                 return $this->json(['error' => 'Table introuvable'], Response::HTTP_NOT_FOUND);
+            }
+            if ($table->getCapacite() < (int)$data['nombrePersonnes']) {
+                return $this->json([
+                    'error' => sprintf(
+                        'La table sélectionnée (Table %s) a une capacité insuffisante (%d pers. max) pour cette réservation (%d pers.).',
+                        $table->getNumeroTable(),
+                        $table->getCapacite(),
+                        (int)$data['nombrePersonnes']
+                    )
+                ], Response::HTTP_BAD_REQUEST);
             }
         }
 
@@ -233,7 +258,8 @@ class ReservationController extends AbstractController
             $reservation->setRestaurant($restaurant);
         }
 
-        // Update Table
+        // Update Table & Validate capacity
+        $nombrePersonnes = isset($data['nombrePersonnes']) ? (int)$data['nombrePersonnes'] : $reservation->getNombrePersonnes();
         if (array_key_exists('tableId', $data)) {
             $tableId = $data['tableId'];
             if ($tableId === null || $tableId === '' || $tableId === 0) {
@@ -243,7 +269,29 @@ class ReservationController extends AbstractController
                 if (!$table) {
                     return $this->json(['error' => 'Table introuvable'], Response::HTTP_NOT_FOUND);
                 }
+                if ($table->getCapacite() < $nombrePersonnes) {
+                    return $this->json([
+                        'error' => sprintf(
+                            'La table sélectionnée (Table %s) a une capacité insuffisante (%d pers. max) pour cette réservation (%d pers.).',
+                            $table->getNumeroTable(),
+                            $table->getCapacite(),
+                            $nombrePersonnes
+                        )
+                    ], Response::HTTP_BAD_REQUEST);
+                }
                 $reservation->setTableReservee($table);
+            }
+        } else {
+            $table = $reservation->getTableReservee();
+            if ($table && $table->getCapacite() < $nombrePersonnes) {
+                return $this->json([
+                    'error' => sprintf(
+                        'La table actuellement réservée (Table %s) a une capacité insuffisante (%d pers. max) pour cette réservation (%d pers.).',
+                        $table->getNumeroTable(),
+                        $table->getCapacite(),
+                        $nombrePersonnes
+                    )
+                ], Response::HTTP_BAD_REQUEST);
             }
         }
 
