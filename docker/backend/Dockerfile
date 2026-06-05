@@ -27,6 +27,9 @@ WORKDIR /var/www/html
 COPY backend/composer.json backend/composer.lock ./
 
 # Install PHP dependencies (production, no dev)
+# Allow Composer plugins (Symfony Flex) to run as root in Docker
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 RUN composer install --no-dev --no-interaction --optimize-autoloader
 
 # Copy full backend application source
