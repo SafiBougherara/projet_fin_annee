@@ -19,23 +19,24 @@ RUN docker-php-ext-install pdo pdo_pgsql zip gd opcache
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
-WORKDIR /var/www/html
-
-# Copy composer files first (cache layer optimization)
-# Context is repo root, so backend/ prefix is needed
-COPY backend/composer.json backend/composer.lock ./
-
-# Install PHP dependencies (production, no dev)
 # Allow Composer plugins (Symfony Flex) to run as root in Docker
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-RUN composer install --no-dev --no-interaction --optimize-autoloader
+# Set working directory
+WORKDIR /var/www/html
 
-# Copy full backend application source
+# ── Step 1: Copy composer files only (cache layer optimization)
+# Context is repo root, so backend/ prefix is needed
+COPY backend/composer.json backend/composer.lock ./
+
+# ── Step 2: Install dependencies WITHOUT scripts
+# (bin/console doesn't exist yet — source not copied)
+RUN composer install --no-dev --no-interaction --optimize-autoloader --no-scripts
+
+# ── Step 3: NOW copy the full application source
 COPY backend/ .
 
-# Clear and warm up Symfony cache for production
+# ── Step 4: Run post-install scripts manually now that bin/console exists
 RUN APP_ENV=prod php bin/console cache:clear --no-debug || true
 RUN APP_ENV=prod php bin/console cache:warmup --no-debug || true
 
