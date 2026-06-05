@@ -67,6 +67,19 @@ const formatDateFr = (dateStr: string | undefined | null) => {
   return dateStr;
 };
 
+const formatTimeFr = (timeStr: string | undefined | null) => {
+  if (!timeStr) return '';
+  try {
+    const parts = timeStr.split(':');
+    if (parts.length >= 2) {
+      return `${parts[0]}h${parts[1]}`;
+    }
+  } catch (e) {
+    // fallback
+  }
+  return timeStr;
+};
+
 export default function Dashboard() {
   const [restaurants, setRestaurants] = useState<RestaurantItem[]>([]);
   const [reservations, setReservations] = useState<ReservationItem[]>([]);
@@ -570,7 +583,7 @@ export default function Dashboard() {
                                   <strong>Couverts :</strong> {reservation.nombrePersonnes} pers.
                                 </Typography>
                                 <Typography variant="body2">
-                                  <strong>Heure :</strong> {reservation.heureReservation}
+                                  <strong>Heure :</strong> {formatTimeFr(reservation.heureReservation)}
                                 </Typography>
                                 {reservation.demandesSpeciales && (
                                   <Typography variant="caption" display="block" sx={{ fontStyle: 'italic', mt: 0.5, color: '#cbd5e1' }}>
@@ -582,7 +595,7 @@ export default function Dashboard() {
                             {status === 'imminent' && reservation && (
                               <>
                                 <Typography variant="body2" sx={{ color: '#fcd34d', fontWeight: 'bold' }}>
-                                  🟠 Arrivée Imminente ({reservation.heureReservation})
+                                  🟠 Arrivée Imminente ({formatTimeFr(reservation.heureReservation)})
                                 </Typography>
                                 <Typography variant="body2" sx={{ mt: 0.5 }}>
                                   <strong>Client :</strong> {reservation.client.nom}
@@ -598,7 +611,7 @@ export default function Dashboard() {
                             {status === 'reserved' && reservation && (
                               <>
                                 <Typography variant="body2" sx={{ color: '#7dd3fc', fontWeight: 'bold' }}>
-                                  🔵 Réservée plus tard ({reservation.heureReservation})
+                                  🔵 Réservée plus tard ({formatTimeFr(reservation.heureReservation)})
                                 </Typography>
                                 <Typography variant="body2" sx={{ mt: 0.5 }}>
                                   <strong>Client :</strong> {reservation.client.nom}
@@ -664,6 +677,11 @@ export default function Dashboard() {
                           <Typography variant="caption" sx={{ color: textColor, opacity: 0.8, fontSize: '0.7rem', textTransform: 'uppercase', mt: 0.5 }}>
                             {statusLabel}
                           </Typography>
+                          {reservation && (status === 'reserved' || status === 'imminent') && (
+                            <Typography variant="caption" sx={{ color: textColor, fontWeight: 'bold', fontSize: '0.75rem', mt: 0.25 }}>
+                              à {formatTimeFr(reservation.heureReservation)}
+                            </Typography>
+                          )}
                         </Paper>
                       </Tooltip>
                     );
@@ -890,7 +908,7 @@ export default function Dashboard() {
                     {reservations.map((reservation) => (
                       <TableRow key={reservation.id} hover>
                         <TableCell>{formatDateFr(reservation.dateReservation)}</TableCell>
-                        <TableCell>{reservation.heureReservation}</TableCell>
+                        <TableCell>{formatTimeFr(reservation.heureReservation)}</TableCell>
                         <TableCell>
                           <Typography variant="body2" fontWeight="medium">
                             {reservation.client.nom ?? 'Sans nom'}
@@ -1120,7 +1138,7 @@ export default function Dashboard() {
             Es-tu sûr de vouloir supprimer la réservation de{' '}
             <strong>{reservationToDelete?.client.nom ?? 'ce client'}</strong> le{' '}
             <strong>{formatDateFr(reservationToDelete?.dateReservation)}</strong> à{' '}
-            <strong>{reservationToDelete?.heureReservation}</strong> ? Cette action est irréversible.
+            <strong>{formatTimeFr(reservationToDelete?.heureReservation)}</strong> ? Cette action est irréversible.
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
