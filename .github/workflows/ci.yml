@@ -53,10 +53,20 @@ jobs:
       - name: Setup Test Environment Variables
         run: |
           cd backend
-          echo "DATABASE_URL=postgresql://calendria_user:calendria_pass@127.0.0.1:5432/calendria_test?serverVersion=15&charset=utf8" > .env.test
-          echo "APP_ENV=test" >> .env.test
-          echo "APP_SECRET=a3f9e9d28e7c10b27e8a939f82d1b73e" >> .env.test
-          echo "GEMINI_API_KEY=dummy_key_for_tests" >> .env.test
+          printf '%s\n' \
+            'DATABASE_URL=postgresql://calendria_user:calendria_pass@127.0.0.1:5432/calendria_test?serverVersion=15&charset=utf8' \
+            'APP_ENV=test' \
+            'APP_SECRET=a3f9e9d28e7c10b27e8a939f82d1b73e' \
+            'CORS_ALLOW_ORIGIN=^https?://localhost' \
+            'MAILER_DSN=null://null' \
+            'MESSENGER_TRANSPORT_DSN=sync://' \
+            'JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem' \
+            'JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem' \
+            'JWT_PASSPHRASE=' \
+            'GEMINI_API_KEY=dummy_key_for_tests' \
+            'TELEGRAM_BOT_TOKEN=dummy_bot_token' \
+            'TELEGRAM_BOT_USERNAME=dummy_bot' \
+          > .env.test
 
       - name: Run PHPUnit Tests
         run: |
