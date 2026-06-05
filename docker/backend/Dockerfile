@@ -23,16 +23,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # Copy composer files first (cache layer optimization)
-COPY composer.json composer.lock ./
+# Context is repo root, so backend/ prefix is needed
+COPY backend/composer.json backend/composer.lock ./
 
 # Install PHP dependencies (production, no dev)
 RUN composer install --no-dev --no-interaction --optimize-autoloader --no-scripts
 
-# Copy application source
-COPY . .
-
-# Run Symfony post-install scripts (cache, assets)
-RUN APP_ENV=prod composer run-script post-install-cmd --no-interaction || true
+# Copy full backend application source
+COPY backend/ .
 
 # Clear and warm up Symfony cache for production
 RUN APP_ENV=prod php bin/console cache:clear --no-debug || true
@@ -68,7 +66,7 @@ autostart=true\n\
 autorestart=true\n' > /etc/supervisord.conf
 
 # Set correct permissions
-RUN chown -R www-data:www-data /var/www/html/var
+RUN chown -R www-data:www-data /var/www/html/var || true
 
 # Expose port
 EXPOSE 8000

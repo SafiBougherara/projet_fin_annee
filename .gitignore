@@ -5,7 +5,7 @@
 /backend/.env.local.php
 /backend/.env.*.local
 /backend/public/bundles/
-/backend/composer.lock
+
 
 # Frontend (React)
 /frontend/node_modules/
@@ -13,8 +13,7 @@
 /frontend/build/
 /frontend/.env.local
 /frontend/.env.production.local
-/frontend/package-lock.json
-/frontend/yarn.lock
+
 
 # Docker
 /docker/database/data/
