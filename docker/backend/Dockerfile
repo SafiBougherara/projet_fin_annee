@@ -36,6 +36,9 @@ RUN composer install --no-dev --no-interaction --optimize-autoloader --no-script
 # ── Step 3: NOW copy the full application source
 COPY backend/ .
 
+# Copy .env.example to .env to prevent Symfony Dotenv from failing when .env is missing
+RUN cp .env.example .env
+
 # ── Step 4: Run post-install scripts manually now that bin/console exists
 RUN APP_ENV=prod php bin/console cache:clear --no-debug || true
 RUN APP_ENV=prod php bin/console cache:warmup --no-debug || true
