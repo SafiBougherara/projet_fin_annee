@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import restaurantService, {
   type RestaurantItem,
   type RestaurantTable,
+  type ServiceItem,
   type CreateRestaurantPayload,
   type CreateTablePayload,
+  type CreateServicePayload,
 } from '../services/restaurant.service';
 import {
   Alert,
@@ -11,6 +13,7 @@ import {
   Button,
   Card,
   CardContent,
+  Checkbox,
   Chip,
   CircularProgress,
   Dialog,
@@ -19,6 +22,9 @@ import {
   DialogTitle,
   Divider,
   FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormLabel,
   Grid,
   IconButton,
   InputLabel,
@@ -35,6 +41,19 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+
+const JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+const JOURS_LABELS: Record<string, string> = {
+  lundi: 'Lun', mardi: 'Mar', mercredi: 'Mer', jeudi: 'Jeu',
+  vendredi: 'Ven', samedi: 'Sam', dimanche: 'Dim',
+};
+
+const initialServiceForm: Omit<CreateServicePayload, 'restaurantId'> = {
+  type: 'midi',
+  heureDebut: '12:00',
+  heureFin: '14:30',
+  joursOuverture: ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi'],
+};
 
 const initialRestaurantForm: CreateRestaurantPayload = {
   nom: '',
@@ -71,14 +90,28 @@ export default function RestaurantManagement() {
   const [tableForm, setTableForm] = useState(initialTableForm);
   const [editingTableId, setEditingTableId] = useState<number | null>(null);
 
+  // Service States
+  const [services, setServices] = useState<ServiceItem[]>([]);
+  const [serviceOpen, setServiceOpen] = useState(false);
+  const [serviceForm, setServiceForm] = useState<Omit<CreateServicePayload, 'restaurantId'>>(initialServiceForm);
+  const [editingServiceId, setEditingServiceId] = useState<number | null>(null);
+
   // Delete Confirmations
-  const [deleteConfirmType, setDeleteConfirmType] = useState<'restaurant' | 'table' | null>(null);
+  const [deleteConfirmType, setDeleteConfirmType] = useState<'restaurant' | 'table' | 'service' | null>(null);
   const [idToDelete, setIdToDelete] = useState<number | null>(null);
   const [nameToDelete, setNameToDelete] = useState<string>('');
 
   useEffect(() => {
     loadRestaurants();
   }, []);
+
+  useEffect(() => {
+    if (selectedRestaurant) {
+      loadServices(selectedRestaurant.id);
+    } else {
+      setServices([]);
+    }
+  }, [selectedRestaurant?.id]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadRestaurants = async () => {
     setLoading(true);
@@ -100,6 +133,15 @@ export default function RestaurantManagement() {
       setError('Erreur lors du chargement des restaurants.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadServices = async (restaurantId: number) => {
+    try {
+      const data = await restaurantService.getServices(restaurantId);
+      setServices(data);
+    } catch {
+      setServices([]);
     }
   };
 
@@ -210,6 +252,63 @@ export default function RestaurantManagement() {
     setNameToDelete(`Table ${table.numeroTable}`);
   };
 
+  // SERVICES HANDLERS
+  const handleOpenServiceCreate = () => {
+    setEditingServiceId(null);
+    setServiceForm(initialServiceForm);
+    setServiceOpen(true);
+  };
+
+  const handleOpenServiceEdit = (service: ServiceItem) => {
+    setEditingServiceId(service.id);
+    setServiceForm({
+      type: service.type,
+      heureDebut: service.heureDebut,
+      heureFin: service.heureFin,
+      joursOuverture: service.joursOuverture,
+    });
+    setServiceOpen(true);
+  };
+
+  const handleServiceSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!selectedRestaurant) return;
+    setError(null);
+    setSuccess(null);
+    setSaving(true);
+    try {
+      const payload: CreateServicePayload = { ...serviceForm, restaurantId: selectedRestaurant.id };
+      if (editingServiceId !== null) {
+        await restaurantService.updateService(editingServiceId, payload);
+        setSuccess('Service mis à jour avec succès.');
+      } else {
+        await restaurantService.createService(payload);
+        setSuccess('Service créé avec succès.');
+      }
+      setServiceOpen(false);
+      await loadServices(selectedRestaurant.id);
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Erreur lors de la sauvegarde du service.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleOpenServiceDelete = (service: ServiceItem) => {
+    setDeleteConfirmType('service');
+    setIdToDelete(service.id);
+    setNameToDelete(`Service ${service.type} (${service.heureDebut}-${service.heureFin})`);
+  };
+
+  const handleJourToggle = (jour: string) => {
+    setServiceForm((prev) => ({
+      ...prev,
+      joursOuverture: prev.joursOuverture.includes(jour)
+        ? prev.joursOuverture.filter((j) => j !== jour)
+        : [...prev.joursOuverture, jour],
+    }));
+  };
+
   // COMMON DELETE CONFIRM
   const handleConfirmDelete = async () => {
     if (idToDelete === null || !deleteConfirmType) return;
@@ -221,9 +320,13 @@ export default function RestaurantManagement() {
       if (deleteConfirmType === 'restaurant') {
         await restaurantService.deleteRestaurant(idToDelete);
         setSuccess('Restaurant supprimé avec succès.');
-      } else {
+      } else if (deleteConfirmType === 'table') {
         await restaurantService.deleteTable(idToDelete);
         setSuccess('Table supprimée avec succès.');
+      } else {
+        await restaurantService.deleteService(idToDelete);
+        setSuccess('Service supprimé avec succès.');
+        if (selectedRestaurant) await loadServices(selectedRestaurant.id);
       }
       setDeleteConfirmType(null);
       setIdToDelete(null);
@@ -391,6 +494,74 @@ export default function RestaurantManagement() {
                     </Grid>
                   </CardContent>
                 </Card>
+              </Grid>
+
+              {/* Services d'ouverture */}
+              <Grid size={{ xs: 12 }}>
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                  <Typography variant="h6" fontWeight="bold" color="text.primary">
+                    Horaires d'ouverture ({services.length})
+                  </Typography>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    startIcon={<AddIcon />}
+                    onClick={handleOpenServiceCreate}
+                    sx={{ fontWeight: 'bold' }}
+                  >
+                    Ajouter un service
+                  </Button>
+                </Box>
+                <Grid container spacing={2}>
+                  {services.map((service) => (
+                    <Grid size={{ xs: 12, sm: 6 }} key={service.id}>
+                      <Card sx={{ boxShadow: 2, border: '1px solid #e0e0e0' }}>
+                        <CardContent sx={{ pb: 1 }}>
+                          <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+                            <Box>
+                              <Chip
+                                label={service.type === 'midi' ? 'Déjeuner' : service.type === 'soir' ? 'Dîner' : service.type}
+                                size="small"
+                                color={service.type === 'midi' ? 'warning' : 'primary'}
+                                sx={{ fontWeight: 'bold', mb: 1 }}
+                              />
+                              <Typography variant="body2" sx={{ mt: 0.5 }}>
+                                <strong>{service.heureDebut}</strong> → <strong>{service.heureFin}</strong>
+                              </Typography>
+                              <Box display="flex" gap={0.5} flexWrap="wrap" mt={1}>
+                                {JOURS.map((jour) => (
+                                  <Chip
+                                    key={jour}
+                                    label={JOURS_LABELS[jour]}
+                                    size="small"
+                                    variant={service.joursOuverture.includes(jour) ? 'filled' : 'outlined'}
+                                    color={service.joursOuverture.includes(jour) ? 'success' : 'default'}
+                                    sx={{ fontSize: '0.7rem' }}
+                                  />
+                                ))}
+                              </Box>
+                            </Box>
+                            <Box display="flex" gap={0.5}>
+                              <IconButton size="small" color="primary" onClick={() => handleOpenServiceEdit(service)}>
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                              <IconButton size="small" color="error" onClick={() => handleOpenServiceDelete(service)}>
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </Box>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  ))}
+                  {services.length === 0 && (
+                    <Grid size={{ xs: 12 }}>
+                      <Paper sx={{ p: 3, textAlign: 'center', color: 'text.secondary' }}>
+                        Aucun service défini. Le chatbot ne pourra pas créer de réservations.
+                      </Paper>
+                    </Grid>
+                  )}
+                </Grid>
               </Grid>
 
               {/* Liste des tables */}
@@ -645,6 +816,83 @@ export default function RestaurantManagement() {
               Annuler
             </Button>
             <Button type="submit" variant="contained" color="primary" disabled={saving}>
+              {saving ? 'Sauvegarde...' : 'Sauvegarder'}
+            </Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
+
+      {/* dialog SERVICE CREATE / EDIT */}
+      <Dialog open={serviceOpen} onClose={() => setServiceOpen(false)} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ fontWeight: 'bold' }}>
+          {editingServiceId !== null ? 'Modifier le service' : 'Ajouter un service'}
+        </DialogTitle>
+        <Box component="form" onSubmit={handleServiceSubmit}>
+          <DialogContent dividers>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 12 }}>
+                <FormControl fullWidth size="small">
+                  <InputLabel id="service-type-label">Type de service</InputLabel>
+                  <Select
+                    labelId="service-type-label"
+                    value={serviceForm.type}
+                    label="Type de service"
+                    onChange={(e) => setServiceForm((prev) => ({ ...prev, type: e.target.value }))}
+                    required
+                  >
+                    <MenuItem value="midi">Déjeuner (midi)</MenuItem>
+                    <MenuItem value="soir">Dîner (soir)</MenuItem>
+                    <MenuItem value="brunch">Brunch</MenuItem>
+                    <MenuItem value="continu">Service continu</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid size={{ xs: 6 }}>
+                <TextField
+                  label="Heure d'ouverture"
+                  type="time"
+                  value={serviceForm.heureDebut}
+                  onChange={(e) => setServiceForm((prev) => ({ ...prev, heureDebut: e.target.value }))}
+                  fullWidth required size="small"
+                  slotProps={{ inputLabel: { shrink: true } }}
+                />
+              </Grid>
+              <Grid size={{ xs: 6 }}>
+                <TextField
+                  label="Heure de fermeture"
+                  type="time"
+                  value={serviceForm.heureFin}
+                  onChange={(e) => setServiceForm((prev) => ({ ...prev, heureFin: e.target.value }))}
+                  fullWidth required size="small"
+                  slotProps={{ inputLabel: { shrink: true } }}
+                />
+              </Grid>
+              <Grid size={{ xs: 12 }}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend" sx={{ fontSize: '0.85rem', mb: 0.5 }}>Jours d'ouverture</FormLabel>
+                  <FormGroup row>
+                    {JOURS.map((jour) => (
+                      <FormControlLabel
+                        key={jour}
+                        control={
+                          <Checkbox
+                            size="small"
+                            checked={serviceForm.joursOuverture.includes(jour)}
+                            onChange={() => handleJourToggle(jour)}
+                          />
+                        }
+                        label={JOURS_LABELS[jour]}
+                        sx={{ mr: 1 }}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions sx={{ p: 2 }}>
+            <Button onClick={() => setServiceOpen(false)} variant="outlined">Annuler</Button>
+            <Button type="submit" variant="contained" color="secondary" disabled={saving}>
               {saving ? 'Sauvegarde...' : 'Sauvegarder'}
             </Button>
           </DialogActions>

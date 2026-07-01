@@ -9,6 +9,14 @@ export interface RestaurantTable {
   restaurantId: number;
 }
 
+export interface ServiceItem {
+  id: number;
+  type: string;
+  heureDebut: string;
+  heureFin: string;
+  joursOuverture: string[];
+}
+
 export interface RestaurantItem {
   id: number;
   nom: string;
@@ -37,6 +45,14 @@ export interface CreateTablePayload {
   type: string;
   statut: string;
   restaurantId: number;
+}
+
+export interface CreateServicePayload {
+  restaurantId: number;
+  type: string;
+  heureDebut: string;
+  heureFin: string;
+  joursOuverture: string[];
 }
 
 const restaurantService = {
@@ -72,6 +88,26 @@ const restaurantService = {
 
   deleteTable: async (id: number): Promise<{ message: string }> => {
     const response = await api.delete<{ message: string }>(`/tables/${id}`);
+    return response.data;
+  },
+
+  getServices: async (restaurantId: number): Promise<ServiceItem[]> => {
+    const response = await api.get<ServiceItem[]>(`/restaurants/${restaurantId}/services`);
+    return response.data;
+  },
+
+  createService: async (payload: CreateServicePayload): Promise<ServiceItem> => {
+    const response = await api.post<ServiceItem>('/services', payload);
+    return response.data;
+  },
+
+  updateService: async (id: number, payload: Partial<CreateServicePayload>): Promise<ServiceItem> => {
+    const response = await api.put<ServiceItem>(`/services/${id}`, payload);
+    return response.data;
+  },
+
+  deleteService: async (id: number): Promise<{ message: string }> => {
+    const response = await api.delete<{ message: string }>(`/services/${id}`);
     return response.data;
   },
 };

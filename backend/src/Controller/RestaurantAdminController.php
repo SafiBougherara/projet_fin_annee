@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Restaurant;
+use App\Entity\Service;
 use App\Entity\Table;
 use App\Repository\RestaurantRepository;
+use App\Repository\ServiceRepository;
 use App\Repository\TableRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -195,4 +197,107 @@ class RestaurantAdminController extends AbstractController
             'message' => 'Table supprimée avec succès',
         ]);
     }
+
+    #[Route('/restaurants/{id}/services', name: 'services_list', methods: ['GET'])]
+    public function listServices(int $id, RestaurantRepository $restaurantRepository): JsonResponse
+    {
+        $restaurant = $restaurantRepository->find($id);
+        if (!$restaurant) {
+            return $this->json(['error' => 'Restaurant introuvable'], Response::HTTP_NOT_FOUND);
+        }
+
+        $services = [];
+        foreach ($restaurant->getServices() as $service) {
+            $services[] = [
+                'id' => $service->getId(),
+                'type' => $service->getType(),
+                'heureDebut' => $service->getHeureDebut()->format('H:i'),
+                'heureFin' => $service->getHeureFin()->format('H:i'),
+                'joursOuverture' => $service->getJoursOuverture(),
+            ];
+        }
+
+        return $this->json($services);
+    }
+
+    #[Route('/services', name: 'service_create', methods: ['POST'])]
+    public function createService(Request $request, RestaurantRepository $restaurantRepository, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        if (!is_array($data)) {
+            return $this->json(['error' => 'Corps JSON invalide'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $restaurant = $restaurantRepository->find($data['restaurantId'] ?? 0);
+        if (!$restaurant) {
+            return $this->json(['error' => 'Restaurant introuvable'], Response::HTTP_NOT_FOUND);
+        }
+
+        if (empty($data['type']) || empty($data['heureDebut']) || empty($data['heureFin'])) {
+            return $this->json(['error' => 'Les champs type, heureDebut et heureFin sont requis'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $service = new Service();
+        $service->setRestaurant($restaurant);
+        $service->setType($data['type']);
+        $service->setHeureDebut(new \DateTime($data['heureDebut']));
+        $service->setHeureFin(new \DateTime($data['heureFin']));
+        $service->setJoursOuverture($data['joursOuverture'] ?? []);
+        $service->setCreatedAt(new \DateTimeImmutable());
+
+        $entityManager->persist($service);
+        $entityManager->flush();
+
+        return $this->json([
+            'id' => $service->getId(),
+            'type' => $service->getType(),
+            'heureDebut' => $service->getHeureDebut()->format('H:i'),
+            'heureFin' => $service->getHeureFin()->format('H:i'),
+            'joursOuverture' => $service->getJoursOuverture(),
+        ], Response::HTTP_CREATED);
+    }
+
+    #[Route('/services/{id}', name: 'service_update', methods: ['PUT'])]
+    public function updateService(int $id, Request $request, ServiceRepository $serviceRepository, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $service = $serviceRepository->find($id);
+        if (!$service) {
+            return $this->json(['error' => 'Service introuvable'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = json_decode($request->getContent(), true);
+        if (!is_array($data)) {
+            return $this->json(['error' => 'Corps JSON invalide'], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (isset($data['type'])) $service->setType($data['type']);
+        if (isset($data['heureDebut'])) $service->setHeureDebut(new \DateTime($data['heureDebut']));
+        if (isset($data['heureFin'])) $service->setHeureFin(new \DateTime($data['heureFin']));
+        if (isset($data['joursOuverture'])) $service->setJoursOuverture($data['joursOuverture']);
+
+        $entityManager->flush();
+
+        return $this->json([
+            'id' => $service->getId(),
+            'type' => $service->getType(),
+            'heureDebut' => $service->getHeureDebut()->format('H:i'),
+            'heureFin' => $service->getHeureFin()->format('H:i'),
+            'joursOuverture' => $service->getJoursOuverture(),
+        ]);
+    }
+
+    #[Route('/services/{id}', name: 'service_delete', methods: ['DELETE'])]
+    public function deleteService(int $id, ServiceRepository $serviceRepository, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $service = $serviceRepository->find($id);
+        if (!$service) {
+            return $this->json(['error' => 'Service introuvable'], Response::HTTP_NOT_FOUND);
+        }
+
+        $entityManager->remove($service);
+        $entityManager->flush();
+
+        return $this->json(['message' => 'Service supprimé avec succès']);
+    }
 }
+
