@@ -1,16 +1,17 @@
 #!/bin/sh
 set -ex
 
-PORT="${PORT:-8000}"
+# Always use port 8000 to match EXPOSE 8000 in Dockerfile.
+# Railway routes to EXPOSE port, so we must listen on the same port.
+PORT=8000
 
 echo "[entrypoint] PORT=${PORT}"
 echo "[entrypoint] APP_ENV=${APP_ENV:-not set}"
-echo "[entrypoint] Writing nginx config for port ${PORT}..."
+echo "[entrypoint] Writing nginx config..."
 
-# Use a placeholder then sed to avoid shell here-doc substitution issues
 cat > /etc/nginx/http.d/default.conf << 'NGINX_TEMPLATE'
 server {
-    listen __PORT__;
+    listen 8000;
     root /var/www/html/public;
     index index.php;
 
@@ -32,8 +33,6 @@ server {
 }
 NGINX_TEMPLATE
 
-sed -i "s/__PORT__/${PORT}/g" /etc/nginx/http.d/default.conf
-
 echo "[entrypoint] Validating nginx config..."
 nginx -t
 
@@ -47,7 +46,6 @@ php bin/console cache:clear --no-debug --env=prod 2>&1 || true
 echo "[entrypoint] Warming up Symfony cache..."
 php bin/console cache:warmup --no-debug --env=prod 2>&1 || true
 
-echo "[entrypoint] Permissions after cache build..."
 chown -R www-data:www-data /var/www/html/var 2>/dev/null || true
 
 echo "[entrypoint] Starting supervisord..."
