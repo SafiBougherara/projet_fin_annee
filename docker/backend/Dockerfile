@@ -43,6 +43,13 @@ RUN cp .env.example .env
 RUN APP_ENV=prod php bin/console cache:clear --no-debug || true
 RUN APP_ENV=prod php bin/console cache:warmup --no-debug || true
 
+# ── Step 5: Generate JWT keypair so Symfony doesn't crash on startup
+RUN apk add --no-cache openssl \
+    && mkdir -p config/jwt \
+    && openssl genrsa -out config/jwt/private.pem 4096 \
+    && openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem \
+    && chmod 644 config/jwt/private.pem config/jwt/public.pem
+
 # Nginx configuration
 RUN printf 'server {\n\
     listen 8000;\n\
