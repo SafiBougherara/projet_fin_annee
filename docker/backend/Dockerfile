@@ -1,3 +1,4 @@
+# Base image using PHP FPM Alpine
 FROM php:8.4-fpm-alpine
 
 # Install system dependencies
