@@ -1,56 +1,53 @@
 #!/bin/sh
-set -e
+set -ex
 
-# Railway injects PORT; fallback to 8000 for local Docker
 PORT="${PORT:-8000}"
 
-echo "[entrypoint] Starting with PORT=$PORT, APP_ENV=${APP_ENV:-prod}"
+echo "[entrypoint] PORT=${PORT}"
+echo "[entrypoint] APP_ENV=${APP_ENV:-not set}"
+echo "[entrypoint] Writing nginx config for port ${PORT}..."
 
-# ── Dynamic Nginx config (uses $PORT) ─────────────────────────────────────────
-cat > /etc/nginx/http.d/default.conf << NGINX_EOF
+# Use a placeholder then sed to avoid shell here-doc substitution issues
+cat > /etc/nginx/http.d/default.conf << 'NGINX_TEMPLATE'
 server {
-    listen ${PORT};
+    listen __PORT__;
     root /var/www/html/public;
     index index.php;
 
-    # Forward real client IP from Railway's edge
-    real_ip_header X-Forwarded-For;
-    set_real_ip_from 0.0.0.0/0;
-
     location / {
-        try_files \$uri /index.php\$is_args\$args;
+        try_files $uri /index.php$is_args$args;
     }
 
     location ~ \.php$ {
         fastcgi_pass 127.0.0.1:9000;
-        fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
-        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         fastcgi_read_timeout 120;
-        fastcgi_buffers 16 16k;
-        fastcgi_buffer_size 32k;
+        fastcgi_intercept_errors on;
+        include fastcgi_params;
     }
 
     location ~ /\.ht {
         deny all;
     }
 }
-NGINX_EOF
+NGINX_TEMPLATE
 
-echo "[entrypoint] Nginx config written for port $PORT"
+sed -i "s/__PORT__/${PORT}/g" /etc/nginx/http.d/default.conf
 
-# ── Fix permissions ────────────────────────────────────────────────────────────
+echo "[entrypoint] Validating nginx config..."
+nginx -t
+
+echo "[entrypoint] Fixing permissions..."
 chown -R www-data:www-data /var/www/html/var 2>/dev/null || true
 
-# ── Clear & rebuild Symfony cache with REAL runtime env vars ──────────────────
-cd /var/www/html
-
 echo "[entrypoint] Clearing Symfony cache..."
+cd /var/www/html
 php bin/console cache:clear --no-debug --env=prod 2>&1 || true
 
 echo "[entrypoint] Warming up Symfony cache..."
 php bin/console cache:warmup --no-debug --env=prod 2>&1 || true
 
-# Fix permissions again after cache generation
+echo "[entrypoint] Permissions after cache build..."
 chown -R www-data:www-data /var/www/html/var 2>/dev/null || true
 
 echo "[entrypoint] Starting supervisord..."
