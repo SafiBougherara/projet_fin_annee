@@ -62,6 +62,7 @@ class DisponibiliteService
         if ($tableDisponible) {
             return [
                 'disponible' => true,
+                'raison' => null,
                 'table' => $tableDisponible,
                 'alternatives' => []
             ];
@@ -72,6 +73,7 @@ class DisponibiliteService
 
         return [
             'disponible' => false,
+            'raison' => $estOuvert ? 'complet' : 'ferme',
             'table' => null,
             'alternatives' => $alternatives
         ];

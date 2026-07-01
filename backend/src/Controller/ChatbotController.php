@@ -212,9 +212,42 @@ class ChatbotController extends AbstractController
                 $alternatives[] = $alt['heure'];
             }
 
+            $raison = $resAvailability['raison'] ?? 'indisponible';
+
+            if ($raison === 'ferme') {
+                if (!empty($alternatives)) {
+                    $altStr = implode(', ', $alternatives);
+                    $message = sprintf(
+                        "Le restaurant est fermé à %s (pas de service ouvert à cet horaire). Des créneaux disponibles existent ce jour-là : %s. Proposez l'un de ces horaires au client.",
+                        $heureStr,
+                        $altStr
+                    );
+                } else {
+                    $message = sprintf(
+                        "Le restaurant est fermé à %s et aucun autre créneau n'est disponible ce jour. Horaires d'ouverture : déjeuner lundi-vendredi 12h00-14h30, dîner lundi-samedi 19h00-22h30.",
+                        $heureStr
+                    );
+                }
+            } else {
+                if (!empty($alternatives)) {
+                    $altStr = implode(', ', $alternatives);
+                    $message = sprintf(
+                        "Toutes les tables sont complètes à %s pour %d personne(s). Des créneaux sont disponibles à : %s. Proposez l'un de ces horaires au client.",
+                        $heureStr,
+                        $nombrePersonnes,
+                        $altStr
+                    );
+                } else {
+                    $message = sprintf(
+                        "Toutes les tables sont complètes pour le %s et aucune alternative n'est disponible ce jour.",
+                        (new \DateTime($dateStr))->format('d/m/Y')
+                    );
+                }
+            }
+
             return $this->json([
                 'success' => false,
-                'message' => 'Aucune table disponible pour cet horaire.',
+                'message' => $message,
                 'alternatives' => $alternatives
             ], Response::HTTP_OK);
         }
