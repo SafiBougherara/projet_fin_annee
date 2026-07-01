@@ -22,6 +22,12 @@ class AuthController extends AbstractController
     ) {
     }
 
+    #[Route('/health', name: 'health', methods: ['GET'])]
+    public function health(): JsonResponse
+    {
+        return $this->json(['status' => 'ok']);
+    }
+
     #[Route('/register', name: 'register', methods: ['POST'])]
     public function register(Request $request): JsonResponse
     {

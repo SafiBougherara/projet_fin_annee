@@ -30,6 +30,11 @@ security:
             stateless: true
             security: false
         
+        health:
+            pattern: ^/api/health
+            stateless: true
+            security: false
+        
         chatbot:
             pattern: ^/api/chatbot
             stateless: true
@@ -49,6 +54,7 @@ security:
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
+        - { path: ^/api/health, roles: PUBLIC_ACCESS }
         - { path: ^/api/chatbot, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 

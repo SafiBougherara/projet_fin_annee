@@ -40,9 +40,8 @@ COPY backend/ .
 # Create a minimal .env for build-time commands only (no CORS/secrets — Railway injects those at runtime)
 RUN echo "APP_ENV=prod" > .env && echo "APP_SECRET=build_placeholder" >> .env
 
-# ── Step 4: Run post-install scripts manually now that bin/console exists
-RUN APP_ENV=prod php bin/console cache:clear --no-debug || true
-RUN APP_ENV=prod php bin/console cache:warmup --no-debug || true
+# ── Step 4: Run composer post-install scripts (autoload optimization)
+RUN APP_ENV=prod composer dump-autoload --optimize --no-dev 2>/dev/null || true
 
 # ── Step 5: Generate JWT keypair so Symfony doesn't crash on startup
 RUN apk add --no-cache openssl \
@@ -51,29 +50,19 @@ RUN apk add --no-cache openssl \
     && openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem \
     && chmod 644 config/jwt/private.pem config/jwt/public.pem
 
-# Nginx configuration
-RUN printf 'server {\n\
-    listen 8000;\n\
-    root /var/www/html/public;\n\
-    index index.php;\n\
-    location / {\n\
-        try_files $uri /index.php$is_args$args;\n\
-    }\n\
-    location ~ \\.php$ {\n\
-        fastcgi_pass 127.0.0.1:9000;\n\
-        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;\n\
-        include fastcgi_params;\n\
-    }\n\
-}\n' > /etc/nginx/http.d/default.conf
-
+# Nginx configuration — written dynamically at runtime by entrypoint.sh (uses $PORT)
 # Supervisord configuration to run nginx + php-fpm together
 RUN printf '[supervisord]\nnodaemon=true\nlogfile=/dev/stdout\nlogfile_maxbytes=0\n\n[program:php-fpm]\ncommand=php-fpm\nautostart=true\nautorestart=true\nstdout_logfile=/dev/stdout\nstdout_logfile_maxbytes=0\nstderr_logfile=/dev/stderr\nstderr_logfile_maxbytes=0\n\n[program:nginx]\ncommand=nginx -g "daemon off;"\nautostart=true\nautorestart=true\nstdout_logfile=/dev/stdout\nstdout_logfile_maxbytes=0\nstderr_logfile=/dev/stderr\nstderr_logfile_maxbytes=0\n' > /etc/supervisord.conf
 
 # Set correct permissions
 RUN chown -R www-data:www-data /var/www/html/var || true
 
-# Expose port
+# Copy entrypoint script (handles PORT, nginx config, cache warmup at runtime)
+COPY docker/backend/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Expose default port (Railway may override via PORT env var)
 EXPOSE 8000
 
-# Start both nginx and php-fpm via supervisord
-CMD ["supervisord", "-c", "/etc/supervisord.conf"]
+# Entrypoint handles nginx config + cache clear, then starts supervisord
+CMD ["/entrypoint.sh"]
