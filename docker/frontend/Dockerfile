@@ -12,12 +12,9 @@ RUN npm install
 # Copy frontend source
 COPY frontend/ .
 
-# Receive VITE_* build-time variables from Railway
+# Receive VITE_API_URL from Railway and bake it into the bundle
 ARG VITE_API_URL
-RUN echo "VITE_API_URL=${VITE_API_URL}" > .env
-
-# Build for production (outputs to /app/dist)
-RUN npm run build
+RUN VITE_API_URL=${VITE_API_URL} npm run build
 
 # Stage 2 — Serve with nginx
 FROM nginx:alpine
