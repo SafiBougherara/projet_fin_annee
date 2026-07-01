@@ -12,6 +12,10 @@ RUN npm install
 # Copy frontend source
 COPY frontend/ .
 
+# Receive VITE_* build-time variables from Railway
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 # Build for production (outputs to /app/dist)
 RUN npm run build
 
