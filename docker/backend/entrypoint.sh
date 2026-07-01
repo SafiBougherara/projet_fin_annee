@@ -1,9 +1,8 @@
 #!/bin/sh
 set -ex
 
-# Always use port 8000 to match EXPOSE 8000 in Dockerfile.
-# Railway routes to EXPOSE port, so we must listen on the same port.
-PORT=8000
+# Use Railway-injected PORT (8080), fallback to 8080 for local Docker
+PORT="${PORT:-8080}"
 
 echo "[entrypoint] PORT=${PORT}"
 echo "[entrypoint] APP_ENV=${APP_ENV:-not set}"
@@ -11,7 +10,7 @@ echo "[entrypoint] Writing nginx config..."
 
 cat > /etc/nginx/http.d/default.conf << 'NGINX_TEMPLATE'
 server {
-    listen 8000;
+    listen __PORT__;
     root /var/www/html/public;
     index index.php;
 
@@ -32,6 +31,8 @@ server {
     }
 }
 NGINX_TEMPLATE
+
+sed -i "s/__PORT__/${PORT}/g" /etc/nginx/http.d/default.conf
 
 echo "[entrypoint] Validating nginx config..."
 nginx -t

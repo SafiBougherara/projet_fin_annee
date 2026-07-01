@@ -61,8 +61,8 @@ RUN chown -R www-data:www-data /var/www/html/var || true
 COPY docker/backend/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Expose default port (Railway may override via PORT env var)
-EXPOSE 8000
+# Railway injects PORT=8080 — must match EXPOSE
+EXPOSE 8080
 
 # Entrypoint handles nginx config + cache clear, then starts supervisord
 CMD ["/entrypoint.sh"]
