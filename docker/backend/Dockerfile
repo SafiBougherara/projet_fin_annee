@@ -66,18 +66,7 @@ RUN printf 'server {\n\
 }\n' > /etc/nginx/http.d/default.conf
 
 # Supervisord configuration to run nginx + php-fpm together
-RUN printf '[supervisord]\n\
-nodaemon=true\n\
-\n\
-[program:php-fpm]\n\
-command=php-fpm\n\
-autostart=true\n\
-autorestart=true\n\
-\n\
-[program:nginx]\n\
-command=nginx -g "daemon off;"\n\
-autostart=true\n\
-autorestart=true\n' > /etc/supervisord.conf
+RUN printf '[supervisord]\nnodaemon=true\nlogfile=/dev/stdout\nlogfile_maxbytes=0\n\n[program:php-fpm]\ncommand=php-fpm\nautostart=true\nautorestart=true\nstdout_logfile=/dev/stdout\nstdout_logfile_maxbytes=0\nstderr_logfile=/dev/stderr\nstderr_logfile_maxbytes=0\n\n[program:nginx]\ncommand=nginx -g "daemon off;"\nautostart=true\nautorestart=true\nstdout_logfile=/dev/stdout\nstdout_logfile_maxbytes=0\nstderr_logfile=/dev/stderr\nstderr_logfile_maxbytes=0\n' > /etc/supervisord.conf
 
 # Set correct permissions
 RUN chown -R www-data:www-data /var/www/html/var || true
