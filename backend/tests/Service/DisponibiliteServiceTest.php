@@ -79,7 +79,7 @@ class DisponibiliteServiceTest extends TestCase
         $restaurant = $this->makeRestaurantWithSoirService();
 
         $table = new Table();
-        $table->setNumeroTable(1);
+        $table->setNumeroTable('1');
         $table->setCapacite(4);
 
         // Mock table collection on the restaurant
