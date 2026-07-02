@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import RestaurantManagement from './pages/RestaurantManagement';
 import ChatWidget from './pages/ChatWidget';
@@ -230,6 +231,9 @@ function AppContent() {
     <Routes>
       {/* Route publique : Connexion */}
       <Route path="/login" element={<Login />} />
+
+      {/* Route publique : Inscription */}
+      <Route path="/register" element={<Register />} />
 
       {/* Route publique : Widget Chat IA */}
       <Route path="/widget" element={<ChatWidget />} />

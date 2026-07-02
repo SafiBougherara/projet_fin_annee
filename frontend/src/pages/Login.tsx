@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { authService } from '../services/auth.service';
 import type { LoginCredentials } from '../services/auth.service';
 import '../App.css'; // On utilisera le CSS global pour le style simple
@@ -57,6 +57,13 @@ export default function Login() {
                         {isSubmitting ? 'Connexion en cours...' : 'Se connecter'}
                     </button>
                 </form>
+
+                <p style={{ marginTop: '1rem', textAlign: 'center', fontSize: '0.875rem', color: '#9ca3af' }}>
+                    Pas encore de compte ?{' '}
+                    <Link to="/register" style={{ color: '#6366f1', textDecoration: 'none', fontWeight: 600 }}>
+                        Créer un compte
+                    </Link>
+                </p>
             </div>
         </div>
     );
