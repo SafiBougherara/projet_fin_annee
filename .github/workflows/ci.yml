@@ -68,6 +68,19 @@ jobs:
             'TELEGRAM_BOT_USERNAME=dummy_bot' \
           > .env.test
 
+      - name: Generate JWT Keys
+        run: |
+          cd backend
+          mkdir -p config/jwt
+          openssl genrsa -out config/jwt/private.pem 2048
+          openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+          chmod 600 config/jwt/private.pem
+
+      - name: Run Database Migrations
+        run: |
+          cd backend
+          php bin/console doctrine:migrations:migrate --no-interaction --env=test
+
       - name: Run PHPUnit Tests
         run: |
           cd backend

@@ -2,95 +2,151 @@
 
 [![CI/CD Pipeline](https://github.com/SafiBougherara/projet_fin_annee/actions/workflows/ci.yml/badge.svg)](https://github.com/SafiBougherara/projet_fin_annee/actions/workflows/ci.yml)
 
-Assistant de réservation multi-canal pour restaurants utilisant l'IA conversationnelle.
+Assistant de réservation multi-canal pour restaurants, combinant dashboard web et agent vocal IA pour automatiser la prise de réservations.
+
+## 🌐 Application en Production
+
+| Service | URL |
+|---|---|
+| **Frontend (Dashboard)** | https://frontend-production-8a43.up.railway.app |
+| **Backend API** | https://backend-production-dd10b.up.railway.app |
+| **Health Check** | https://backend-production-dd10b.up.railway.app/api/health |
+
+### Identifiants de démo (après `doctrine:fixtures:load`)
+- **Email** : `admin@calendria.com`
+- **Mot de passe** : `password123`
+
+---
 
 ## 🎯 Fonctionnalités
 
-- 📱 **WhatsApp Business** : Réservation via QR Code
-- 🌐 **Widget Web** : Chatbot intégrable sur site restaurant
-- 📲 **SMS Direct** : Réservation par SMS
-- 🤖 **IA Conversationnelle** : OpenAI GPT-4o-mini
-- ✅ **Validation Automatique** : Confirmation instantanée si disponibilité
-- 📊 **Dashboard Restaurateur** : Gestion complète des réservations
+- 🗓️ **Dashboard Restaurateur** : Gestion complète des réservations (CRUD), plan de salle interactif, slider temporel
+- 🤖 **Agent Vocal IA (Retell AI)** : Réservation par téléphone via webhook `/api/chatbot/call`
+- 🧠 **Chatbot Web (Gemini AI)** : Widget conversationnel intégrable sur site restaurant
+- 📲 **Bot Telegram** : Canal de réservation mobile gratuit connecté par webhook
+- ✅ **Disponibilité intelligente** : Attribution automatique de table + alternatives horaires
+- 🔐 **Authentification JWT** : Espace restaurateur sécurisé
+- 🌙 **Mode sombre** : Thème persistant
+
+---
 
 ## 🛠️ Stack Technique
 
-- **Back-end** : Symfony 6.4 LTS (PHP 8.2+)
-- **Front-end** : React 18+ (TypeScript)
-- **Base de données** : PostgreSQL 15
-- **APIs** : Twilio (WhatsApp + SMS) + OpenAI
-- **Conteneurisation** : Docker + Docker Compose
-- **CI/CD** : GitHub Actions
+| Couche | Technologie |
+|---|---|
+| **Back-end** | Symfony 6.4 LTS — PHP 8.4 |
+| **Front-end** | React 18 + TypeScript + Vite + Material UI |
+| **Base de données** | PostgreSQL 15 (Doctrine ORM) |
+| **Auth** | LexikJWTAuthenticationBundle (RS256) |
+| **APIs externes** | Google Gemini 2.5 Flash · Retell AI |
+| **Conteneurisation** | Docker + Docker Compose (nginx + PHP-FPM + supervisord) |
+| **CI/CD** | GitHub Actions → Railway (déploiement continu) |
 
-## 🚀 Installation
+---
+
+## 🚀 Démarrage Rapide (Docker)
 
 ### Prérequis
+- Docker & Docker Compose
+- Clé API Gemini (gratuite sur [Google AI Studio](https://aistudio.google.com/))
 
-- PHP 8.2+ ✅
-- Composer 2.x ✅
-- Node.js 20+ ✅
-- Docker & Docker Compose ✅
-- Compte Twilio (gratuit)
-- Compte OpenAI (gratuit)
-
-### Démarrage Rapide
+### Lancement en local
 
 ```bash
-# Copier les variables d'environnement
+# 1. Cloner le dépôt
+git clone https://github.com/SafiBougherara/projet_fin_annee.git
+cd projet_fin_annee
+
+# 2. Configurer les variables d'environnement
 cp backend/.env.example backend/.env
-cp frontend/.env.example frontend/.env
+# Renseigner GEMINI_API_KEY dans backend/.env
 
-# Configurer les clés API dans backend/.env
-# TWILIO_ACCOUNT_SID=...
-# TWILIO_AUTH_TOKEN=...
-# OPENAI_API_KEY=...
+# 3. Lancer tous les services
+docker compose up -d --build
 
-# Lancer avec Docker
-docker-compose up -d
+# 4. Initialiser la base de données
+docker compose exec backend php bin/console doctrine:migrations:migrate --no-interaction
+docker compose exec backend php bin/console doctrine:fixtures:load --no-interaction
 
-# Accéder à l'application
-# Frontend : http://localhost:3000
-# Backend API : http://localhost:8000
+# 5. Accéder à l'application
+#    Dashboard : http://localhost:3000
+#    API       : http://localhost:8000/api/health
 ```
+
+### Variables d'environnement requises (`backend/.env`)
+
+| Variable | Description | Obligatoire |
+|---|---|---|
+| `DATABASE_URL` | URL de connexion PostgreSQL | ✅ |
+| `APP_SECRET` | Clé secrète Symfony (32 chars) | ✅ |
+| `GEMINI_API_KEY` | Clé API Google Gemini | ✅ |
+| `CORS_ALLOW_ORIGIN` | Regex domaine frontend | ✅ |
+| `JWT_PASSPHRASE` | Passphrase clés RSA (vide = sans) | ✅ |
+| `TELEGRAM_BOT_TOKEN` | Token bot Telegram | ❌ optionnel |
+| `TELEGRAM_BOT_USERNAME` | Username bot Telegram | ❌ optionnel |
+
+---
+
+## 🧪 Tests
+
+```bash
+# Tests unitaires et fonctionnels backend
+docker compose exec backend php bin/console cache:clear --env=test
+docker compose exec backend vendor/bin/phpunit
+
+# Vérification TypeScript frontend
+cd frontend && npm run build
+```
+
+---
 
 ## 📁 Structure du Projet
 
 ```
-calendria/
-├── backend/              # API Symfony
-├── frontend/             # React SPA
-├── documentation/        # Docs projet
-├── docker/              # Configurations Docker
-├── .github/             # GitHub Actions (CI/CD)
-└── scripts/             # Scripts utilitaires
+projet_fin_annee/
+├── backend/              # API Symfony 6.4
+│   ├── src/
+│   │   ├── Controller/   # Endpoints REST
+│   │   ├── Entity/       # Entités Doctrine
+│   │   ├── Service/      # Logique métier
+│   │   ├── Repository/   # Couche d'accès aux données
+│   │   └── EventSubscriber/ # Rate limiting login
+│   ├── tests/            # PHPUnit (unitaires + fonctionnels)
+│   ├── config/           # Configuration Symfony
+│   └── migrations/       # Migrations Doctrine
+├── frontend/             # React SPA (TypeScript + MUI)
+│   └── src/
+│       ├── pages/        # Dashboard, Login, Register, Plan de salle…
+│       ├── components/   # Composants réutilisables
+│       └── services/     # Couche API (Axios)
+├── docker/               # Dockerfiles + configs nginx/supervisord
+├── documentation/        # Livrables jalons 1→6 (Markdown)
+├── .github/workflows/    # Pipeline CI/CD GitHub Actions
+└── docker-compose.yml    # Orchestration locale
 ```
+
+---
 
 ## 📚 Documentation
 
-Voir le dossier `/documentation` pour :
-- [Guide d'Installation](documentation/INSTALLATION.md)
-- [Plan du Projet](documentation/Plan.md)
-- [Structure Détaillée](documentation/STRUCTURE.md)
-- CDCF complet (Jalon 1) ✅
-- Maquettes UI/UX (Jalon 2)
-- Modélisation BDD (Jalon 3)
-- Conception UML (Jalon 4)
+| Jalon | Contenu | Statut |
+|---|---|---|
+| Jalon 1 | Cahier des Charges Fonctionnel | ✅ |
+| Jalon 2 | Méthodologie + Conception UI/UX | ✅ |
+| Jalon 3 | Modélisation BDD (MCD/MLD/MPD) | ✅ |
+| Jalon 4 | Architecture + Diagrammes UML | ✅ |
+| Jalon 5 | Version Bêta + Tests + Sécurité | ✅ |
+| Jalon 6 | Livraison Finale + Déploiement | ✅ |
 
-## 📅 Jalons
-
-- [x] **Jalon 1** (31/01) : CDCF ✅
-- [x] **Jalon 2** (28/02) : Méthodologie + Maquettes ✅
-- [x] **Jalon 3** (31/03) : MCD/MLD/MPD + API ✅
-- [x] **Jalon 4** (30/04) : Chatbot WhatsApp + Dashboard ✅
-- [x] **Jalon 5** (29/05) : Widget Web + Tests ✅
-- [ ] **Jalon 6** (30/06) : Livraison finale
+---
 
 ## 👤 Auteur
 
 **BOUGHERARA Safi**  
-Formation CDA - Concepteur Développeur d'Applications  
-Janvier 2026
+Formation CDA — Concepteur Développeur d'Applications  
+Promotion 2025–2026
 
 ## 📄 Licence
 
 MIT
+
