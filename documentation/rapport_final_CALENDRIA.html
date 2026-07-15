@@ -3989,7 +3989,7 @@ java -jar plantuml.jar MCD.puml MLD.puml MPD.puml</code></pre>
 <p>Notre conception cible les principes SOLID :</p>
 <ul>
 <li><strong>SRP (Single Responsibility Principle)</strong> : La séparation Controller (HTTP), Service (Métier), Repository (BDD) assure qu'une classe n'a qu'une seule raison de changer.</li>
-<li><strong>OCP (Open/Closed Principle)</strong> : L'utilisation d'API Platform avec des DataProviders et DataPersisters personnalisés permet d'étendre le comportement de l'API sans modifier le cœur du package.</li>
+<li><strong>OCP (Open/Closed Principle)</strong> : L'utilisation d'API Platform avec des <code>State Providers</code> et <code>State Persisters</code> personnalisés (terminologie API Platform v3+, successeurs des anciens DataProviders/DataPersisters v2) permet d'étendre le comportement de l'API sans modifier le cœur du package.</li>
 <li><strong>DIP (Dependency Inversion Principle)</strong> : Les contrôleurs s'appuient sur l'Injection de Dépendances de Symfony pour recevoir des instances de services. Au lieu d'instancier un service manuellement, le container Symfony l'injecte dans le constructeur.</li>
 </ul>
 

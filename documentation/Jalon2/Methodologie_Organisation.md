@@ -226,6 +226,18 @@ Chaque tâche du backlog est créée sous forme de **GitHub Issue** avec :
 - **Taux de complétion** : % de tâches terminées par rapport au sprint backlog
 - **Retard accumulé** : Nombre de jours de retard par rapport au planning initial
 
+#### Données Réelles — Sprint 1 (Janvier 2026 · Jalon 1 — CDCF)
+
+| Indicateur | Planifié | Réalisé |
+|---|---|---|
+| Story points totaux | 13 | 13 |
+| Story points complétés | 13 | **13** |
+| Taux de complétion | 100% | **100%** |
+| Retard accumulé | 0 jour | **0 jour** |
+| Vélocité mesurée | — | **13 pts/sprint** |
+
+> **Analyse** : Sprint 1 complété à 100% dans les délais. Le CDCF a été livré sans retard. Les 13 points estimés couvrent : analyse du contexte métier (2 pts), objectifs SMART (2 pts), périmètre fonctionnel (3 pts), exigences techniques (2 pts), contraintes et risques (2 pts), annexes (2 pts). Cette vélocité de 13 pts/sprint constitue la référence de planification pour les sprints suivants.
+
 ---
 
 ## 4. Gestion du Code Source (Git)

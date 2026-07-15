@@ -105,6 +105,7 @@ L'application CALENDRIA est composée de deux interfaces distinctes :
 Les wireframes suivants représentent l'agencement des éléments pour les écrans clés de l'application. Ce sont des maquettes basse fidélité (fil de fer) qui définissent la structure fonctionnelle sans le design visuel final.
 
 ### 2.1 Page de Connexion
+> *Répond au besoin CDCF §3.1.3.A — Authentification sécurisée des restaurateurs (email + mot de passe, session JWT Bearer Token)*
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -141,6 +142,7 @@ Les wireframes suivants représentent l'agencement des éléments pour les écra
 ```
 
 ### 2.2 Dashboard (Tableau de Bord) – Desktop
+> *Répond au besoin CDCF §3.1.3 — Interface Dashboard Restaurateur : KPIs temps réel, planning du service, vue d'ensemble des réservations*
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
@@ -178,6 +180,7 @@ Les wireframes suivants représentent l'agencement des éléments pour les écra
 ```
 
 ### 2.3 Dashboard – Version Mobile
+> *Répond à la contrainte CDCF §4.4 — Interface responsive : le dashboard doit être utilisable sur tablette et smartphone par le restaurateur en salle*
 
 ```
 ┌───────────────────────┐
@@ -224,6 +227,7 @@ Les wireframes suivants représentent l'agencement des éléments pour les écra
 ```
 
 ### 2.4 Page Réservations – Desktop
+> *Répond au besoin CDCF §3.1.3.D — Gestion des Réservations : liste filtrable, statuts visuels, actions rapides (modifier, annuler, marquer arrivé)*
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
@@ -259,6 +263,7 @@ Les wireframes suivants représentent l'agencement des éléments pour les écra
 ```
 
 ### 2.5 Plan de Salle – Vue en Direct – Desktop
+> *Répond aux besoins CDCF §3.1.2.A (configuration des tables) et §3.1.3.C (vue temps réel avec statuts couleur et timeline de service)*
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
@@ -295,6 +300,7 @@ Cette vue combine :
 - **Slider Turnover** : ajustement de la durée estimée d'un repas (30min – 3h)
 
 ### 2.6 Paramètres – Horaires & Services
+> *Répond au besoin CDCF §3.1.2.B — Gestion des Services : configuration des horaires midi/soir, jours d'ouverture JSONB, fermetures exceptionnelles*
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
@@ -339,6 +345,7 @@ Cette vue combine :
 ```
 
 ### 2.7 Widget Web Chatbot (Côté Client)
+> *Répond au besoin CDCF §3.1.1 — Module IA Conversationnel multi-canal : widget web intégrable côté client pour réservation en langage naturel*
 
 ```
                                           ┌────────────────────────────┐
@@ -380,6 +387,7 @@ Cette vue combine :
 ```
 
 ### 2.8 Fiche Client – Desktop
+> *Répond au besoin CDCF §3.1.5 — Gestion des Clients : profil, historique des réservations, préférences, taux no-show, droit à l'oubli RGPD*
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐

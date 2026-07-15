@@ -65,7 +65,7 @@ Le backend Symfony suit le pattern architectural **MVC étendu vers une architec
 
 Notre conception cible les principes SOLID :
 - **SRP (Single Responsibility Principle)** : La séparation Controller (HTTP), Service (Métier), Repository (BDD) assure qu'une classe n'a qu'une seule raison de changer.
-- **OCP (Open/Closed Principle)** : L'utilisation d'API Platform avec des `DataProviders` et `DataPersisters` personnalisés permet d'étendre le comportement de l'API sans modifier le cœur du package.
+- **OCP (Open/Closed Principle)** : L'utilisation d'API Platform avec des `State Providers` et `State Persisters` personnalisés (terminologie API Platform v3+, successeurs des anciens DataProviders/DataPersisters v2) permet d'étendre le comportement de l'API sans modifier le cœur du package.
 - **DIP (Dependency Inversion Principle)** : Les contrôleurs s'appuient sur l'Injection de Dépendances de Symfony pour recevoir des instances de services. Au lieu d'instancier un service manuellement (`$service = new Service()`), le container Symfony l'injecte dans le constructeur.
 
 ---
@@ -75,7 +75,7 @@ Notre conception cible les principes SOLID :
 Afin de ne pas réinventer la roue, l'architecture s'appuie sur des composants standards robustes :
 
 ### Back-end (Bundles Symfony)
-*   **API Platform (`api_platform`)** : Inclus dans le projet pour la documentation OpenAPI/Swagger automatique (`/api/docs`). Les annotations `#[ApiResource]` sont présentes sur certaines entités, mais les endpoints opérationnels (auth, chatbot, gestion restaurant) sont des contrôleurs Symfony custom avec `#[Route]`. Ce choix délibéré permet un contrôle total sur la sérialisation et la logique de réponse, que les DataProviders/DataPersisters d'API Platform ne permettraient pas sans une surcharge importante.
+*   **API Platform (`api_platform`)** : Inclus dans le projet pour la documentation OpenAPI/Swagger automatique (`/api/docs`). Les annotations `#[ApiResource]` sont présentes sur certaines entités, mais les endpoints opérationnels (auth, chatbot, gestion restaurant) sont des contrôleurs Symfony custom avec `#[Route]`. Ce choix délibéré permet un contrôle total sur la sérialisation et la logique de réponse, que les State Providers/State Persisters d'API Platform ne permettraient pas sans une surcharge importante.
 *   **Lexik JWT Authentication (`lexik_jwt_authentication`)** : Gère la création (Login) et la validation des tokens JSON Web Token pour sécuriser l'API (Stateless).
 *   **Nelmio CORS (`nelmio_cors`)** : Gère la politique Cors-Origin pour permettre au navigateur d'interroger l'API depuis le domaine du frontend.
 *   **Doctrine ORM** : Fait le pont entre les objets PHP (`Entities`) et la base de données PostgreSQL (génération des migrations SQL).
