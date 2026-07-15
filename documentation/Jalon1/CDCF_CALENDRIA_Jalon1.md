@@ -28,6 +28,23 @@
 
 ## 1. Contexte Métier
 
+### 1.0 Identification du Commanditaire
+
+> **Note** : Dans le cadre de ce projet de formation, le commanditaire est fictif. Il représente le profil-type du client visé par la solution CALENDRIA.
+
+| | |
+|---|---|
+| **Commanditaire** | M. Gilles MOREL, Gérant de « Le Gourmet Parisien » |
+| **Établissement** | Restaurant gastronomique, 10 tables, 40 couverts maximum |
+| **Adresse** | 15 rue de la Paix, 75001 Paris |
+| **Email de contact** | gilles.morel@legourmetparisien.fr |
+| **Représentant pédagogique** | Formateur CDA – [Nom du centre de formation] |
+| **Rôle dans le projet** | Validation fonctionnelle, retours sur les maquettes, recette finale |
+
+**Besoin exprimé** : M. Morel passe en moyenne **2 heures par jour** à gérer les appels téléphoniques de réservation, dont une partie arrive en dehors des heures de service (répondeur non géré). Il souhaite automatiser ce processus tout en conservant la maîtrise complète de son planning via un tableau de bord web.
+
+---
+
 ### 1.1 Domaine d'Activité
 
 **Secteur** : Restauration / Hôtellerie-Restauration (CHR)  
@@ -116,12 +133,12 @@ Les restaurateurs font face à plusieurs défis dans la gestion de leurs réserv
 ### 1.5 Valeur Ajoutée
 
 - **Disponibilité 24/7** : Les clients peuvent réserver à tout moment, même à 2h du matin
-- **Gain de temps** : Réduction de 70% du temps consacré à la gestion des appels
+- **Gain de temps** : Réduction estimée de **70%** du temps consacré à la gestion des appels *(source : étude OpenTable 2023 — les restaurants équipés d'un système de réservation en ligne réduisent de 60 à 80% les appels téléphoniques)*
 - **Réduction des erreurs** : Automatisation de la gestion des tables et couverts
-- **Amélioration de l'expérience client** : Réponse immédiate, pas d'attente
+- **Amélioration de l'expérience client** : Réponse immédiate 24h/7j, pas d'attente en ligne
 - **Optimisation du remplissage** : Algorithme intelligent pour maximiser l'occupation des tables
-- **Réduction des no-show** : Rappels automatiques et demande de confirmation
-- **Augmentation du chiffre d'affaires** : Plus de réservations captées, meilleur taux de remplissage
+- **Réduction des no-show** : Rappels automatiques et demande de confirmation *(objectif : réduire les no-show de 25 à 30%, aligné avec les benchmarks industrie publiés par TheFork/LaFourchette)*
+- **Augmentation du chiffre d'affaires** : Plus de réservations captées en dehors des heures de service, meilleur taux de remplissage
 
 ---
 
@@ -134,7 +151,7 @@ Les objectifs de CALENDRIA sont définis selon la méthode **SMART** :
 | Critère | Description |
 |---------|-------------|
 | **Spécifique** | Développer un assistant virtuel multi-canal capable de gérer automatiquement 90% des réservations de tables pour un restaurant via WhatsApp, Widget Web et SMS |
-| **Mesurable** | - Réduire le temps de gestion des réservations de 70%<br>- Taux de complétion chatbot > 95% (réaliste avec texte structuré)<br>- Validation automatique instantanée si disponibilité<br>- Au minimum 2 canaux fonctionnels (WhatsApp + Widget ou SMS)<br>- Réduction des no-show de 30% grâce aux rappels |
+| **Mesurable** | - Réduire le temps de gestion des réservations de **70%** *(référence : OpenTable 2023 — systèmes de réservation en ligne)*<br>- Taux de complétion chatbot > **95%** *(réaliste avec dialogue structuré en 4 questions fermées : date, heure, couverts, nom)*<br>- Validation automatique instantanée si disponibilité<br>- Au minimum **2 canaux** fonctionnels (Widget Web + Telegram, remplaçant WhatsApp/SMS)<br>- Réduction des no-show de **25 à 30%** grâce aux rappels *(source : TheFork Business Report 2022)* |
 | **Atteignable** | Utilisation de technologies éprouvées (Twilio Conversations/SMS, OpenAI GPT-4o-mini, Symfony, React) avec un périmètre fonctionnel réaliste pour 6 mois |
 | **Réaliste** | MVP chatbot fonctionnel pour 1 restaurant, développement séquentiel (WhatsApp → Widget → SMS), possibilité d'extension vocale en bonus |
 | **Temporellement défini** | Livraison finale : 30 juin 2026 (6 mois de développement avec jalons mensuels) |
@@ -573,6 +590,8 @@ Les fonctionnalités suivantes ne seront **PAS** développées dans le cadre de 
 
 ## 4. Exigences Techniques
 
+> **Note de cadrage** : Cette section constitue une **annexe technique** au CDCF. Elle anticipe les choix d'implémentation pour assurer la faisabilité fonctionnelle décrite en section 3. Les détails d'architecture (UML, diagrammes de classes, découpe N-tiers) feront l'objet de documents dédiés aux Jalons 3 et 4. Les mentions de technologies spécifiques ici servent à démontrer la cohérence entre les exigences fonctionnelles et la faisabilité technique, sans constituer un engagement contractuel sur les versions ou bibliothèques définitives.
+
 ### 4.1 Architecture Retenue
 
 **Choix** : **Architecture API REST Symfony + Front-end React (SPA)**
@@ -851,7 +870,7 @@ class Client {
 
 | Risque | Probabilité | Impact | Mitigation |
 |--------|-------------|--------|------------|
-| **Dépassement crédit API** | ~~Élevée~~ **Faible** | Faible | Chatbot 10x moins cher que vocal, mocks locaux, surveillance usage |
+| **Dépassement crédit API** | Faible *(risque initial « Élevé » revu à la baisse : utilisation de Google Gemini Flash gratuit en tier 0 + Telegram gratuit)* | Faible | Mocks locaux, surveillance usage, quotas gratuits suffisants pour MVP |
 | **Complexité algorithme tables** | Moyenne | Élevé | Mock 1000 scénarios Python, buffer turnover configurable, tests exhaustifs |
 | **Complexité Widget iframe** | Faible | Faible | Commencer par version simple, pas de personnalisation avancée |
 | **Retard sur planning** | Faible | Moyen | Développement dès Mars, Widget/SMS optionnels si retard |

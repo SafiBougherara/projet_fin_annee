@@ -1,0 +1,129 @@
+@startuml Architecture_Production_Calendria
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Helvetica
+skinparam shadowing false
+skinparam roundCorner 8
+
+skinparam node {
+    BackgroundColor #2E86C1
+    FontColor white
+    BorderColor #1A5276
+    BorderThickness 2
+}
+skinparam cloud {
+    BackgroundColor #27AE60
+    FontColor white
+    BorderColor #1E8449
+}
+skinparam database {
+    BackgroundColor #8E44AD
+    FontColor white
+    BorderColor #6C3483
+}
+skinparam actor {
+    BackgroundColor #E67E22
+    FontColor white
+    BorderColor #CA6F1E
+}
+skinparam component {
+    BackgroundColor #2471A3
+    FontColor white
+    BorderColor #1A5276
+}
+
+title <color:#2E86C1><b>Architecture de Production – CALENDRIA v1.0</b></color>\n<color:#707070>Déploiement Railway (US West) — Juillet 2026</color>
+
+' Acteurs externes
+actor "Restaurateur\n(Dashboard)" as admin #E67E22
+actor "Client\n(Chatbot / Widget)" as client #16A085
+actor "Agent Vocal\nRetell AI" as retell #8E44AD
+
+' Zone Internet
+cloud "INTERNET\n(HTTPS / TLS 1.3)" as internet #27AE60
+
+' Railway Zone
+package "Railway Cloud (US West)" #F0F8FF {
+    
+    package "Réseau Privé Railway" #E8F4FD {
+        
+        node "Frontend Service\nnginx:alpine + React SPA\nPort 3000" as frontend {
+            component "Vite Build\n(HTML/CSS/JS)" as vite
+            component "react-router-dom\nMaterial UI 6" as mui
+        }
+        
+        node "Backend Service\nPHP 8.4-FPM + nginx\nPort 8080" as backend {
+            component "nginx\n(reverse proxy)" as nginx_b
+            component "PHP-FPM\n(workers pool)" as phpfpm
+            component "Symfony 6.4\n(API REST)" as symfony
+            component "LexikJWT\n(RS256 auth)" as jwt
+            component "supervisord" as supervisord
+        }
+        
+        database "PostgreSQL 15\nPlugin Railway\nport 5432 (interne)" as db {
+        }
+    }
+    
+}
+
+' APIs Externes
+cloud "Google AI\nGemini 2.5 Flash" as gemini #2ECC71
+cloud "Telegram\nBot API" as telegram #0088CC
+cloud "Retell AI\nVoice Agent Platform" as retell_platform #9B59B6
+
+' GitHub CI/CD
+node "GitHub\nActions CI" as ci #24292E
+
+' Connexions externes → internet
+admin --> internet : HTTPS/443
+client --> internet : HTTPS/443
+retell --> internet : HTTPS\nPOST /api/chatbot/call
+
+' Internet → services Railway
+internet --> frontend : GET /\nfrontend-production-8a43\n.up.railway.app
+internet --> backend : REST API\nbackend-production-dd10b\n.up.railway.app
+
+' Frontend → Backend (XHR)
+frontend -[#2E86C1]-> backend : HTTPS REST\nJWT Bearer Token\n(CORS validé)
+
+' Backend → DB
+backend -[#8E44AD]-> db : TCP 5432\nréseau privé\npostgres.railway.internal
+
+' Backend → External APIs
+backend -[#27AE60]-> gemini : HTTPS\nGEMINI_API_KEY
+backend -[#0088CC]-> telegram : HTTPS\nTELEGRAM_BOT_TOKEN
+
+' CI/CD
+ci -[#24292E,dashed]-> backend : git push → auto-deploy\n(Dockerfile rebuild)
+ci -[#24292E,dashed]-> frontend : git push → auto-deploy\n(Dockerfile rebuild)
+
+note right of backend
+  <b>Clés JWT RSA 4096 bits</b>
+  Générées au build time
+  (Dockerfile: openssl genrsa)
+  —
+  <b>Health check</b>: /api/health
+  —
+  <b>supervisord gère :</b>
+  • nginx (proxy)
+  • php-fpm (workers)
+end note
+
+note bottom of db
+  <b>DB: railway</b>
+  7 tables Doctrine
+  Migration auto via CI
+  —
+  <b>Accès :</b> réseau privé
+  (non exposé à internet)
+end note
+
+note top of ci
+  <b>GitHub Actions CI</b>
+  • PHPUnit (8 tests)
+  • TypeScript build
+  • Badge README
+  Déclenché: push main/develop
+end note
+
+@enduml

@@ -16,6 +16,29 @@ Ce dictionnaire des données recense l'ensemble des entités du système CALENDR
 
 ---
 
+### Notes Transversales de Modélisation
+
+#### a) Types conceptuels « Date/Heure » → `TIMESTAMP` en SQL
+
+Dans ce dictionnaire, le type **« Date/Heure »** désigne, au niveau conceptuel (MCD), toute donnée temporelle complète (date + heure). Dans l'implémentation physique PostgreSQL (MPD), ce type conceptuel est traduit en **`TIMESTAMP WITHOUT TIME ZONE`**, le type natif PostgreSQL pour les horodatages sans information de fuseau horaire. De même, le type conceptuel « Date » seul devient `DATE`, et le type « Heure » seul devient `TIME`. Ces correspondances sont documentées dans le MPD (`MPD.puml`).
+
+#### b) Colonnes JSON vs JSONB
+
+Plusieurs attributs stockent des structures semi-structurées dans des colonnes JSON. PostgreSQL propose deux variantes :
+
+| Type SQL | Stockage | Index GIN possible | Cas d'usage |
+|---|---|---|---|
+| `JSON` | Texte brut validé syntaxiquement | ❌ | Archivage pur, transcriptions |
+| `JSONB` | Binaire décomposé, plus rapide en lecture | ✅ | Filtrage, recherche, requêtes `@>` |
+
+**Choix retenu** : Les colonnes nécessitant des requêtes fréquentes (`roles` de USER, `jours_ouverture` de SERVICE) utilisent **`JSONB`** pour bénéficier des index GIN et des opérateurs de containement (`@>`, `?`). Les colonnes d'archivage pur (`transcription`, `donnees_collectees`) peuvent rester en `JSON`. Ce choix est explicité dans le MPD.
+
+#### c) Référence « Code existant » dans la synthèse
+
+Certaines entités mentionnent la source « Code existant » dans la synthèse finale. Cela signifie que leur structure a été affinée **en parallèle** de la rédaction de ce dictionnaire (Jalon 3), en vérifiant la cohérence avec les entités Doctrine déjà esquissées. Le dictionnaire reste la **référence conceptuelle** ; c'est lui qui valide le code, et non l'inverse.
+
+---
+
 ## 1. RESTAURANT
 
 > Représente l'établissement de restauration utilisant CALENDRIA. C'est l'entité racine du système – toutes les autres entités gravitent autour d'un restaurant.
@@ -49,6 +72,12 @@ Ce dictionnaire des données recense l'ensemble des entités du système CALENDR
 | `roles` | Rôles attribués (ROLE_USER, ROLE_RESTAURATEUR, ROLE_ADMIN) | JSON (tableau de chaînes) | NOT NULL | ✅ |
 | `password` | Mot de passe hashé (bcrypt/Argon2) | Chaîne (255) | NOT NULL | ✅ |
 | `restaurant_id` | Restaurant géré par cet utilisateur | Référence → RESTAURANT | FK, nullable | ❌ |
+
+> **Justification du champ `restaurant_id` nullable** : Ce champ est volontairement nullable pour deux raisons :
+> 1. **Compte administrateur système** (ROLE_ADMIN) — un super-administrateur peut avoir accès à tous les restaurants sans être attaché à un établissement particulier.
+> 2. **Évolutivité multi-restaurant** — dans une future v2, un restaurateur pourrait gérer plusieurs établissements. La relation deviendrait alors une table d'association `USER ↔ RESTAURANT` (N:M). La nullabilité actuelle prépare cette évolution sans bloquer le MVP (un seul restaurant par restaurateur).
+>
+> En pratique, lors de l'inscription avec ROLE_RESTAURATEUR, `restaurant_id` est assigné immédiatement après la création du premier restaurant.
 
 ---
 
@@ -85,6 +114,8 @@ Ce dictionnaire des données recense l'ensemble des entités du système CALENDR
 | `heure_fin` | Heure de fin du service | Heure | NOT NULL | ✅ |
 | `jours_ouverture` | Jours de la semaine actifs | JSON (tableau) | NOT NULL, ex: ["lundi","mardi","mercredi"] | ✅ |
 | `created_at` | Date de création de l'enregistrement | Date/Heure | NOT NULL | ✅ |
+
+> **Note `jours_ouverture` — JSON → JSONB** : En production PostgreSQL, cette colonne est de type **`JSONB`** (binaire) et non `JSON`. Cela permet les requêtes de disponibilité avec l'opérateur de containement : `WHERE jours_ouverture @> '"lundi"'`, utilisé par `DisponibiliteService` pour vérifier si un service est actif un jour donné. Sans JSONB, cette requête nécessiterait un cast coûteux ou une normalisation en table dédiée. Voir « Notes Transversales b) » en introduction.
 
 ---
 

@@ -4,7 +4,16 @@ Ce document décrit l'architecture multi-couches de l'application Calendria, les
 
 ## 1. Architecture N-Tiers (Déploiement Physique)
 
-L'application suit une **architecture 3-tiers stricte**, où chaque couche a une responsabilité unique et communique via des protocoles standards.
+L'application suit une **architecture 3-tiers** au sens du déploiement physique : chaque **tier** est un processus (ou groupe de processus) distincts, communiquant via des protocoles réseaux standardisés.
+
+> **Clarification 3-tiers vs N-couches** :
+>
+> Il convient de distinguer deux niveaux de lecture de l'architecture :
+>
+> - **3 tiers physiques (déploiement)** : ce sont les trois processus indépendants déployés — navigateur, serveur API, base de données. C'est ce que l'on désigne par « architecture 3-tiers ».
+> - **4 couches logiques (code interne du Tier 2)** : à l'intérieur du serveur backend Symfony, le code est organisé en 4 couches (Controller, Service, Entity, Repository) suivant le pattern MVC étendu. Ce découpage est une organisation du code, **pas un tier supplémentaire** au sens déploiement.
+>
+> En résumé : l'architecture **physique** est 3-tiers ; l'architecture **logique** interne au backend est N-couches (4).
 
 ### Tier 1 : Présentation (Client)
 - **Navigateur Web / Mobile** : Charge la Single Page Application (SPA) React compilée par Vite.
@@ -37,7 +46,7 @@ Le backend Symfony suit le pattern architectural **MVC étendu vers une architec
 1. **Routing & Controllers (Couche HTTP)** :
    - Point d'entrée de la requête HTTP.
    - Désérialisent les données REST (JSON), appellent les services métier adéquats, et retournent des réponses HTTP (ex: 201 Created, 400 Bad Request).
-   - Outil principal : **API Platform** génère automatiquement ces endpoints pour le CRUD de base (GET, POST, PUT, DELETE) sur nos entités Doctrine.
+   - **Implémentation réelle** : Les endpoints sont des **contrôleurs Symfony classiques** (annotations `#[Route]`). API Platform est inclus dans le projet et génère la documentation OpenAPI, mais les routes principales (auth, chatbot, restaurant, réservations) sont des contrôleurs personnalisés — cela offre un contrôle total sur la sérialisation, la validation et la logique de réponse. API Platform ne remplace donc pas les contrôleurs métier, il les complète.
 
 2. **Services (Couche Métier / Domain)** :
    - Contient la "vraie" logique métier de l'application.
@@ -66,9 +75,9 @@ Notre conception cible les principes SOLID :
 Afin de ne pas réinventer la roue, l'architecture s'appuie sur des composants standards robustes :
 
 ### Back-end (Bundles Symfony)
-*   **API Platform (`api_platform`)** : Standardise la création de l'API RESTful. Fournit la pagination, le filtrage, la documentation OpenAPI/Swagger native et la sérialisation (Groupes JSON).
+*   **API Platform (`api_platform`)** : Inclus dans le projet pour la documentation OpenAPI/Swagger automatique (`/api/docs`). Les annotations `#[ApiResource]` sont présentes sur certaines entités, mais les endpoints opérationnels (auth, chatbot, gestion restaurant) sont des contrôleurs Symfony custom avec `#[Route]`. Ce choix délibéré permet un contrôle total sur la sérialisation et la logique de réponse, que les DataProviders/DataPersisters d'API Platform ne permettraient pas sans une surcharge importante.
 *   **Lexik JWT Authentication (`lexik_jwt_authentication`)** : Gère la création (Login) et la validation des tokens JSON Web Token pour sécuriser l'API (Stateless).
-*   **Nelmio CORS (`nelmio_cors`)** : Gère la politique Cors-Origin pour permettre au navigateur d'interroger l'API depuis le port 5173 du frontend.
+*   **Nelmio CORS (`nelmio_cors`)** : Gère la politique Cors-Origin pour permettre au navigateur d'interroger l'API depuis le domaine du frontend.
 *   **Doctrine ORM** : Fait le pont entre les objets PHP (`Entities`) et la base de données PostgreSQL (génération des migrations SQL).
 
 ### Services Tiers (APIs)

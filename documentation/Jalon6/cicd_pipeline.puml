@@ -1,0 +1,103 @@
+@startuml Pipeline_CICD_Calendria
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Helvetica
+skinparam shadowing false
+skinparam roundCorner 6
+skinparam ActivityBackgroundColor #2E86C1
+skinparam ActivityFontColor white
+skinparam ActivityBorderColor #1A5276
+skinparam ArrowColor #2E86C1
+skinparam NoteBackgroundColor #FFF9C4
+skinparam NoteBorderColor #F9A825
+
+title <color:#2E86C1><b>Pipeline CI/CD – GitHub Actions</b></color>\n<color:#707070>CALENDRIA v1.0 — .github/workflows/ci.yml</color>
+
+|#E8F4FD| Développeur |
+start
+:git commit + push\nbranches: main / develop;
+
+|#E3F2FD| GitHub Actions |
+:Trigger: push / pull_request;
+fork
+    :=== JOB 1: Backend CI ===;
+    note right
+      ubuntu-latest
+      PHP 8.4 + PostgreSQL 15
+    end note
+    
+    :Checkout code\n(actions/checkout@v4);
+    :Setup PHP 8.4\n(shivammathur/setup-php);
+    note right
+      extensions:
+      pdo_pgsql, intl,
+      mbstring, xml
+    end note
+    :Cache Composer\n(actions/cache);
+    :composer install\n(--no-dev --prefer-dist);
+    :Écriture .env.test\n(DATABASE_URL, APP_ENV=test);
+    :Génération clés JWT\n(openssl genrsa 4096);
+    note right
+      config/jwt/private.pem
+      config/jwt/public.pem
+    end note
+    :Migrations Doctrine\n(doctrine:migrations:migrate);
+    :PHPUnit\n(vendor/bin/phpunit);
+    note right
+      Tests exécutés :
+      • DisponibiliteServiceTest (4)
+      • ChatbotControllerTest (2)
+      • AuthControllerTest (6)
+    end note
+    if (Tests passed?) then (✅ OUI)
+        :Backend job: SUCCESS;
+    else (❌ NON)
+        :Backend job: FAILED;
+        stop
+    endif
+    
+fork again
+    :=== JOB 2: Frontend CI ===;
+    note right
+      ubuntu-latest
+      Node.js 20
+    end note
+    
+    :Checkout code\n(actions/checkout@v4);
+    :Setup Node.js 20\n(actions/setup-node@v4);
+    :Cache npm\n(.npm directory);
+    :npm install;
+    :npm run build\n(Vite + TypeScript strict);
+    note right
+      Valide :
+      • tsc -b (no errors)
+      • Bundle dist/ généré
+      • No circular imports
+    end note
+    if (Build succeeded?) then (✅ OUI)
+        :Frontend job: SUCCESS;
+    else (❌ NON)
+        :Frontend job: FAILED;
+        stop
+    endif
+end fork
+
+:=== Résultats ===;
+note right
+  • Badge README mis à jour
+  • build: passing ✅
+  • Pull request: verte
+end note
+
+|#E8F8E8| Railway Deploy |
+:Push sur main détecté\npar Railway GitHub Integration;
+:Build Docker image\n(docker/backend/Dockerfile);
+:Build Docker image\n(docker/frontend/Dockerfile);
+:Rolling deploy\n(zero-downtime);
+:Health check /api/health\n→ 200 OK;
+:Trafic basculé\nvers la nouvelle version;
+
+|#E8F4FD| Développeur |
+:Application en production\nhttps://frontend-production-8a43\n.up.railway.app;
+stop
+
+@enduml
