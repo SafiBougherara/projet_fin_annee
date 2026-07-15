@@ -148,7 +148,7 @@ class DisponibiliteServiceTest extends TestCase
     private function createMockQueryBuilder(): \Doctrine\ORM\QueryBuilder
     {
         $qb = $this->createMock(\Doctrine\ORM\QueryBuilder::class);
-        $query = $this->createMock(\Doctrine\ORM\AbstractQuery::class);
+        $query = $this->createMock(\Doctrine\ORM\Query::class);
         $query->method('getResult')->willReturn([]);
         $qb->method('andWhere')->willReturnSelf();
         $qb->method('setParameter')->willReturnSelf();
