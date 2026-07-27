@@ -249,4 +249,50 @@ class DisponibiliteService
 
         return $alternatives;
     }
+
+    /**
+     * Vérifie si une table spécifique est disponible sur un créneau (sans changer de table).
+     */
+    public function verifierTableSpecifiqueDisponible(int $restaurantId, int $tableId, string $dateStr, string $heureStr): bool
+    {
+        $restaurant = $this->restaurantRepository->find($restaurantId);
+        if (!$restaurant) {
+            return false;
+        }
+
+        try {
+            $proposedDateTime = new \DateTime($dateStr . ' ' . $heureStr);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        $proposedStart = $proposedDateTime->getTimestamp();
+        $dureeTotale = ($restaurant->getDureeRepas() + $restaurant->getBufferNettoyage()) * 60;
+        $proposedEnd = $proposedStart + $dureeTotale;
+
+        $reservations = $this->reservationRepository->createQueryBuilder('r')
+            ->andWhere('r.restaurant = :restaurant')
+            ->andWhere('r.dateReservation = :date')
+            ->andWhere('r.statut != :annulee')
+            ->setParameter('restaurant', $restaurant)
+            ->setParameter('date', $proposedDateTime->format('Y-m-d'))
+            ->setParameter('annulee', 'annulee')
+            ->getQuery()
+            ->getResult();
+
+        foreach ($reservations as $res) {
+            if ($res->getTableReservee()?->getId() === $tableId) {
+                $resStart = (new \DateTime(
+                    $res->getDateReservation()->format('Y-m-d') . ' ' . $res->getHeureReservation()->format('H:i:s')
+                ))->getTimestamp();
+                $resEnd = $resStart + $dureeTotale;
+
+                if ($resStart < $proposedEnd && $proposedStart < $resEnd) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }

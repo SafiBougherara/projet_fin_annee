@@ -8,6 +8,7 @@ use App\Repository\ClientRepository;
 use App\Repository\RestaurantRepository;
 use App\Repository\ReservationRepository;
 use App\Repository\TableRepository;
+use App\Service\DisponibiliteService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -70,23 +71,8 @@ class ReservationController extends AbstractController
     }
 
     #[Route('/reservations', name: 'reservations_list', methods: ['GET'])]
-    public function listReservations(ReservationRepository $reservationRepository, EntityManagerInterface $entityManager): JsonResponse
+    public function listReservations(ReservationRepository $reservationRepository): JsonResponse
     {
-        // Suppression automatique des réservations antérieures à la date d'aujourd'hui (00:00)
-        $today = (new \DateTime())->setTime(0, 0, 0);
-        $pastReservations = $reservationRepository->createQueryBuilder('r')
-            ->where('r.dateReservation < :today')
-            ->setParameter('today', $today)
-            ->getQuery()
-            ->getResult();
-
-        foreach ($pastReservations as $pastRes) {
-            $entityManager->remove($pastRes);
-        }
-        if (count($pastReservations) > 0) {
-            $entityManager->flush();
-        }
-
         $reservations = $reservationRepository->findAll();
         $payload = array_map(static function ($reservation) {
             return [
@@ -123,7 +109,8 @@ class ReservationController extends AbstractController
         EntityManagerInterface $entityManager,
         RestaurantRepository $restaurantRepository,
         ClientRepository $clientRepository,
-        TableRepository $tableRepository
+        TableRepository $tableRepository,
+        DisponibiliteService $disponibiliteService
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
 
@@ -177,6 +164,38 @@ class ReservationController extends AbstractController
             $heureReservation = new \DateTime($data['heureReservation']);
         } catch (\Exception $exception) {
             return $this->json(['error' => 'Format de date ou d’heure invalide'], Response::HTTP_BAD_REQUEST);
+        }
+
+        // Vérification des conflits en tenant compte de la durée du repas + buffer
+        if ($table !== null) {
+            // Table spécifique sélectionnée : vérifier qu'elle est libre sur ce créneau
+            if (!$disponibiliteService->verifierTableSpecifiqueDisponible(
+                (int)$data['restaurantId'],
+                $table->getId(),
+                $data['dateReservation'],
+                $heureReservation->format('H:i')
+            )) {
+                return $this->json([
+                    'error' => sprintf(
+                        'La table %s est déjà occupée sur ce créneau (durée repas incluse). Choisissez un autre horaire ou une autre table.',
+                        $table->getNumeroTable()
+                    )
+                ], Response::HTTP_CONFLICT);
+            }
+        } else {
+            // Aucune table choisie : vérifier les horaires de service et la capacité globale
+            $dispo = $disponibiliteService->verifierDisponibilite(
+                (int)$data['restaurantId'],
+                $data['dateReservation'],
+                $heureReservation->format('H:i'),
+                (int)$data['nombrePersonnes']
+            );
+            if (!$dispo['disponible']) {
+                $message = ($dispo['raison'] ?? '') === 'ferme'
+                    ? 'Le restaurant est fermé à cet horaire.'
+                    : 'Aucune table disponible pour ce créneau (toutes les tables sont occupées).';
+                return $this->json(['error' => $message], Response::HTTP_CONFLICT);
+            }
         }
 
         $reservation = new Reservation();

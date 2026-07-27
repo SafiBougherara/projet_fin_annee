@@ -200,6 +200,19 @@ export default function Dashboard() {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [reservationToDelete, setReservationToDelete] = useState<ReservationItem | null>(null);
 
+  const today = new Date().toISOString().split('T')[0];
+
+  const sortedReservations = useMemo(() => {
+    return [...reservations].sort((a, b) => {
+      const aDate = a.dateReservation ?? '';
+      const bDate = b.dateReservation ?? '';
+      const aFuture = aDate >= today;
+      const bFuture = bDate >= today;
+      if (aFuture !== bFuture) return aFuture ? -1 : 1;
+      return (aDate + (a.heureReservation ?? '')).localeCompare(bDate + (b.heureReservation ?? ''));
+    });
+  }, [reservations, today]);
+
   const selectedRestaurant = useMemo(
     () => restaurants.find((restaurant) => restaurant.id === Number(form.restaurantId)),
     [form.restaurantId, restaurants],
@@ -905,8 +918,13 @@ export default function Dashboard() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {reservations.map((reservation) => (
-                      <TableRow key={reservation.id} hover>
+                    {sortedReservations.map((reservation) => {
+                      const isPast = (reservation.dateReservation ?? '') < today;
+                      return (<TableRow
+                        key={reservation.id}
+                        hover={!isPast}
+                        sx={isPast ? { opacity: 0.45, bgcolor: 'rgba(0,0,0,0.025)', filter: 'grayscale(0.3)' } : undefined}
+                      >
                         <TableCell>{formatDateFr(reservation.dateReservation)}</TableCell>
                         <TableCell>{formatTimeFr(reservation.heureReservation)}</TableCell>
                         <TableCell>
@@ -961,8 +979,8 @@ export default function Dashboard() {
                             </IconButton>
                           </Box>
                         </TableCell>
-                      </TableRow>
-                    ))}
+                      </TableRow>);
+                    })}
                     {reservations.length === 0 && (
                       <TableRow>
                         <TableCell colSpan={8} align="center" sx={{ py: 3, color: 'text.secondary' }}>
