@@ -21,6 +21,7 @@ import {
   Paper,
   Select,
   Slider,
+  Snackbar,
   Tooltip,
   type SelectChangeEvent,
   Table,
@@ -419,16 +420,7 @@ export default function Dashboard() {
         </Typography>
       </Box>
 
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
-      {success && (
-        <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess(null)}>
-          {success}
-        </Alert>
-      )}
+
 
       <Grid container spacing={3}>
         {/* Plan de Salle Interactif */}
@@ -1174,6 +1166,27 @@ export default function Dashboard() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Toast notifications */}
+      <Snackbar
+        open={!!error}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        onClose={() => setError(null)}
+      >
+        <Alert severity="error" onClose={() => setError(null)} sx={{ width: '100%', boxShadow: 4 }}>
+          {error}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={!!success}
+        autoHideDuration={4000}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        onClose={() => setSuccess(null)}
+      >
+        <Alert severity="success" onClose={() => setSuccess(null)} sx={{ width: '100%', boxShadow: 4 }}>
+          {success}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
