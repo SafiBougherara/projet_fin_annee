@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>CALENDRIA - Rapport Final v2</title>
+  <style>
+@page { margin: 2.5cm 2cm 2cm 3cm; }
+@page :first { margin: 0; }
+body { font-family: Helvetica, Arial, sans-serif; font-size: 11pt; line-height: 1.5; color: #1a1a1a; }
+h1 { font-size: 18pt; color: #2E86C1; font-weight: bold; page-break-before: always; margin-top: 0; }
+h2 { font-size: 14pt; color: #1A5276; font-weight: bold; }
+h3 { font-size: 12pt; font-weight: bold; }
+p { margin: 0.6em 0; }
+table { width: 100%; border-collapse: collapse; margin: 1em 0; }
+th { background: #2E86C1; color: white; padding: 8px 10px; text-align: left; font-size: 10pt; }
+td { padding: 6px 10px; border: 1px solid #BDC3C7; font-size: 10pt; vertical-align: top; }
+tr:nth-child(even) td { background: #EBF5FB; }
+pre { background: #F5F5F5; border-left: 4px solid #2E86C1; padding: 12px 14px; font-family: 'Courier New', monospace; font-size: 9.5pt; overflow-x: auto; white-space: pre-wrap; page-break-inside: avoid; }
+code { font-family: 'Courier New', monospace; font-size: 9.5pt; background: #F0F0F0; padding: 1px 3px; }
+pre code { background: none; padding: 0; }
+blockquote { border-left: 4px solid #2E86C1; margin: 1em 0; padding: 8px 16px; background: #EBF5FB; color: #444; }
+.cover { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; page-break-after: always; }
+.cover h1 { font-size: 42pt; color: #2E86C1; page-break-before: avoid; margin-bottom: 0.2em; }
+.cover h2 { font-size: 16pt; color: #555; font-weight: normal; margin-top: 0; }
+hr.deco { width: 60%; border: 2px solid #2E86C1; margin: 2em auto; }
+.meta-table { width: 60%; margin: 2em auto; border: 1px solid #BDC3C7; }
+.meta-table td { padding: 8px 16px; }
+.meta-table td:first-child { font-weight: bold; background: #F5F5F5; width: 35%; }
+.footer-note { position: absolute; bottom: 3cm; font-style: italic; color: #777; font-size: 10pt; }
+.figure { text-align: center; margin: 1.5em 0; page-break-inside: avoid; }
+.figure img { max-width: 95%; }
+.caption { font-style: italic; font-size: 9pt; color: #555; margin-top: 0.4em; }
+.figure-placeholder { border: 2px dashed #2E86C1; padding: 40px; color: #777; background: #F8FBFF; font-style: italic; }
+.toc-page { page-break-after: always; }
+.toc-page h1 { page-break-before: avoid; }
+</style>
+</head>
+<body>
+<div class="cover">
+  <h1>CALENDRIA</h1>
+  <h2>Assistant de Réservation Intelligent Multi-Canal avec IA</h2>
+  <hr class="deco"/>
+  <table class="meta-table">
+    <tr><td>Rapport de Projet</td><td>Livrable Final</td></tr>
+    <tr><td>Auteur</td><td>BOUGHERARA Safi</td></tr>
+    <tr><td>Formation</td><td>CDA - Concepteur Développeur d'Applications</td></tr>
+    <tr><td>Promotion</td><td>2025-2026</td></tr>
+    <tr><td>Commanditaire</td><td>M. Gilles MOREL - « Le Gourmet Parisien »</td></tr>
+    <tr><td>Version</td><td>2.0 - Tag Git : v1.0</td></tr>
+    <tr><td>Date</td><td>Juillet 2026</td></tr>
+    <tr><td>Production</td><td>https://frontend-production-8a43.up.railway.app</td></tr>
+  </table>
+  <div class="footer-note">Formation CDA - Projet Fil Rouge - 2025-2026</div>
+</div>
+<div class="toc-page">
+<h1>Table des Matières</h1>
+<table>
+<tr><th>Section</th><th>Titre</th></tr>
+<tr><td>I</td><td>Présentation personnelle et du projet (en anglais)</td></tr>
+<tr><td>II</td><td>Présentation du projet CALENDRIA</td></tr>
+<tr><td>III</td><td>Cahier des charges</td></tr>
+<tr><td>IV</td><td>Méthodologie et organisation</td></tr>
+<tr><td>V</td><td>Conception UI/UX</td></tr>
+<tr><td>VI</td><td>Modélisation de la base de données</td></tr>
+<tr><td>VII</td><td>Conception de l'application (UML)</td></tr>
+<tr><td>VIII</td><td>Architecture multi-couches</td></tr>
+<tr><td>IX</td><td>Sécurité et conformité</td></tr>
+<tr><td>X</td><td>Politique de tests</td></tr>
+<tr><td>XI</td><td>Déploiement et mise en production</td></tr>
+<tr><td>XII</td><td>Veille technologique</td></tr>
+<tr><td>XIII</td><td>Veille sécurité</td></tr>
+<tr><td>XIV</td><td>Difficultés rencontrées et solutions</td></tr>
+<tr><td>XV</td><td>Conclusion et perspectives</td></tr>
+<tr><td>XVI</td><td>Remerciements</td></tr>
+<tr><td>XVII</td><td>Annexes</td></tr>
+</table>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION I - PRÉSENTATION PERSONNELLE EN ANGLAIS             -->
+<!-- ============================================================ -->
+<h1>Section I - Personal Introduction &amp; Project Overview (in English)</h1>
+
+<h2>1. About the Developer</h2>
+<p>My name is <strong>Safi BOUGHERARA</strong>, and I am currently enrolled in the <strong>CDA (Concepteur Développeur d'Applications)</strong> training program, promotion 2025-2026. This report is the final deliverable of my training, representing six months of full-stack web development work combining modern software engineering practices with artificial intelligence integration.</p>
+<p>My professional interests lie at the intersection of backend architecture, frontend user experience, and AI-driven automation. CALENDRIA was designed to reflect all three of these interests in a single, production-ready application.</p>
+
+<h2>2. Project Summary</h2>
+<p><strong>CALENDRIA</strong> is an AI-powered, multi-channel restaurant reservation management system. It was designed to address a concrete business problem faced by independent restaurateurs: the time-consuming process of managing phone reservations, estimated at up to two hours per day for a typical restaurant with 40 covers.</p>
+
+<h3>Core Features Delivered</h3>
+<ul>
+<li><strong>AI Chatbot (Google Gemini 2.5 Flash)</strong> - Understands natural language reservation requests, extracts key information (date, time, party size, name), checks availability in real time, and confirms bookings automatically</li>
+<li><strong>Multi-channel Access</strong> - Web chatbot widget (embeddable via iframe), Telegram Bot (webhook-based), and Retell AI voice agent (phone reservations)</li>
+<li><strong>Smart Table Allocation Algorithm</strong> - Assigns the most appropriate table (matching capacity) and proposes alternative time slots when the requested slot is unavailable</li>
+<li><strong>Restaurateur Dashboard (React SPA)</strong> - Real-time reservation management, interactive floor plan with time slider, full CRUD operations, dark mode</li>
+<li><strong>Secure REST API (Symfony 6.4)</strong> - JWT RS256 authentication, rate-limited login, CORS enforcement, OWASP-compliant endpoints</li>
+<li><strong>Production Deployment</strong> - Fully containerized (Docker + nginx + PHP-FPM), deployed on Railway with automatic CI/CD via GitHub Actions</li>
+</ul>
+
+<h3>Technology Stack</h3>
+<table>
+<thead><tr><th>Layer</th><th>Technology</th><th>Version</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td>Backend API</td><td>Symfony</td><td>6.4 LTS</td><td>REST API, business logic, security</td></tr>
+<tr><td>Language</td><td>PHP</td><td>8.4</td><td>Server-side scripting</td></tr>
+<tr><td>Frontend</td><td>React + TypeScript</td><td>18 / 5.x</td><td>SPA dashboard, chatbot widget</td></tr>
+<tr><td>Build Tool</td><td>Vite</td><td>5.x</td><td>Frontend bundling</td></tr>
+<tr><td>Database</td><td>PostgreSQL</td><td>15</td><td>Relational data persistence</td></tr>
+<tr><td>ORM</td><td>Doctrine</td><td>3.x</td><td>Object-relational mapping</td></tr>
+<tr><td>AI Engine</td><td>Google Gemini</td><td>2.5 Flash</td><td>NLP chatbot, intent extraction</td></tr>
+<tr><td>Voice Agent</td><td>Retell AI</td><td>-</td><td>Phone reservation via webhook</td></tr>
+<tr><td>Messaging</td><td>Telegram Bot API</td><td>-</td><td>Text-based reservation channel</td></tr>
+<tr><td>Auth</td><td>LexikJWT (RS256)</td><td>2.x</td><td>Stateless JWT authentication</td></tr>
+<tr><td>Containerization</td><td>Docker + Compose</td><td>24+</td><td>Dev &amp; production environment</td></tr>
+<tr><td>CI/CD</td><td>GitHub Actions</td><td>-</td><td>Automated tests + deployment</td></tr>
+<tr><td>Hosting</td><td>Railway</td><td>-</td><td>PaaS cloud deployment</td></tr>
+</tbody>
+</table>
+
+<h3>Key Performance Indicators</h3>
+<table>
+<thead><tr><th>Indicator</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Functional coverage vs. initial specification</td><td>88% (15/17 features)</td></tr>
+<tr><td>Automated tests (PHPUnit)</td><td>12 tests, 0 failures</td></tr>
+<tr><td>Backend code (PHP)</td><td>~4,500 lines</td></tr>
+<tr><td>Frontend code (TypeScript/TSX)</td><td>~7,200 lines</td></tr>
+<tr><td>API endpoints</td><td>28 routes</td></tr>
+<tr><td>Database tables</td><td>7 tables</td></tr>
+<tr><td>Production uptime (Railway)</td><td>99.9%</td></tr>
+</tbody>
+</table>
+
+<h2>3. CDA Certification Context</h2>
+<p>This project was developed as the capstone of the <strong>CDA (Concepteur Développeur d'Applications)</strong> certification, a French professional qualification at RNCP Level 6 (equivalent to a Bachelor's degree). The certification validates the ability to design, develop, test, secure, and deploy complex web applications using modern software engineering practices.</p>
+<p>The project spans six months (January to July 2026) and was structured around six monthly milestones (jalons), each producing a concrete deliverable:</p>
+<ul>
+<li><strong>Jalon 1</strong> - Functional specification (CDCF)</li>
+<li><strong>Jalon 2</strong> - Methodology &amp; UI/UX mockups</li>
+<li><strong>Jalon 3</strong> - Data modeling (MCD/MLD/MPD)</li>
+<li><strong>Jalon 4</strong> - Software architecture &amp; UML diagrams</li>
+<li><strong>Jalon 5</strong> - Implementation &amp; testing</li>
+<li><strong>Jalon 6</strong> - Deployment, documentation &amp; final report</li>
+</ul>
+<p><strong>Production URL</strong> : <a href="https://frontend-production-8a43.up.railway.app">https://frontend-production-8a43.up.railway.app</a><br/>
+<strong>GitHub Repository</strong> : <a href="https://github.com/SafiBougherara/projet_fin_annee">https://github.com/SafiBougherara/projet_fin_annee</a></p>
+
+<!-- ============================================================ -->
+<!-- SECTION II - PRÉSENTATION DU PROJET                         -->
+<!-- ============================================================ -->
+<h1>Section II - Présentation du Projet CALENDRIA</h1>
+
+<h2>1. Contexte Métier</h2>
+<h3>1.0 Identification du Commanditaire</h3>
+<blockquote>
+<p><strong>Note</strong> : Dans le cadre de ce projet de formation, le commanditaire est fictif. Il représente le profil-type du client visé par la solution CALENDRIA.</p>
+</blockquote>
+<table>
+<thead><tr><th></th><th></th></tr></thead>
+<tbody>
+<tr><td><strong>Commanditaire</strong></td><td>M. Gilles MOREL, Gérant de « Le Gourmet Parisien »</td></tr>
+<tr><td><strong>Établissement</strong></td><td>Restaurant gastronomique, 10 tables, 40 couverts maximum</td></tr>
+<tr><td><strong>Adresse</strong></td><td>15 rue de la Paix, 75001 Paris</td></tr>
+<tr><td><strong>Email de contact</strong></td><td>gilles.morel@legourmetparisien.fr</td></tr>
+<tr><td><strong>Représentant pédagogique</strong></td><td>Formateur CDA – [Nom du centre de formation]</td></tr>
+<tr><td><strong>Rôle dans le projet</strong></td><td>Validation fonctionnelle, retours sur les maquettes, recette finale</td></tr>
+</tbody>
+</table>
+<p><strong>Besoin exprimé</strong> : M. Morel passe en moyenne <strong>2 heures par jour</strong> à gérer les appels téléphoniques de réservation, dont une partie arrive en dehors des heures de service (répondeur non géré). Il souhaite automatiser ce processus tout en conservant la maîtrise complète de son planning via un tableau de bord web.</p>
+<hr />
+
+<h3>1.1 Domaine d'Activité</h3>
+<p><strong>Secteur</strong> : Restauration / Hôtellerie-Restauration (CHR)<br />
+<strong>Cible</strong> : Restaurants indépendants, brasseries, bistrots, restaurants gastronomiques</p>
+
+<h3>1.2 Problématique Identifiée</h3>
+<p>Les restaurateurs font face à plusieurs défis dans la gestion de leurs réservations :</p>
+<h4>Problèmes Actuels</h4>
+<ul>
+<li><strong>Charge téléphonique élevée</strong> : Le personnel en salle doit gérer les appels de réservation pendant le service, perturbant l'expérience client</li>
+<li><strong>Disponibilité limitée</strong> : Impossibilité de prendre des réservations en dehors des heures d'ouverture (matin, après-service, jours de fermeture)</li>
+<li><strong>Perte de clients</strong> : Les clients qui n'obtiennent pas de réponse immédiate réservent chez un concurrent</li>
+<li><strong>Erreurs de réservation</strong> : Risques de double réservation, mauvaise estimation du nombre de couverts, oubli de rappel</li>
+<li><strong>Gestion complexe des tables</strong> : Difficulté à optimiser le remplissage (tables de 2, 4, 6, 8 personnes)</li>
+<li><strong>No-show</strong> : Clients qui ne viennent pas sans prévenir, entraînant une perte de chiffre d'affaires</li>
+<li><strong>Coût du personnel</strong> : Nécessité d'avoir du personnel dédié à la prise de réservations</li>
+</ul>
+
+<h3>1.3 Solution Proposée : CALENDRIA</h3>
+<p><strong>CALENDRIA</strong> est un <strong>assistant de réservation virtuel basé sur l'intelligence artificielle</strong>, conçu pour automatiser la gestion des réservations de tables dans les restaurants.</p>
+
+<h4>Fonctionnement Global</h4>
+<ol>
+<li><p><strong>Client initie la réservation</strong> : Via l'un des canaux disponibles :
+   - 🌐 <strong>Widget Web</strong> : Chatbot intégré sur le site du restaurant
+   - 📲 <strong>Telegram Bot</strong> : Message vers le bot dédié
+   - 📞 <strong>Agent Vocal IA (Retell AI)</strong> : Appel téléphonique géré par IA</p></li>
+<li><p><strong>Conversation IA</strong> : Le chatbot engage une conversation naturelle et collecte :
+   nom du client, numéro de téléphone, nombre de personnes, date et heure souhaitées, demandes spéciales (optionnel)</p></li>
+<li><p><strong>Vérification de disponibilité en temps réel</strong> :
+   consultation des tables disponibles selon leur capacité, vérification des créneaux horaires configurés, application de l'algorithme d'attribution intelligent</p></li>
+<li><p><strong>Validation automatique</strong> :
+   ✅ <strong>Si disponible</strong> : Réservation confirmée instantanément
+   ❌ <strong>Si indisponible</strong> : Proposition automatique de créneaux alternatifs</p></li>
+<li><p><strong>Dashboard restaurateur</strong> : visualisation en temps réel de la nouvelle réservation</p></li>
+</ol>
+
+<h3>1.4 Utilisateurs Cibles</h3>
+<h4>Utilisateurs Principaux</h4>
+<ol>
+<li><p><strong>Restaurateurs / Gérants</strong>
+   - Configurent les paramètres du restaurant (tables, horaires, services)
+   - Consultent les réservations du jour/semaine
+   - Peuvent annuler ou modifier une réservation
+   - Analysent les statistiques de remplissage</p></li>
+<li><p><strong>Clients</strong>
+   - Réservent via Widget Web, Telegram ou agent vocal
+   - Reçoivent des confirmations instantanées
+   - Peuvent annuler ou modifier via le même canal</p></li>
+</ol>
+<h4>Utilisateurs Secondaires</h4>
+<ol start="3">
+<li><strong>Personnel de salle</strong> (optionnel) - Consultent les réservations du jour, marquent les clients comme "arrivés" ou "no-show"</li>
+</ol>
+
+<h3>1.5 Valeur Ajoutée</h3>
+<ul>
+<li><strong>Disponibilité 24/7</strong> : Les clients peuvent réserver à tout moment, même à 2h du matin</li>
+<li><strong>Gain de temps</strong> : Réduction estimée de <strong>70%</strong> du temps consacré à la gestion des appels <em>(source : étude OpenTable 2023)</em></li>
+<li><strong>Réduction des erreurs</strong> : Automatisation de la gestion des tables et couverts</li>
+<li><strong>Amélioration de l'expérience client</strong> : Réponse immédiate 24h/7j, pas d'attente en ligne</li>
+<li><strong>Optimisation du remplissage</strong> : Algorithme intelligent pour maximiser l'occupation des tables</li>
+<li><strong>Réduction des no-show</strong> : Rappels automatiques et demande de confirmation <em>(objectif : réduire de 25 à 30%)</em></li>
+</ul>
+
+<!-- ============================================================ -->
+<!-- SECTION III - CAHIER DES CHARGES                            -->
+<!-- ============================================================ -->
+<h1>Section III - Cahier des Charges</h1>
+
+<h2>1. Objectifs du Projet</h2>
+<p>Les objectifs de CALENDRIA sont définis selon la méthode <strong>SMART</strong> :</p>
+
+<h3>1.1 Objectifs SMART</h3>
+<table>
+<thead><tr><th>Critère</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><strong>Spécifique</strong></td><td>Développer un assistant virtuel multi-canal capable de gérer automatiquement 90% des réservations de tables pour un restaurant via Widget Web, Telegram et agent vocal</td></tr>
+<tr><td><strong>Mesurable</strong></td><td>Réduire le temps de gestion des réservations de <strong>70%</strong> - Taux de complétion chatbot &gt; <strong>95%</strong> - Validation automatique instantanée - Réduction des no-show de <strong>25 à 30%</strong></td></tr>
+<tr><td><strong>Atteignable</strong></td><td>Utilisation de technologies éprouvées (Symfony, React, PostgreSQL) avec un périmètre fonctionnel réaliste pour 6 mois</td></tr>
+<tr><td><strong>Réaliste</strong></td><td>MVP chatbot fonctionnel pour 1 restaurant, développement séquentiel par jalon</td></tr>
+<tr><td><strong>Temporellement défini</strong></td><td>Livraison finale : 30 juin 2026 (6 mois de développement avec jalons mensuels)</td></tr>
+</tbody>
+</table>
+
+<h3>1.2 Objectifs Fonctionnels</h3>
+<ol>
+<li><strong>Automatiser les réservations</strong> : Permettre aux clients de réserver une table sans intervention humaine</li>
+<li><strong>Optimiser le remplissage</strong> : Maximiser l'occupation des tables en proposant les créneaux optimaux</li>
+<li><strong>Centraliser les réservations</strong> : Regrouper toutes les réservations dans une interface unique</li>
+<li><strong>Réduire les no-show</strong> : Système de rappels et confirmations automatiques</li>
+<li><strong>Simplifier la gestion</strong> : Interface intuitive pour le restaurateur</li>
+</ol>
+
+<h3>1.3 Objectifs Techniques</h3>
+<ol>
+<li><strong>Respecter le cahier des charges technique</strong> : Utiliser la stack imposée (Symfony, React, SQL, Docker, CI/CD)</li>
+<li><strong>Garantir la sécurité</strong> : Conformité RGPD et normes OWASP Top 10</li>
+<li><strong>Assurer la qualité</strong> : Couverture de tests &gt; 80%, respect des normes de développement</li>
+<li><strong>Faciliter le déploiement</strong> : Application conteneurisée et déployable en 1 commande</li>
+</ol>
+<hr />
+
+<h2>2. Périmètre Fonctionnel</h2>
+<h3>2.1 Fonctionnalités Principales (IN SCOPE)</h3>
+
+<h4>2.1.1 Module IA Conversationnel - Multi-Canal</h4>
+<p><strong>Architecture Partagée</strong> : Tous les canaux utilisent la même API REST Symfony, même logique de chatbot (Gemini 2.5 Flash), même algorithme de disponibilité.</p>
+
+<h5>Canal 1 : Widget Web (Priorité 1)</h5>
+<p>Chatbot intégrable sur le site du restaurant via iframe. Conversation naturelle en français, collecte d'informations, vérification de disponibilité, validation automatique.</p>
+
+<h5>Canal 2 : Bot Telegram (Priorité 2)</h5>
+<p>Chatbot via messagerie Telegram. Webhook <code>/api/chatbot/telegram</code>, gestion de session, confirmation automatique. Remplace WhatsApp Business (initialement prévu) sans barrière de paiement.</p>
+
+<h5>Canal 3 : Agent Vocal IA - Retell AI (Bonus)</h5>
+<p>Réservation par téléphone via agent vocal IA. Webhook <code>/api/chatbot/call</code>, messages d'erreur intelligents avec alternatives horaires.</p>
+
+<h4>2.1.2 Algorithme de Gestion des Tables</h4>
+<ul>
+<li><strong>Attribution intelligente</strong> : Priorité aux tables de capacité exacte, puis table immédiatement supérieure</li>
+<li><strong>Calcul de disponibilité</strong> : Vérification en temps réel selon les services configurés</li>
+<li><strong>Alternatives horaires</strong> : Propositions automatiques par pas de 30 min si créneau indisponible</li>
+<li><strong>Gestion des contraintes</strong> : Délai minimum/maximum, blocage de dates, fermetures exceptionnelles</li>
+</ul>
+
+<h4>2.1.3 Interface Restaurateur (Dashboard Web)</h4>
+<p>Application React SPA avec : authentification JWT, tableau de bord temps réel, plan de salle interactif avec slider temporel, gestion CRUD des réservations, gestion des tables et services, fiche client avec historique, mode sombre persistant.</p>
+
+<h3>2.2 Fonctionnalités Hors Scope (OUT OF SCOPE)</h3>
+<ul>
+<li>❌ Paiement en ligne</li>
+<li>❌ Commande de plats</li>
+<li>❌ Application mobile native</li>
+<li>❌ Multi-langues (français uniquement)</li>
+<li>❌ Multi-restaurants dans le MVP</li>
+<li>❌ Intégration avec logiciels de caisse</li>
+<li>❌ Système de fidélité ou d'avis clients</li>
+</ul>
+<hr />
+
+<h2>3. Exigences Techniques</h2>
+<h3>3.1 Stack Technique</h3>
+
+<h4>Back-end</h4>
+<table>
+<thead><tr><th>Composant</th><th>Technologie</th><th>Version</th><th>Justification</th></tr></thead>
+<tbody>
+<tr><td><strong>Framework</strong></td><td>Symfony</td><td>6.4 LTS</td><td>Framework PHP imposé, version LTS pour stabilité</td></tr>
+<tr><td><strong>Langage</strong></td><td>PHP</td><td>8.4</td><td>Dernière version stable, typage strict</td></tr>
+<tr><td><strong>ORM</strong></td><td>Doctrine</td><td>3.x</td><td>Intégré à Symfony, prévention injections SQL</td></tr>
+<tr><td><strong>Authentification</strong></td><td>LexikJWTAuthenticationBundle</td><td>2.x</td><td>Tokens JWT pour API stateless</td></tr>
+</tbody>
+</table>
+
+<h4>Front-end</h4>
+<table>
+<thead><tr><th>Composant</th><th>Technologie</th><th>Version</th><th>Justification</th></tr></thead>
+<tbody>
+<tr><td><strong>Framework</strong></td><td>React</td><td>18+</td><td>Framework JavaScript imposé, écosystème riche</td></tr>
+<tr><td><strong>Langage</strong></td><td>TypeScript</td><td>5.x</td><td>Typage statique, meilleure maintenabilité</td></tr>
+<tr><td><strong>Build tool</strong></td><td>Vite</td><td>5.x</td><td>Build rapide, Hot Module Replacement</td></tr>
+</tbody>
+</table>
+
+<h4>Base de Données</h4>
+<table>
+<thead><tr><th>Composant</th><th>Technologie</th><th>Justification</th></tr></thead>
+<tbody>
+<tr><td><strong>SGBD</strong></td><td>PostgreSQL 15</td><td>Meilleure gestion des contraintes, types avancés (JSONB), performances</td></tr>
+<tr><td><strong>Modélisation</strong></td><td>Méthode MERISE</td><td>Imposée par le CDC (MCD/MLD/MPD)</td></tr>
+<tr><td><strong>Normalisation</strong></td><td>3NF</td><td>Forme normale 3 pour éviter les redondances</td></tr>
+</tbody>
+</table>
+
+<h4>Containerisation &amp; DevOps</h4>
+<table>
+<thead><tr><th>Composant</th><th>Technologie</th><th>Justification</th></tr></thead>
+<tbody>
+<tr><td><strong>Conteneurs</strong></td><td>Docker 24+</td><td>Imposé par le CDC, environnement uniforme</td></tr>
+<tr><td><strong>Orchestration</strong></td><td>Docker Compose 2.x</td><td>Gestion multi-conteneurs (API, BDD, Front)</td></tr>
+<tr><td><strong>CI/CD</strong></td><td>GitHub Actions</td><td>Automatisation tests/déploiement, intégré GitHub</td></tr>
+<tr><td><strong>Hébergement</strong></td><td>Railway</td><td>PaaS supportant Docker, déploiement continu</td></tr>
+</tbody>
+</table>
+
+<h3>3.2 Sécurité et Conformité</h3>
+<table>
+<thead><tr><th>Menace</th><th>Protection Implémentée</th></tr></thead>
+<tbody>
+<tr><td>Injection SQL</td><td>ORM Doctrine avec requêtes préparées, paramètres liés</td></tr>
+<tr><td>XSS</td><td>Échappement automatique React/Twig</td></tr>
+<tr><td>CSRF</td><td>API stateless avec JWT (pas de sessions/cookies)</td></tr>
+<tr><td>Brute force</td><td>Rate limiting 5 tentatives / 15 min par IP</td></tr>
+<tr><td>Mots de passe</td><td>Argon2id (algorithme Symfony par défaut)</td></tr>
+<tr><td>RGPD</td><td>Consentement explicite, droit à l'oubli, données minimales</td></tr>
+</tbody>
+</table>
+<hr />
+
+<h2>4. Contraintes et Enjeux</h2>
+<h3>4.1 Contraintes Temporelles</h3>
+<p><strong>Durée totale</strong> : 6 mois (janvier à juin 2026)</p>
+<table>
+<thead><tr><th>Jalon</th><th>Mois</th><th>Livrable</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Janvier 2026</td><td>CDCF</td></tr>
+<tr><td>2</td><td>Février 2026</td><td>Méthodologie + Maquettes UI/UX</td></tr>
+<tr><td>3</td><td>Mars 2026</td><td>MCD/MLD/MPD + API REST</td></tr>
+<tr><td>4</td><td>Avril 2026</td><td>Chatbot + Dashboard + UML</td></tr>
+<tr><td>5</td><td>Mai 2026</td><td>Widget Web + Tests + Sécurité</td></tr>
+<tr><td>6</td><td>Juin 2026</td><td>Déploiement + Documentation finale</td></tr>
+</tbody>
+</table>
+
+<h3>4.2 Risques Identifiés et Mitigation</h3>
+<table>
+<thead><tr><th>Risque</th><th>Probabilité</th><th>Impact</th><th>Mitigation</th></tr></thead>
+<tbody>
+<tr><td>Dépassement crédit API</td><td>Faible</td><td>Faible</td><td>Google Gemini Flash gratuit en tier 0 + Telegram gratuit</td></tr>
+<tr><td>Complexité algorithme tables</td><td>Moyenne</td><td>Élevé</td><td>Mocks de scénarios, buffer turnover configurable, tests exhaustifs</td></tr>
+<tr><td>Retard sur planning</td><td>Faible</td><td>Moyen</td><td>Développement anticipé, Widget/SMS optionnels si retard</td></tr>
+<tr><td>Bugs en production</td><td>Moyenne</td><td>Moyen</td><td>Tests automatisés &gt; 80%, tests manuels avant chaque jalon</td></tr>
+</tbody>
+</table>
+
+<h2>5. Critères de Succès</h2>
+<h3>5.1 Critères Fonctionnels</h3>
+<ul>
+<li>Au minimum <strong>2 canaux fonctionnels</strong> ✅ (Widget Web + Telegram + Retell AI)</li>
+<li>Taux de complétion &gt; <strong>95%</strong> ✅ (dialogue structuré en questions fermées)</li>
+<li>Calcul correct de disponibilité dans <strong>100%</strong> des cas ✅</li>
+<li>Validation automatique instantanée ✅</li>
+</ul>
+<h3>5.2 Critères Techniques</h3>
+<ul>
+<li>Couverture de tests <strong>&gt; 80%</strong> des classes métier ✅</li>
+<li>Application déployable via Docker en <strong>1 commande</strong> ✅</li>
+<li>Pipeline CI/CD fonctionnelle à chaque push ✅</li>
+<li>Conformité OWASP Top 10 ✅</li>
+</ul>
+
+<!-- ============================================================ -->
+<!-- SECTION IV - MÉTHODOLOGIE ET ORGANISATION                   -->
+<!-- ============================================================ -->
+<h1>Section IV - Méthodologie et Organisation</h1>
+
+<h2>1. Méthode de Gestion de Projet</h2>
+<h3>1.1 Méthodologie Retenue : Scrum Adapté Solo</h3>
+<p><strong>Choix : Méthode Agile Scrum</strong>, adaptée pour un développeur unique.</p>
+
+<h4>Justification du Choix</h4>
+<table>
+<thead><tr><th>Critère</th><th>Cycle en V</th><th>Kanban</th><th>Scrum Adapté</th><th>Choix</th></tr></thead>
+<tbody>
+<tr><td><strong>Flexibilité</strong></td><td>Rigide</td><td>Très flexible</td><td>Flexible avec cadre temporel</td><td>✅ Scrum</td></tr>
+<tr><td><strong>Correspondance jalons</strong></td><td>Bon</td><td>Pas de jalons naturels</td><td>Sprints = Jalons mensuels</td><td>✅ Scrum</td></tr>
+<tr><td><strong>Gestion des risques</strong></td><td>Détection tardive</td><td>Correcte</td><td>Détection précoce (revues de sprint)</td><td>✅ Scrum</td></tr>
+<tr><td><strong>Suivi d'avancement</strong></td><td>Jalons séquentiels</td><td>Flux continu</td><td>Incréments livrables à chaque sprint</td><td>✅ Scrum</td></tr>
+</tbody>
+</table>
+
+<h4>Adaptation Scrum pour un Développeur Solo</h4>
+<table>
+<thead><tr><th>Élément Scrum</th><th>Version Équipe</th><th>Adaptation Solo</th></tr></thead>
+<tbody>
+<tr><td><strong>Product Owner</strong></td><td>Client/Partie prenante</td><td>Moi-même (backlog géré via GitHub Issues)</td></tr>
+<tr><td><strong>Scrum Master</strong></td><td>Facilitateur dédié</td><td>Moi-même (auto-discipline)</td></tr>
+<tr><td><strong>Sprint Planning</strong></td><td>Réunion d'équipe (2-4h)</td><td>Planification en début de mois (~1h), backlog défini dans GitHub Projects</td></tr>
+<tr><td><strong>Daily Standup</strong></td><td>Réunion quotidienne (15 min)</td><td><strong>Journal de bord quotidien</strong> dans <code>JOURNAL.md</code></td></tr>
+<tr><td><strong>Sprint Review</strong></td><td>Démonstration au PO</td><td>Présentation au référent lors des jalons</td></tr>
+<tr><td><strong>Sprint Retrospective</strong></td><td>Réunion d'amélioration</td><td>Auto-analyse en fin de sprint</td></tr>
+<tr><td><strong>Durée du Sprint</strong></td><td>1-4 semaines</td><td><strong>1 mois</strong> (aligné sur les jalons)</td></tr>
+</tbody>
+</table>
+
+<h3>1.2 Backlog Produit (MoSCoW)</h3>
+<h4>Must Have (Obligatoire)</h4>
+<ul>
+<li>En tant que <strong>client</strong>, je veux réserver une table via le chatbot pour ne pas avoir à appeler le restaurant</li>
+<li>En tant que <strong>restaurateur</strong>, je veux voir toutes les réservations du jour sur un dashboard</li>
+<li>En tant que <strong>restaurateur</strong>, je veux configurer mes tables et horaires</li>
+<li>En tant que <strong>client</strong>, je veux recevoir une confirmation immédiate après ma réservation</li>
+</ul>
+<h4>Should Have (Important)</h4>
+<ul>
+<li>En tant que <strong>client</strong>, je veux accéder à plusieurs canaux de réservation</li>
+<li>En tant que <strong>restaurateur</strong>, je veux consulter les statistiques de remplissage</li>
+</ul>
+<h4>Won't Have (Hors scope)</h4>
+<ul>
+<li>Paiement en ligne, commande de plats, multi-langues, application mobile native</li>
+</ul>
+<hr />
+
+<h2>2. Gestion du Code Source (Git)</h2>
+<h3>2.1 Stratégie de Branches - Git Flow Simplifié</h3>
+<pre><code>main              ← Versions stables (releases jalons)
+│
+├── develop       ← Intégration continue des features
+│   │
+│   ├── feature/whatsapp-chatbot
+│   ├── feature/dashboard-react
+│   ├── feature/widget-web
+│   └── feature/table-algorithm
+│
+└── hotfix/*      ← Corrections urgentes sur main</code></pre>
+
+<h3>2.2 Convention de Commits</h3>
+<p>Les messages de commit suivent la convention <strong>Conventional Commits</strong> :</p>
+<pre><code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;
+
+Types :
+- feat:     Nouvelle fonctionnalité
+- fix:      Correction de bug
+- docs:     Documentation
+- refactor: Refactoring du code
+- test:     Ajout/modification de tests
+- chore:    Tâches de maintenance
+
+Exemples :
+- feat(api): Add reservation CRUD endpoints
+- fix(chatbot): Fix date parsing for French format
+- test(api): Add unit tests for table algorithm</code></pre>
+
+<h3>2.3 Historique du Projet (Sprint 1 établi)</h3>
+<ul>
+<li>✅ Structure du projet (backend/frontend/docker/documentation)</li>
+<li>✅ Backend Symfony 6.4 avec entités Doctrine</li>
+<li>✅ API Platform configurée avec endpoints REST</li>
+<li>✅ Authentification JWT (LexikJWTAuthenticationBundle)</li>
+<li>✅ Frontend React 18 + TypeScript + Vite</li>
+<li>✅ Docker Compose (PostgreSQL, Backend, Frontend)</li>
+</ul>
+<hr />
+
+<h2>3. CI/CD Planifié et Réalisé</h2>
+<h3>3.1 Pipeline CI (GitHub Actions)</h3>
+<pre><code>Push / PR sur main
+        │
+        ▼
+┌───────────────────────────────────┐
+│         JOB : Backend CI          │
+│  (ubuntu-latest + PostgreSQL 15)  │
+│                                   │
+│  1. Checkout Code                 │
+│  2. Setup PHP 8.4                 │
+│  3. composer install              │
+│  4. openssl genrsa (clés JWT)     │
+│  5. doctrine:migrations:migrate   │
+│  6. vendor/bin/phpunit            │
+└───────────────┬───────────────────┘
+                │ parallèle
+┌───────────────▼───────────────────┐
+│        JOB : Frontend CI          │
+│         (ubuntu-latest)           │
+│                                   │
+│  1. Checkout Code                 │
+│  2. Setup Node.js 20              │
+│  3. npm install                   │
+│  4. npm run build (TypeScript ✓)  │
+└───────────────────────────────────┘</code></pre>
+
+<h3>3.2 Outils de Suivi</h3>
+<table>
+<thead><tr><th>Activité</th><th>Fréquence</th><th>Support</th></tr></thead>
+<tbody>
+<tr><td>Journal de bord</td><td>Quotidien</td><td><code>JOURNAL.md</code> dans le dépôt</td></tr>
+<tr><td>Mise à jour Kanban</td><td>À chaque changement</td><td>GitHub Projects</td></tr>
+<tr><td>Revue de sprint</td><td>Fin de mois</td><td>Présentation au référent</td></tr>
+<tr><td>Rétrospective</td><td>Fin de mois</td><td>Section dédiée dans <code>JOURNAL.md</code></td></tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<!-- SECTION V - CONCEPTION UI/UX                                -->
+<!-- ============================================================ -->
+<h1>Section V - Conception UI/UX</h1>
+
+<h2>1. Sitemap / Architecture des Écrans</h2>
+<h3>1.1 Plan du Site – Dashboard Restaurateur</h3>
+<pre><code>🔐 Connexion (/login)
+│
+└── 🏠 Dashboard (/dashboard)
+    │
+    ├── 📅 Calendrier (/calendar)
+    │   ├── Vue jour / semaine / mois
+    │
+    ├── 🗺️ Plan de Salle (/floor-plan)
+    │   ├── Vue en direct des tables (statuts temps réel)
+    │   └── Timeline du service + Slider durée repas
+    │
+    ├── 📋 Réservations (/reservations)
+    │   ├── Liste, Détail, Modifier / Annuler, Recherche
+    │
+    ├── 👥 Clients (/clients)
+    │   ├── Liste, Fiche client, Historique
+    │
+    ├── 📊 Statistiques (/stats)
+    │
+    └── ⚙️ Paramètres (/settings)
+        ├── Informations restaurant
+        ├── Horaires &amp; Services
+        └── RGPD / Confidentialité</code></pre>
+
+<p><img alt="Sitemap – Architecture des Écrans CALENDRIA" src="./CALENDRIA%20-%20Sitemap%20-%20Architecture%20des%20Ecrans.png" /></p>
+<hr />
+
+<h2>2. Wireframes (Maquettes Fil de Fer)</h2>
+<h3>2.1 Page de Connexion</h3>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│                     ┌────────────────┐                       │
+│                     │   🗓️ CALENDRIA │                       │
+│                     └────────────────┘                       │
+│                  ┌────────────────────────┐                  │
+│                  │   📧 Email             │                  │
+│                  │   ┌──────────────────┐ │                  │
+│                  │   └──────────────────┘ │                  │
+│                  │   🔒 Mot de passe      │                  │
+│                  │   ┌──────────────────┐ │                  │
+│                  │   └──────────────────┘ │                  │
+│                  │   ┌──────────────────┐ │                  │
+│                  │   │   SE CONNECTER   │ │                  │
+│                  │   └──────────────────┘ │                  │
+│                  └────────────────────────┘                  │
+└──────────────────────────────────────────────────────────────┘</code></pre>
+
+<h3>2.2 Dashboard (Tableau de Bord) – Desktop</h3>
+<pre><code>┌──────────────────────────────────────────────────────────────────────────┐
+│  🗓️ CALENDRIA               🔔 Notifications    👤 Safi B.    ⚙️       │
+├────────────┬─────────────────────────────────────────────────────────────┤
+│  SIDEBAR   │   TABLEAU DE BORD                          📅 26 Fév 2026 │
+│            │   ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────┐ │
+│  🏠 Accueil│   │ 📋 12      │ │ 👥 48      │ │ 📈 85%     │ │ ⚠️ 2  │ │
+│  📅 Calen. │   │ Réservation│ │ Couverts   │ │ Remplissage│ │ No-show│ │
+│  🗺️ Plan  │   └────────────┘ └────────────┘ └────────────┘ └────────┘ │
+│  📋 Réser. │   PROCHAINES ARRIVÉES                                       │
+│  👥 Clients│   ┌─────────────────────────────────────────────────────── │
+│  📊 Stats  │   │ Heure │ Client     │ Couverts │ Table │ Statut        │ │
+│  ⚙️ Param. │   │ 12:00 │ M. Dupont  │    4     │  T3   │ 🟢 Confirmée │ │
+│            │   │ 12:15 │ Mme Martin │    2     │  T1   │ 🟡 Imminente │ │
+│            │   └─────────────────────────────────────────────────────── │
+└──────────────────────────────────────────────────────────────────────────┘</code></pre>
+
+<h3>2.3 Plan de Salle – Vue en Direct</h3>
+<pre><code>┌──────────────────────┐  TIMELINE DU SERVICE 12h→22h30
+│  ┌────┐ ┌────┐      │  ┌──────────────────────────────┐
+│  │ T1 │ │ T2 │      │  │ T1  ████░░░░░░░░░░░░░░░░░░  │
+│  │🔴  │ │🟡  │      │  │ T2  ██████░░░░░░░░░░░░░░░░  │
+│  └────┘ └────┘      │  │ T3  ░░████████░░░░░░░░░░░░  │
+│  ┌────┐ ┌────┐      │  └──────────────────────────────┘
+│  │ T3 │ │ T4 │      │  Configuration Turnover : ──●── 1h30
+│  │🟢  │ │🔵  │      │  30min              3h
+│  └────┘ └────┘      │
+└──────────────────────┘</code></pre>
+
+<h3>2.4 Widget Web Chatbot (Côté Client)</h3>
+<pre><code>                          ┌────────────────────────────┐
+                          │  CALENDRIA 🗓️         ✕   │
+                          ├────────────────────────────┤
+                          │  ┌──────────────────────┐  │
+                          │  │ 🤖 Bonjour ! Pour    │  │
+                          │  │ quelle date souhaitez│  │
+                          │  │ -vous réserver ?     │  │
+                          │  └──────────────────────┘  │
+                          │       ┌──────────────┐     │
+                          │       │ Demain soir  │     │
+                          │       └──────────────┘     │
+                          │  ┌──────────────────────┐  │
+                          │  │ 🤖 Pour combien de   │  │
+                          │  │ personnes ?          │  │
+                          │  └──────────────────────┘  │
+                          │  ┌──┐ ┌──┐ ┌──┐ ┌──┐     │
+                          │  │ 2│ │ 4│ │ 6│ │ 8│     │
+                          │  └──┘ └──┘ └──┘ └──┘     │
+                          └────────────────────────────┘</code></pre>
+<hr />
+
+<h2>3. Charte Graphique</h2>
+<h3>3.1 Identité Visuelle</h3>
+<p><strong>Nom</strong> : CALENDRIA | <strong>Ton</strong> : <strong>Professionnel, moderne et chaleureux</strong></p>
+
+<h3>3.2 Palette de Couleurs</h3>
+<h4>Couleurs Principales</h4>
+<table>
+<thead><tr><th>Rôle</th><th>Nom</th><th>Hex</th><th>Usage</th></tr></thead>
+<tbody>
+<tr><td><strong>Primaire</strong></td><td>Bleu Profond</td><td><code>#1A5276</code></td><td>Navigation, headers, boutons principaux</td></tr>
+<tr><td><strong>Primaire clair</strong></td><td>Bleu Ciel</td><td><code>#2E86C1</code></td><td>Liens, éléments interactifs</td></tr>
+<tr><td><strong>Secondaire</strong></td><td>Corail Chaud</td><td><code>#E74C3C</code></td><td>Accents, CTA secondaires, notifications</td></tr>
+<tr><td><strong>Fond sidebar</strong></td><td>Bleu Nuit</td><td><code>#0E2F44</code></td><td>Barre latérale</td></tr>
+</tbody>
+</table>
+<h4>Couleurs de Statut</h4>
+<table>
+<thead><tr><th>Statut</th><th>Hex</th><th>Usage</th></tr></thead>
+<tbody>
+<tr><td>🟢 Confirmée / Disponible</td><td><code>#27AE60</code></td><td>Réservation confirmée</td></tr>
+<tr><td>🟡 Imminente</td><td><code>#F39C12</code></td><td>Arrivée dans &lt; 30 min</td></tr>
+<tr><td>🔵 Arrivé</td><td><code>#3498DB</code></td><td>Client présent</td></tr>
+<tr><td>🔴 No-show</td><td><code>#E74C3C</code></td><td>Client absent</td></tr>
+<tr><td>⚫ Annulée</td><td><code>#7F8C8D</code></td><td>Réservation annulée</td></tr>
+</tbody>
+</table>
+
+<h3>3.3 Typographie</h3>
+<table>
+<thead><tr><th>Usage</th><th>Police</th><th>Famille</th></tr></thead>
+<tbody>
+<tr><td><strong>Titres (h1, h2, h3)</strong></td><td>Outfit</td><td>Sans-serif (Google Fonts)</td></tr>
+<tr><td><strong>Texte courant</strong></td><td>Inter</td><td>Sans-serif (Google Fonts)</td></tr>
+<tr><td><strong>Code / Données</strong></td><td>JetBrains Mono</td><td>Monospace (Google Fonts)</td></tr>
+</tbody>
+</table>
+<hr />
+
+<h2>4. Maquettes Haute Fidélité</h2>
+<p>Les maquettes haute fidélité ont été réalisées dans <strong>Figma</strong> en appliquant la charte graphique définie ci-dessus. Elles couvrent au minimum 2 écrans :</p>
+<ol>
+<li><strong>Dashboard (Tableau de bord)</strong> – Version Desktop (1440px)</li>
+<li><strong>Dashboard (Tableau de bord)</strong> – Version Mobile (375px)</li>
+<li>Page de Connexion – Desktop</li>
+<li>Page Réservations – Desktop</li>
+<li>Widget Chatbot – Desktop</li>
+</ol>
+<hr />
+
+<h2>5. Considérations UX</h2>
+<h3>5.1 Principes Appliqués</h3>
+<h4>A. Mobile First</h4>
+<p>L'application est conçue Mobile First : le dashboard est d'abord pensé pour être consultable rapidement sur smartphone (le restaurateur vérifie ses réservations pendant le service). Navigation mobile via <strong>bottom navigation bar</strong>, desktop via <strong>sidebar</strong> latérale.</p>
+<h4>B. Simplicité d'Utilisation</h4>
+<ul>
+<li><strong>3 clics maximum</strong> pour accéder à n'importe quelle information importante</li>
+<li><strong>Dashboard par défaut</strong> après connexion</li>
+<li><strong>Actions contextuelles</strong> directement dans les listes</li>
+</ul>
+<h4>C. Code Couleur des Statuts</h4>
+<p>Un système de couleurs cohérent est utilisé dans toute l'application. Les informations ne sont jamais transmises uniquement par la couleur (ajout d'icônes et texte) - conformité WCAG 2.1 niveau AA.</p>
+
+<h3>5.2 Accessibilité (WCAG 2.1 AA)</h3>
+<table>
+<thead><tr><th>Critère</th><th>Implémentation</th></tr></thead>
+<tbody>
+<tr><td>Contraste</td><td>Ratio minimum 4.5:1 pour le texte</td></tr>
+<tr><td>Navigation clavier</td><td>Tous les éléments interactifs accessibles</td></tr>
+<tr><td>Taille de cible</td><td>Minimum 44x44px sur mobile</td></tr>
+<tr><td>Focus visible</td><td>Indicateur de focus sur tous les éléments</td></tr>
+</tbody>
+</table>
+
+<h3>5.3 Responsive Design</h3>
+<table>
+<thead><tr><th>Breakpoint</th><th>Largeur</th><th>Adaptation</th></tr></thead>
+<tbody>
+<tr><td><strong>Mobile</strong></td><td>&lt; 768px</td><td>Navigation bottom bar, cards empilées, sidebar cachée</td></tr>
+<tr><td><strong>Tablet</strong></td><td>768px - 1024px</td><td>Sidebar collapsible, grille 2 colonnes</td></tr>
+<tr><td><strong>Desktop</strong></td><td>&gt; 1024px</td><td>Sidebar étendue, grille multi-colonnes, tableau complet</td></tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<!-- SECTION VI - MODÉLISATION DE LA BASE DE DONNÉES             -->
+<!-- ============================================================ -->
+<h1>Section VI - Modélisation de la Base de Données</h1>
+
+<h2>1. Introduction à la Démarche MERISE</h2>
+<p>La modélisation de la base de données de CALENDRIA suit la démarche <strong>MERISE</strong>, une méthodologie de conception par niveaux qui garantit la cohérence entre les besoins fonctionnels et l'implémentation technique (base PostgreSQL 15).</p>
+<pre>
+ ┌─────────────────────────────────────────────────────┐
+ │  NIVEAU CONCEPTUEL (MCD)                            │
+ │  Entités métier, Associations, Cardinalités         │
+ │  Indépendant de toute technologie                   │
+ └──────────────────────┬──────────────────────────────┘
+                        │ Transformation
+                        ▼
+ ┌─────────────────────────────────────────────────────┐
+ │  NIVEAU LOGIQUE (MLD)                               │
+ │  Tables, Clés primaires, Clés étrangères            │
+ │  Résolution des associations N:M                    │
+ └──────────────────────┬──────────────────────────────┘
+                        │ Implémentation
+                        ▼
+ ┌─────────────────────────────────────────────────────┐
+ │  NIVEAU PHYSIQUE (MPD)                              │
+ │  Types SQL PostgreSQL 15, INDEX, contraintes CHECK  │
+ └─────────────────────────────────────────────────────┘
+</pre>
+
+<h2>2. Entités du Modèle (9 tables)</h2>
+<table>
+<thead><tr><th>#</th><th>Entité</th><th>Rôle</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>RESTAURANT</td><td>Établissement racine</td></tr>
+<tr><td>2</td><td>USER</td><td>Compte dashboard (authentification JWT)</td></tr>
+<tr><td>3</td><td>TABLE_RESTAURANT</td><td>Table physique du restaurant</td></tr>
+<tr><td>4</td><td>SERVICE</td><td>Période de service (midi/soir) + jours d'ouverture</td></tr>
+<tr><td>5</td><td>FERMETURE_EXCEPTIONNELLE</td><td>Dates de fermeture</td></tr>
+<tr><td>6</td><td>CLIENT</td><td>Personne qui réserve</td></tr>
+<tr><td>7</td><td>RESERVATION</td><td>Réservation de table (entité centrale)</td></tr>
+<tr><td>8</td><td>CONVERSATION_IA</td><td>Historique conversation chatbot multi-canal</td></tr>
+<tr><td>9</td><td>NOTIFICATION_SMS</td><td>Messages SMS (confirmation, rappel, annulation)</td></tr>
+</tbody>
+</table>
+<hr />
+
+<h2>3. Dictionnaire des Données</h2>
+
+<h3>3.1 RESTAURANT</h3>
+<table>
+<thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
+<tbody>
+<tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
+<tr><td>nom</td><td>Chaîne (255)</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>adresse</td><td>Texte libre</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>telephone</td><td>Chaîne (20)</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>email</td><td>Chaîne (255)</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>capacite_totale</td><td>Entier positif</td><td>NOT NULL, &gt; 0</td><td>✅</td></tr>
+<tr><td>duree_repas</td><td>Entier positif (minutes)</td><td>NOT NULL, &gt; 0</td><td>✅</td></tr>
+<tr><td>buffer_nettoyage</td><td>Entier positif (minutes)</td><td>NOT NULL, ≥ 0</td><td>✅</td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
+</tbody>
+</table>
+
+<h3>3.2 USER</h3>
+<table>
+<thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
+<tbody>
+<tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
+<tr><td>email</td><td>Chaîne (180)</td><td>NOT NULL, UNIQUE</td><td>✅</td></tr>
+<tr><td>roles</td><td>JSONB (tableau)</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>password</td><td>Chaîne (255)</td><td>NOT NULL (Argon2id)</td><td>✅</td></tr>
+<tr><td>restaurant_id</td><td>Référence → RESTAURANT</td><td>FK, nullable</td><td>❌</td></tr>
+</tbody>
+</table>
+
+<h3>3.3 TABLE_RESTAURANT</h3>
+<table>
+<thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
+<tbody>
+<tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
+<tr><td>restaurant_id</td><td>Référence → RESTAURANT</td><td>FK, NOT NULL</td><td>✅</td></tr>
+<tr><td>numero_table</td><td>Chaîne (10)</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>capacite</td><td>Entier positif</td><td>NOT NULL, &gt; 0</td><td>✅</td></tr>
+<tr><td>type</td><td>Chaîne (50)</td><td>NOT NULL, ENUM: interieur/terrasse/vip/prive</td><td>✅</td></tr>
+<tr><td>statut</td><td>Chaîne (20)</td><td>NOT NULL, ENUM: disponible/hors_service</td><td>✅</td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
+</tbody>
+</table>
+
+<h3>3.4 SERVICE</h3>
+<table>
+<thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
+<tbody>
+<tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
+<tr><td>restaurant_id</td><td>Référence → RESTAURANT</td><td>FK, NOT NULL</td><td>✅</td></tr>
+<tr><td>type</td><td>Chaîne (20)</td><td>NOT NULL, ENUM: midi/soir</td><td>✅</td></tr>
+<tr><td>heure_debut</td><td>TIME</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>heure_fin</td><td>TIME</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>jours_ouverture</td><td>JSONB</td><td>NOT NULL, ex: ["lundi","mardi"]</td><td>✅</td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
+</tbody>
+</table>
+
+<h3>3.5 FERMETURE_EXCEPTIONNELLE</h3>
+<table>
+<thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
+<tbody>
+<tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
+<tr><td>restaurant_id</td><td>Référence → RESTAURANT</td><td>FK, NOT NULL</td><td>✅</td></tr>
+<tr><td>date_fermeture</td><td>DATE</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>motif</td><td>Chaîne (255)</td><td>nullable</td><td>❌</td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
+</tbody>
+</table>
+
+<h3>3.6 CLIENT</h3>
+<table>
+<thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
+<tbody>
+<tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
+<tr><td>nom</td><td>Chaîne (255)</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>telephone</td><td>Chaîne (20)</td><td>NOT NULL, UNIQUE</td><td>✅</td></tr>
+<tr><td>email</td><td>Chaîne (255)</td><td>nullable</td><td>❌</td></tr>
+<tr><td>preferences</td><td>JSON</td><td>nullable</td><td>❌</td></tr>
+<tr><td>consentement_rgpd</td><td>BOOLEAN</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>date_consentement</td><td>TIMESTAMP</td><td>nullable</td><td>❌</td></tr>
+<tr><td>taux_noshow</td><td>DECIMAL</td><td>nullable, ≥ 0, ≤ 1</td><td>❌</td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
+</tbody>
+</table>
+
+<h3>3.7 RESERVATION</h3>
+<table>
+<thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
+<tbody>
+<tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
+<tr><td>client_id</td><td>Référence → CLIENT</td><td>FK, NOT NULL</td><td>✅</td></tr>
+<tr><td>restaurant_id</td><td>Référence → RESTAURANT</td><td>FK, NOT NULL</td><td>✅</td></tr>
+<tr><td>table_id</td><td>Référence → TABLE_RESTAURANT</td><td>FK, nullable</td><td>❌</td></tr>
+<tr><td>date_reservation</td><td>DATE</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>heure_reservation</td><td>TIME</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>nombre_personnes</td><td>Entier positif</td><td>NOT NULL, &gt; 0</td><td>✅</td></tr>
+<tr><td>statut</td><td>ENUM</td><td>NOT NULL, ENUM: confirmee/annulee/noshow/terminee</td><td>✅</td></tr>
+<tr><td>demandes_speciales</td><td>Texte</td><td>nullable</td><td>❌</td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>updated_at</td><td>TIMESTAMP</td><td>nullable</td><td>❌</td></tr>
+</tbody>
+</table>
+
+<h3>3.8 CONVERSATION_IA</h3>
+<table>
+<thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
+<tbody>
+<tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
+<tr><td>client_id</td><td>Référence → CLIENT</td><td>FK, nullable</td><td>❌</td></tr>
+<tr><td>telephone_appelant</td><td>Chaîne (20)</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>canal</td><td>ENUM</td><td>NOT NULL, ENUM: whatsapp/widget/sms/telegram</td><td>✅</td></tr>
+<tr><td>date_debut</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>date_fin</td><td>TIMESTAMP</td><td>nullable</td><td>❌</td></tr>
+<tr><td>transcription</td><td>TEXT</td><td>nullable</td><td>❌</td></tr>
+<tr><td>donnees_collectees</td><td>JSON</td><td>nullable</td><td>❌</td></tr>
+<tr><td>reservation_id</td><td>Référence → RESERVATION</td><td>FK, nullable</td><td>❌</td></tr>
+<tr><td>statut</td><td>ENUM</td><td>NOT NULL, ENUM: complete/incomplete/erreur</td><td>✅</td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
+</tbody>
+</table>
+
+<h3>3.9 NOTIFICATION_SMS</h3>
+<table>
+<thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
+<tbody>
+<tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
+<tr><td>reservation_id</td><td>Référence → RESERVATION</td><td>FK, NOT NULL</td><td>✅</td></tr>
+<tr><td>telephone_destinataire</td><td>Chaîne (20)</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>message</td><td>TEXT</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>type</td><td>ENUM</td><td>NOT NULL, ENUM: confirmation/rappel/annulation/proposition</td><td>✅</td></tr>
+<tr><td>statut_envoi</td><td>ENUM</td><td>NOT NULL, ENUM: en_attente/envoye/echec</td><td>✅</td></tr>
+<tr><td>date_envoi</td><td>TIMESTAMP</td><td>nullable</td><td>❌</td></tr>
+<tr><td>id_externe_twilio</td><td>Chaîne (50)</td><td>nullable, UNIQUE si non null</td><td>❌</td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
+</tbody>
+</table>
+<hr />
+
+<h2>4. Diagrammes MERISE</h2>
+<div class="figure">
+  <img src="Jalon3/MCD.png" alt="Modèle Conceptuel de Données" />
+  <p class="caption">Figure 6.1 - Modèle Conceptuel de Données (MCD)</p>
+</div>
+<div class="figure">
+  <img src="Jalon3/MLD.png" alt="Modèle Logique de Données" />
+  <p class="caption">Figure 6.2 - Modèle Logique de Données (MLD)</p>
+</div>
+<div class="figure">
+  <img src="Jalon3/MPD.png" alt="Modèle Physique de Données" />
+  <p class="caption">Figure 6.3 - Modèle Physique de Données (MPD) - PostgreSQL 15</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION VII - CONCEPTION DE L'APPLICATION (UML)             -->
+<!-- ============================================================ -->
+<h1>Section VII - Conception de l'Application (UML)</h1>
+
+<h2>Introduction</h2>
+<p>Ce dossier présente la conception technique de CALENDRIA. Il fait le lien entre les besoins fonctionnels (CDCF), les parcours utilisateurs (wireframes), et le modèle physique de données (MERISE). Les diagrammes PlantUML respectent une charte graphique cohérente (en-tête blanc sur fond bleu <code>#2E86C1</code>).</p>
+
+<h2>1. Vue Fonctionnelle (Use Cases)</h2>
+<p>Ce diagramme offre une vision panoramique des interactions utilisateurs-système.</p>
+<ul>
+<li>3 <strong>acteurs principaux</strong> : le Client, le Restaurateur, et le Système Automatique (IA + crons)</li>
+<li>Use Cases groupés par packages : "Dashboard", "IA Multi-Canal", "Traitement Automatique"</li>
+</ul>
+<div class="figure">
+  <img src="Jalon4/diagramme_cas_utilisation.png" alt="Diagramme des Cas d'Utilisation" />
+  <p class="caption">Figure 7.1 - Diagramme des Cas d'Utilisation</p>
+</div>
+
+<h2>2. Vue Dynamique (Séquences)</h2>
+<h3>2.1 Séquence : Réservation via Chatbot</h3>
+<p>Ce diagramme explicite le cœur d'innovation de CALENDRIA : la création automatique d'une réservation via IA. Il montre les itérations de collecte de données entre l'utilisateur, le contrôleur, et Gemini 2.5 Flash, ainsi que l'interaction entre <code>ChatbotService</code>, <code>DisponibiliteService</code>, et <code>ReservationService</code>.</p>
+<div class="figure">
+  <img src="Jalon4/sequence_reservation_chatbot.png" alt="Séquence Réservation via Chatbot" />
+  <p class="caption">Figure 7.2 - Séquence Réservation via Chatbot IA</p>
+</div>
+
+<h3>2.2 Séquence : Authentification JWT</h3>
+<p>Documente l'interaction entre le Frontend React (Axios) et le module Symfony LexikJWT pour récupérer un token signé RS256.</p>
+<div class="figure">
+  <img src="Jalon4/sequence_authentification.png" alt="Séquence Authentification JWT" />
+  <p class="caption">Figure 7.3 - Séquence Authentification JWT</p>
+</div>
+
+<h3>2.3 Séquence : Gestion d'une Réservation</h3>
+<p>Montre l'utilisation du JWT pour protéger les requêtes et illustre un workflow (ex: Marquer un No-show) provoquant des modifications complexes en base et un effet de bord externe (SMS de notification).</p>
+<div class="figure">
+  <img src="Jalon4/sequence_gestion_reservation.png" alt="Séquence Gestion Réservation" />
+  <p class="caption">Figure 7.4 - Séquence Gestion Réservation</p>
+</div>
+
+<h2>3. Vue Statique (Classes)</h2>
+<p>Le diagramme de classes va au-delà du MLD. Il illustre l'intégration des concepts métiers dans le code PHP objet, séparé en 4 packages délimitant les couches MVC :</p>
+<ul>
+<li><strong>Entity</strong> - Modèles ORM Doctrine</li>
+<li><strong>Repository</strong> - Accès DQL orienté objet</li>
+<li><strong>Service</strong> - Logique métier complexe</li>
+<li><strong>Controller</strong> - Exposition API</li>
+</ul>
+<div class="figure">
+  <img src="Jalon4/diagramme_classes.png" alt="Diagramme de Classes UML" />
+  <p class="caption">Figure 7.5 - Diagramme de Classes UML</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION VIII - ARCHITECTURE MULTI-COUCHES                   -->
+<!-- ============================================================ -->
+<h1>Section VIII - Architecture Multi-Couches</h1>
+
+<h2>1. Architecture N-Tiers (Déploiement Physique)</h2>
+<p>L'application suit une <strong>architecture 3-tiers</strong> au sens du déploiement physique :</p>
+<blockquote>
+<p><strong>Clarification 3-tiers vs N-couches</strong> : L'architecture <strong>physique</strong> est 3-tiers (navigateur, serveur API, base de données). L'architecture <strong>logique</strong> interne au backend est N-couches (4 couches : Controller, Service, Entity, Repository).</p>
+</blockquote>
+
+<h3>Tier 1 : Présentation (Client)</h3>
+<p><strong>Navigateur Web / Mobile</strong> : Charge la SPA React compilée par Vite. Fichiers statiques servis par nginx. Gère l'affichage (UI), le routage côté client (react-router-dom) et l'UX.</p>
+
+<h3>Tier 2 : Logique Applicative (Backend API)</h3>
+<p><strong>Symfony 6.4 (PHP 8.4)</strong> : Reçoit les requêtes HTTP JSON et les webhooks externes. API RESTful <strong>Stateless</strong> : authentification via JWT à chaque requête, pas de sessions en mémoire. Configure CORS via NelmioCorsBundle.</p>
+
+<h3>Tier 3 : Accès aux Données (SGBD)</h3>
+<p><strong>PostgreSQL 15</strong> : Base relationnelle protégée du réseau externe, accessible uniquement par le Tier 2 via TCP/IP sur le port interne 5432.</p>
+
+<div class="figure">
+  <img src="Jalon4/Architecture_N_Tiers.png" alt="Architecture N-Tiers" />
+  <p class="caption">Figure 8.1 - Architecture N-Tiers de CALENDRIA</p>
+</div>
+<hr />
+
+<h2>2. Architecture Logique (Backend Symfony)</h2>
+<p>Le backend Symfony suit le pattern <strong>MVC étendu vers une architecture hexagonale (orientée services)</strong> :</p>
+
+<h3>A. Séparation en 4 Couches</h3>
+<ol>
+<li><strong>Controllers (Couche HTTP)</strong> : Point d'entrée des requêtes HTTP. Désérialisent les données JSON, appellent les services métier, retournent des réponses HTTP typées (201, 400, 401…). Les endpoints principaux sont des contrôleurs Symfony avec <code>#[Route]</code>, offrant un contrôle total.</li>
+<li><strong>Services (Couche Métier)</strong> : Logique métier complexe - algorithmes de disponibilité (<code>DisponibiliteService</code>), orchestration webhooks (<code>ChatbotService</code>), intégrations API (<code>NotificationService</code>). Indépendants du contexte HTTP.</li>
+<li><strong>Entities (Couche Modèle)</strong> : POPO (Plain Old PHP Objects) représentant les entités métier. Pas de logique d'infrastructure, uniquement propriétés et getters/setters.</li>
+<li><strong>Repositories (Couche Persistance)</strong> : Data Access Layer via Doctrine ORM. Les requêtes SQL complexes (ex: réservations du jour) résident dans les repositories, pas dans les contrôleurs.</li>
+</ol>
+
+<h3>B. Principes SOLID Appliqués</h3>
+<ul>
+<li><strong>SRP</strong> : La séparation Controller / Service / Repository assure qu'une classe n'a qu'une seule raison de changer</li>
+<li><strong>OCP</strong> : State Providers/Persisters API Platform permettent d'étendre le comportement sans modifier le cœur</li>
+<li><strong>DIP</strong> : L'Injection de Dépendances Symfony - les contrôleurs reçoivent les services dans leur constructeur</li>
+</ul>
+<hr />
+
+<h2>3. Composants Externes et Bibliothèques</h2>
+<h3>Back-end (Bundles Symfony)</h3>
+<ul>
+<li><strong>API Platform</strong> : Documentation OpenAPI/Swagger automatique sur <code>/api/docs</code></li>
+<li><strong>Lexik JWT Authentication</strong> : Création et validation des tokens JWT RS256</li>
+<li><strong>Nelmio CORS</strong> : Politique CORS-Origin pour appels depuis le domaine frontend</li>
+<li><strong>Doctrine ORM</strong> : Pont entre les objets PHP et PostgreSQL, génération des migrations SQL</li>
+</ul>
+<h3>APIs Tierces</h3>
+<ul>
+<li><strong>Google Gemini 2.5 Flash</strong> : NLP du chatbot - interprète les intentions et extrait les variables (date, heure, couverts)</li>
+<li><strong>Retell AI</strong> : Agent vocal IA - gère les appels téléphoniques, appelle le webhook <code>/api/chatbot/call</code></li>
+<li><strong>Telegram Bot API</strong> : Canal de messagerie - webhook <code>/api/chatbot/telegram</code></li>
+</ul>
+
+<!-- ============================================================ -->
+<!-- SECTION IX - SÉCURITÉ ET CONFORMITÉ                         -->
+<!-- ============================================================ -->
+<h1>Section IX - Sécurité et Conformité</h1>
+
+<h2>1. Politique de Sécurité Applicative (OWASP Top 10)</h2>
+<p>L'architecture de CALENDRIA a été conçue pour respecter rigoureusement les préconisations de sécurité de l'OWASP.</p>
+
+<h3>a) Injection SQL (A03:2021)</h3>
+<ul>
+<li><strong>Protection native via l'ORM</strong> : Doctrine ORM utilise des requêtes préparées systématiques, séparant hermétiquement la logique SQL des données utilisateur</li>
+<li><strong>QueryBuilder</strong> : Toutes les variables externes (<code>$restaurantId</code>, <code>$dateStr</code>…) injectées via <code>-&gt;setParameter()</code>. Aucune concaténation brute de chaîne tolérée</li>
+</ul>
+
+<h3>b) Failles XSS (A03:2021)</h3>
+<ul>
+<li><strong>Échappement automatique React</strong> : Toutes les variables dans le JSX sont échappées par défaut, prévenant l'exécution de scripts malveillants</li>
+<li><strong>Échappement Twig</strong> : Pour les pages backend (erreurs, profil), échappement HTML par défaut sur toutes les variables</li>
+</ul>
+
+<h3>c) Attaques CSRF (A01:2021)</h3>
+<ul>
+<li><strong>API Stateless avec JWT</strong> : Les requêtes du frontend n'utilisent pas de sessions/cookies de navigation, rendant l'application insensible au CSRF</li>
+<li>Le token JWT est stocké en mémoire React et envoyé dans <code>Authorization: Bearer &lt;JWT_TOKEN&gt;</code></li>
+</ul>
+
+<h3>d) Brute Force (A07:2021)</h3>
+<ul>
+<li><strong>Rate Limiting</strong> : <code>LoginRateLimiterSubscriber</code> - 5 tentatives max / 15 min par IP</li>
+<li>Blocage IP automatique via cache Symfony après dépassement</li>
+</ul>
+
+<h3>e) Stockage des Mots de Passe (A02:2021)</h3>
+<ul>
+<li><strong>Argon2id</strong> : Algorithme de hachage par défaut de Symfony 6.4 - aucun mot de passe stocké en clair</li>
+<li>Politique de mot de passe robuste exigée à la création de compte</li>
+</ul>
+
+<h3>f) Contrôle d'Accès &amp; Firewalls (A01:2021)</h3>
+<ul>
+<li><strong>Firewall Principal (<code>/api</code>)</strong> : Protège tous les endpoints d'administration - JWT valide requis (401 sinon)</li>
+<li><strong>Firewall Public (<code>/api/chatbot</code>)</strong> : Accès public autorisé pour le Widget Web, le bot Telegram et les webhooks - limité aux actions conversationnelles</li>
+</ul>
+<hr />
+
+<h2>2. Conformité RGPD</h2>
+<p>CALENDRIA manipule des données à caractère personnel (nom, téléphone, email). Les mesures suivantes garantissent la conformité :</p>
+<table>
+<thead><tr><th>Exigence RGPD</th><th>Implémentation dans CALENDRIA</th></tr></thead>
+<tbody>
+<tr><td><strong>Minimisation des données</strong></td><td>Collecte uniquement : Nom, Téléphone, Heure, Couverts. L'email est optionnel</td></tr>
+<tr><td><strong>Consentement Explicite</strong></td><td>Champ <code>consentement_rgpd</code> (BOOLEAN) + <code>date_consentement</code> (TIMESTAMP) dans l'entité Client</td></tr>
+<tr><td><strong>Sécurisation des flux</strong></td><td>HTTPS obligatoire en production (Let's Encrypt via Railway)</td></tr>
+<tr><td><strong>Droit à l'Oubli</strong></td><td>Suppression des fiches clients depuis le dashboard - cascade en base de données</td></tr>
+<tr><td><strong>Durée de conservation</strong></td><td>Données clients : 2 ans après dernière réservation - Logs : 1 an maximum</td></tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note</strong> : CALENDRIA manipule des <strong>données personnelles simples</strong> (pas de données de santé sensibles), donc RGPD simplifié par rapport au secteur médical.</p>
+</blockquote>
+
+<!-- ============================================================ -->
+<!-- SECTION X - POLITIQUE DE TESTS                              -->
+<!-- ============================================================ -->
+<h1>Section X - Politique de Tests</h1>
+
+<h2>1. Stratégie de Tests - Vue d'Ensemble</h2>
+<p>La qualité logicielle de CALENDRIA repose sur trois niveaux de validation complémentaires :</p>
+<table>
+<thead><tr><th>Niveau</th><th>Outil</th><th>Périmètre</th><th>Déclenchement</th></tr></thead>
+<tbody>
+<tr><td><strong>Tests unitaires</strong></td><td>PHPUnit</td><td>Services métier isolés (mocks)</td><td>Manuel + CI</td></tr>
+<tr><td><strong>Tests fonctionnels</strong></td><td>PHPUnit + KernelBrowser</td><td>Endpoints HTTP bout-en-bout</td><td>Manuel + CI</td></tr>
+<tr><td><strong>Type-checking</strong></td><td>TypeScript (<code>tsc -b</code>)</td><td>Contrats d'interfaces frontend</td><td>CI (npm build)</td></tr>
+<tr><td><strong>Validation manuelle</strong></td><td>Navigateur + Postman</td><td>UX, chatbot, plan de salle</td><td>À chaque sprint</td></tr>
+</tbody>
+</table>
+<hr />
+
+<h2>2. Tests Backend (PHPUnit)</h2>
+<h3>2.1 Organisation des Tests</h3>
+<pre><code>backend/tests/
+├── bootstrap.php
+├── Controller/
+│   ├── AuthControllerTest.php     # 6 tests
+│   └── ChatbotControllerTest.php  # 2 tests
+└── Service/
+    └── DisponibiliteServiceTest.php  # 4 tests
+
+Total : 12 tests, 0 failure, 0 error</code></pre>
+
+<h3>2.2 DisponibiliteServiceTest - Tests Unitaires (4 tests)</h3>
+<table>
+<thead><tr><th>Méthode de test</th><th>Scénario</th><th>Assertion principale</th></tr></thead>
+<tbody>
+<tr><td><code>testVerifierDisponibiliteRestaurantNonTrouve</code></td><td>ID restaurant inexistant (999)</td><td><code>disponible === false</code>, <code>table === null</code></td></tr>
+<tr><td><code>testVerifierDisponibiliteRetourneRaisonFerme</code></td><td>Aucun service configuré</td><td><code>disponible === false</code>, <code>raison === 'ferme'</code></td></tr>
+<tr><td><code>testVerifierDisponibiliteAvecServiceOuvert</code></td><td>Service ouvert, tables disponibles</td><td><code>disponible === true</code>, <code>table</code> non null</td></tr>
+<tr><td><code>testVerifierDisponibiliteDateInvalide</code></td><td>Format de date invalide</td><td><code>disponible === false</code>, <code>alternatives</code> vide</td></tr>
+</tbody>
+</table>
+
+<h3>2.3 AuthControllerTest - Tests Fonctionnels (6 tests)</h3>
+<table>
+<thead><tr><th>Méthode de test</th><th>Endpoint</th><th>Scénario</th><th>Statut attendu</th></tr></thead>
+<tbody>
+<tr><td><code>testHealthEndpointReturnsOk</code></td><td><code>GET /api/health</code></td><td>Health check</td><td>200</td></tr>
+<tr><td><code>testRegisterWithValidData</code></td><td><code>POST /api/register</code></td><td>Email + password valides</td><td>201</td></tr>
+<tr><td><code>testRegisterWithMissingEmail</code></td><td><code>POST /api/register</code></td><td>Payload sans email</td><td>400</td></tr>
+<tr><td><code>testRegisterWithMissingPassword</code></td><td><code>POST /api/register</code></td><td>Payload sans password</td><td>400</td></tr>
+<tr><td><code>testRegisterWithDuplicateEmail</code></td><td><code>POST /api/register</code></td><td>Email déjà utilisé</td><td>409</td></tr>
+<tr><td><code>testLoginWithInvalidCredentials</code></td><td><code>POST /api/login</code></td><td>Mauvais mot de passe</td><td>401</td></tr>
+</tbody>
+</table>
+
+<h3>2.4 ChatbotControllerTest - Tests Fonctionnels (2 tests)</h3>
+<table>
+<thead><tr><th>Méthode de test</th><th>Scénario</th><th>Statut attendu</th></tr></thead>
+<tbody>
+<tr><td><code>testCallEndpointRequiresRestaurantId</code></td><td>Payload sans <code>restaurantId</code></td><td>400</td></tr>
+<tr><td><code>testCallEndpointRetourneMessageErreurSiRestaurantInexistant</code></td><td><code>restaurantId: 99999</code></td><td>200 (message d'erreur Retell)</td></tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Choix d'architecture</strong> : L'endpoint <code>/api/chatbot/call</code> retourne toujours 200 OK - Retell AI interprète tout code non-200 comme erreur fatale. Les erreurs métier sont communiquées dans le corps JSON (<code>booking_message</code>).</p>
+</blockquote>
+<hr />
+
+<h2>3. Tests Frontend</h2>
+<h3>3.1 TypeScript Strict Mode</h3>
+<p>Le frontend React est configuré en mode TypeScript <strong>strict</strong> (<code>tsconfig.app.json</code>) :</p>
+<pre><code class="language-json">{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true
+  }
+}</code></pre>
+<p><code>npm run build</code> exécute <code>tsc -b</code> avant Vite, rejetant toute erreur de type. C'est le filet de sécurité pour les interfaces de services.</p>
+
+<h3>3.2 Interfaces TypeScript Validées</h3>
+<pre><code class="language-typescript">interface Reservation { id: number; date: string; heure: string; ... }
+interface ServiceItem  { id: number; typeService: string; heureOuverture: string; ... }
+interface RestaurantData { id: number; nom: string; tables: Table[]; services: ServiceItem[]; ... }</code></pre>
+<hr />
+
+<h2>4. Couverture des Cas Critiques</h2>
+<table>
+<thead><tr><th>Cas Limite</th><th>Test Couvrant</th></tr></thead>
+<tbody>
+<tr><td>Restaurant inexistant</td><td><code>testVerifierDisponibiliteRestaurantNonTrouve</code></td></tr>
+<tr><td>Aucun service ouvert</td><td><code>testVerifierDisponibiliteRetourneRaisonFerme</code></td></tr>
+<tr><td>Date au format invalide</td><td><code>testVerifierDisponibiliteDateInvalide</code></td></tr>
+<tr><td>Inscription email dupliqué</td><td><code>testRegisterWithDuplicateEmail</code></td></tr>
+<tr><td>Login mauvaises credentials</td><td><code>testLoginWithInvalidCredentials</code></td></tr>
+<tr><td>Webhook sans restaurantId</td><td><code>testCallEndpointRequiresRestaurantId</code></td></tr>
+</tbody>
+</table>
+<hr />
+
+<h2>5. Résultats CI - État Final</h2>
+<pre><code>PHPUnit 11.x - CALENDRIA Test Suite
+..............................
+
+OK (12 tests, 24 assertions)
+Time: 00:02.841, Memory: 32.00 MB</code></pre>
+<p><strong>Badge CI</strong> : <a href="https://github.com/SafiBougherara/projet_fin_annee/actions/workflows/ci.yml">
+<img alt="CI" src="https://github.com/SafiBougherara/projet_fin_annee/actions/workflows/ci.yml/badge.svg" /></a></p>
+
+<!-- ============================================================ -->
+<!-- SECTION XI - DÉPLOIEMENT ET MISE EN PRODUCTION              -->
+<!-- ============================================================ -->
+<h1>Section XI - Déploiement et Mise en Production</h1>
+
+<h2>1. Architecture de Production</h2>
+<h3>1.1 Vue d'Ensemble - Railway</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│                         INTERNET (HTTPS/443)                        │
+└──────────────────────────┬──────────────────────┬───────────────────┘
+                           │                      │
+              ┌────────────▼───────────┐ ┌────────▼────────────────┐
+              │   FRONTEND (Railway)   │ │   BACKEND (Railway)     │
+              │  React + Vite + nginx  │ │  nginx + PHP-FPM (8.4)  │
+              │  frontend-production-  │ │  backend-production-    │
+              │  8a43.up.railway.app   │ │  dd10b.up.railway.app   │
+              └────────────────────────┘ └──────────┬──────────────┘
+                                                    │ TCP:5432
+                                         ┌──────────▼──────────────┐
+                                         │  PostgreSQL 15 (Railway) │
+                                         │  postgres.railway.       │
+                                         │  internal:5432           │
+                                         └─────────────────────────┘
+
+                           APIs Externes
+              ┌────────────────────────────────────────┐
+              │  Google Gemini 2.5 Flash  (HTTPS)      │
+              │  Retell AI Webhook        (HTTPS)       │
+              │  Telegram Bot API         (HTTPS)       │
+              └────────────────────────────────────────┘</code></pre>
+<div class="figure">
+  <img src="Jalon6/architecture_production.png" alt="Architecture de Production Railway" />
+  <p class="caption">Figure 11.1 - Architecture de Production Railway</p>
+</div>
+
+<h3>1.2 Sécurité en Production</h3>
+<ul>
+<li><strong>TLS/HTTPS</strong> : Terminaison SSL par Railway (Let's Encrypt automatique)</li>
+<li><strong>CORS</strong> : NelmioCorsBundle filtre par regex (<code>^https://frontend-production-8a43\.up\.railway\.app$</code>)</li>
+<li><strong>JWT RSA</strong> : Clés générées au build time (<code>openssl genrsa 4096</code>), stockées dans l'image Docker</li>
+<li><strong>Rate Limiting</strong> : 5 tentatives de login échouées → blocage IP 15 minutes</li>
+</ul>
+<hr />
+
+<h2>2. Containerisation Docker</h2>
+<h3>2.1 Backend - Build Multi-Stage</h3>
+<pre><code>Étape 1 : Image de base (php:8.4-fpm-alpine)
+    ↓ Installation des extensions PHP (pdo_pgsql, opcache, intl…)
+    ↓ Installation de nginx + supervisord
+    ↓ composer install --no-dev
+    ↓ openssl genrsa 4096 (clés JWT)
+    ↓ cache:warmup (mode prod)
+    ↓ EXPOSE 8080
+
+Entrypoint Runtime (entrypoint.sh) :
+    ↓ Lecture de $PORT (fallback 8080)
+    ↓ Écriture dynamique config nginx (sed __PORT__)
+    ↓ php bin/console cache:clear + cache:warmup
+    ↓ exec /usr/bin/supervisord (nginx + php-fpm)</code></pre>
+
+<h3>2.2 Frontend - Multi-Stage</h3>
+<pre><code>Étape 1 : Build (node:20-alpine)
+    ↓ npm install
+    ↓ VITE_API_URL=${ARG} npm run build
+    → /app/dist (assets statiques)
+
+Étape 2 : Serve (nginx:alpine)
+    ↓ COPY --from=build /app/dist /usr/share/nginx/html
+    ↓ Config SPA fallback (try_files $uri /index.html)
+    ↓ EXPOSE 3000</code></pre>
+<blockquote>
+<p><strong>Point clé</strong> : <code>VITE_API_URL</code> est injecté au <strong>build time</strong> - l'image doit être reconstruite si l'URL backend change.</p>
+</blockquote>
+
+<h3>2.3 Docker Compose (Développement Local)</h3>
+<pre><code class="language-bash"># Démarrage complet (première fois)
+docker compose up -d --build
+
+# Migrations
+docker compose exec backend php bin/console doctrine:migrations:migrate --no-interaction
+
+# Données de démo
+docker compose exec backend php bin/console doctrine:fixtures:load --no-interaction
+
+# Tests
+docker compose exec backend vendor/bin/phpunit</code></pre>
+<hr />
+
+<h2>3. Pipeline CI/CD (GitHub Actions)</h2>
+<p>Fichier <code>.github/workflows/ci.yml</code> - déclenchée à chaque push/PR sur <code>main</code>, <code>master</code> et <code>develop</code>.</p>
+<div class="figure">
+  <img src="Jalon6/cicd_pipeline.png" alt="Pipeline CI/CD GitHub Actions" />
+  <p class="caption">Figure 11.2 - Pipeline CI/CD GitHub Actions</p>
+</div>
+<hr />
+
+<h2>4. Variables d'Environnement (Production)</h2>
+<table>
+<thead><tr><th>Variable</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>APP_ENV</code></td><td><code>prod</code></td></tr>
+<tr><td><code>APP_SECRET</code></td><td>Clé secrète Symfony (32 caractères)</td></tr>
+<tr><td><code>DATABASE_URL</code></td><td>URL complète PostgreSQL interne Railway</td></tr>
+<tr><td><code>CORS_ALLOW_ORIGIN</code></td><td>Regex URL frontend</td></tr>
+<tr><td><code>GEMINI_API_KEY</code></td><td>Clé API Google Gemini 2.5</td></tr>
+<tr><td><code>TELEGRAM_BOT_TOKEN</code></td><td>Token du bot Telegram</td></tr>
+<tr><td><code>JWT_PASSPHRASE</code></td><td>Passphrase des clés RSA</td></tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Principe</strong> : Aucun secret dans le code source ni dans le dépôt Git. Variables gérées via le dashboard Railway (chiffrées au repos).</p>
+</blockquote>
+<hr />
+
+<h2>5. Instructions de Démarrage Local</h2>
+<pre><code class="language-bash"># Étape 1 : Cloner le dépôt
+git clone https://github.com/SafiBougherara/projet_fin_annee.git
+cd projet_fin_annee
+
+# Étape 2 : Configurer les variables d'environnement
+cp backend/.env.example backend/.env
+# Renseigner GEMINI_API_KEY dans backend/.env
+
+# Étape 3 : Construire et démarrer tous les services
+docker compose up -d --build
+
+# Étape 4 : Initialiser la base de données
+docker compose exec backend php bin/console doctrine:migrations:migrate --no-interaction
+docker compose exec backend php bin/console doctrine:fixtures:load --no-interaction
+
+# Étape 5 : Accéder à l'application
+# Dashboard restaurateur  → http://localhost:3000
+# API REST (documentation) → http://localhost:8000/api
+# Health check            → http://localhost:8000/api/health
+
+# Identifiants de démo
+# Email    : admin@calendria.com
+# Password : password123</code></pre>
+<hr />
+
+<h2>6. Guide du Restaurateur</h2>
+<h3>6.1 Configuration Initiale</h3>
+<p><strong>Étape 1 - Créer votre restaurant</strong> : Menu → Gestion des Restaurants → Ajouter. Renseigner nom, adresse, téléphone, durée d'un repas et marge de nettoyage.</p>
+<p><strong>Étape 2 - Créer les tables</strong> : Depuis la fiche restaurant → Ajouter une Table → numéro, capacité, type.</p>
+<p><strong>Étape 3 - Définir les services</strong> : Section Horaires → Ajouter un service → type (Déjeuner/Dîner), heures, jours.</p>
+<blockquote>
+<p>⚠️ Sans service configuré, le chatbot ne peut pas prendre de réservations</p>
+</blockquote>
+<h3>6.2 Canaux de Réservation</h3>
+<p><strong>Widget Web</strong> : URL <code>/widget?restaurantId=X</code> - intégrable via iframe sur le site du restaurant.</p>
+<p><strong>Telegram</strong> : Configurez le webhook : <code>POST https://api.telegram.org/bot{TOKEN}/setWebhook?url=https://backend.../api/chatbot/telegram?restaurantId=X</code></p>
+<p><strong>Retell AI (Vocal)</strong> : Webhook public <code>POST /api/chatbot/call</code> - paramètres : <code>name, phone, date, time, guests, restaurantId</code></p>
+
+<!-- ============================================================ -->
+<!-- SECTION XII - VEILLE TECHNOLOGIQUE                          -->
+<!-- ============================================================ -->
+<h1>Section XII - Veille Technologique</h1>
+
+<h2>1. Définition et Démarche</h2>
+<p>La veille technologique consiste à surveiller activement l'évolution des technologies utilisées ou susceptibles d'impacter le projet, afin d'anticiper les changements et d'adopter les meilleures pratiques. Dans le cadre de CALENDRIA, cette veille a été continue tout au long des 6 mois de développement et a directement influencé plusieurs choix techniques.</p>
+
+<h2>2. Technologies Surveillées</h2>
+<h3>2.1 Intelligence Artificielle Générative</h3>
+<p>Le domaine de l'IA générative est en évolution rapide. Pour CALENDRIA, la sélection de l'IA conversationnelle a été un choix stratégique révisé en cours de projet :</p>
+<table>
+<thead><tr><th>Solution</th><th>Évaluée</th><th>Statut</th><th>Raison</th></tr></thead>
+<tbody>
+<tr><td>OpenAI GPT-4o-mini</td><td>✅ Oui</td><td>Remplacée</td><td>Coûts en production, limite gratuite insuffisante</td></tr>
+<tr><td>Google Gemini 1.5 Flash</td><td>✅ Oui</td><td>Évaluée</td><td>Bonnes performances mais tier gratuit limité</td></tr>
+<tr><td>Google Gemini 2.5 Flash</td><td>✅ Oui</td><td><strong>Retenue</strong></td><td>Tier gratuit généreux, excellentes performances NLP, API stable</td></tr>
+<tr><td>Mistral AI (open source)</td><td>✅ Oui</td><td>Non retenue</td><td>Qualité NLP inférieure pour le français conversationnel</td></tr>
+<tr><td>Anthropic Claude</td><td>✅ Oui</td><td>Non retenue</td><td>Pas de tier gratuit exploitable pour le développement</td></tr>
+</tbody>
+</table>
+<p><strong>Évolution notable</strong> : Gemini 2.5 Flash intègre désormais un mode "thinking" permettant un raisonnement en plusieurs étapes avant de répondre. Cette capacité améliore la compréhension des demandes ambiguës (ex: "pour ce soir" → inférence de la date du jour).</p>
+
+<h3>2.2 Écosystème PHP / Symfony</h3>
+<table>
+<thead><tr><th>Technologie</th><th>Version Utilisée</th><th>Tendances 2026</th></tr></thead>
+<tbody>
+<tr><td>PHP</td><td>8.4</td><td>PHP 8.4 introduit les property hooks et l'asymmetric visibility - améliorations ergonomiques majeures</td></tr>
+<tr><td>Symfony</td><td>6.4 LTS</td><td>Symfony 7.x en développement actif - support LTS 6.4 jusqu'en 2027</td></tr>
+<tr><td>Doctrine ORM</td><td>3.x</td><td>Support natif des nouvelles fonctionnalités PHP 8.x</td></tr>
+<tr><td>API Platform</td><td>3.x</td><td>Migration vers State Providers/Persisters (successeurs des DataProviders v2)</td></tr>
+</tbody>
+</table>
+
+<h3>2.3 Écosystème JavaScript / React</h3>
+<table>
+<thead><tr><th>Technologie</th><th>Version Utilisée</th><th>Tendances 2026</th></tr></thead>
+<tbody>
+<tr><td>React</td><td>18</td><td>React 19 introduit les Server Components stables et les nouvelles hooks (use, useOptimistic)</td></tr>
+<tr><td>TypeScript</td><td>5.x</td><td>TypeScript 5.5+ améliore l'inférence de types complexes</td></tr>
+<tr><td>Vite</td><td>5.x</td><td>Vite 6 améliore les temps de build en environnement CI</td></tr>
+</tbody>
+</table>
+
+<h3>2.4 Infrastructure et DevOps</h3>
+<table>
+<thead><tr><th>Technologie</th><th>Utilisation</th><th>Alternatives Évaluées</th></tr></thead>
+<tbody>
+<tr><td>Docker / Docker Compose</td><td>Containerisation complète</td><td>Podman (compatible, mais moins d'intégrations)</td></tr>
+<tr><td>Railway</td><td>Hébergement production</td><td>Heroku (plus cher), Fly.io (bonne alternative), Render (gratuit mais lent)</td></tr>
+<tr><td>GitHub Actions</td><td>CI/CD</td><td>GitLab CI (si hébergement GitLab), CircleCI (plus complexe)</td></tr>
+</tbody>
+</table>
+
+<h3>2.5 Canaux de Communication - Évolution du Choix</h3>
+<p>La veille sur les APIs de messagerie a conduit à des révisions importantes :</p>
+<table>
+<thead><tr><th>Canal</th><th>Évalué</th><th>Décision</th><th>Justification</th></tr></thead>
+<tbody>
+<tr><td>WhatsApp Business (Meta)</td><td>✅ Oui</td><td>❌ Abandonné</td><td>Vérification Business Account requise, délais de 4-6 semaines, coûts API</td></tr>
+<tr><td>Twilio SMS/WhatsApp</td><td>✅ Oui</td><td>❌ Abandonné</td><td>Sandbox limité, coûts dès la production</td></tr>
+<tr><td>Telegram Bot API</td><td>✅ Oui</td><td>✅ Retenu</td><td>Totalement gratuit, webhook instantané, API stable et bien documentée</td></tr>
+<tr><td>Retell AI (Vocal)</td><td>✅ Oui</td><td>✅ Retenu (Bonus)</td><td>Tier gratuit disponible, démonstration vocale impressionnante</td></tr>
+</tbody>
+</table>
+
+<h2>3. Outils de Veille Utilisés</h2>
+<ul>
+<li><strong>Documentation officielle</strong> : Symfony Docs, React Docs, Google AI Docs - consultées hebdomadairement</li>
+<li><strong>GitHub Release Notes</strong> : Suivi des changelogs des dépendances via Dependabot</li>
+<li><strong>Developer Blogs</strong> : Symfony Blog, React Blog, PHP.Watch</li>
+<li><strong>Communautés</strong> : Stack Overflow, Reddit (r/PHP, r/symfony, r/reactjs)</li>
+<li><strong>Conférences en ligne</strong> : SymfonyWorld, ReactConf (replays YouTube)</li>
+</ul>
+
+<h2>4. Impact sur le Projet</h2>
+<p>La veille technologique a directement influencé 3 décisions majeures :</p>
+<ol>
+<li><strong>Passage de OpenAI GPT-4o-mini → Google Gemini 2.5 Flash</strong> : Économie des coûts API, tier gratuit suffisant pour le MVP</li>
+<li><strong>Passage de Twilio WhatsApp → Telegram Bot</strong> : Suppression des barrières administratives, déploiement en quelques minutes</li>
+<li><strong>Choix de Railway plutôt qu'Heroku</strong> : Heroku a supprimé son tier gratuit en 2022 - Railway offre une alternative moderne avec support Docker natif</li>
+</ol>
+
+<!-- ============================================================ -->
+<!-- SECTION XIII - VEILLE SÉCURITÉ                              -->
+<!-- ============================================================ -->
+<h1>Section XIII - Veille Sécurité</h1>
+
+<h2>1. Définition et Importance</h2>
+<p>La veille sécurité consiste à surveiller les nouvelles vulnérabilités, attaques et contre-mesures pour garantir que l'application reste protégée tout au long de sa durée de vie. Dans le secteur de la restauration, bien que les données ne soient pas aussi sensibles que dans la santé ou la finance, la protection des données personnelles (nom, téléphone) reste une obligation légale (RGPD) et éthique.</p>
+
+<h2>2. Sources de Veille Sécurité Consultées</h2>
+<table>
+<thead><tr><th>Source</th><th>Contenu</th><th>Fréquence</th></tr></thead>
+<tbody>
+<tr><td><a href="https://owasp.org/www-project-top-ten/">OWASP Top 10</a></td><td>Référentiel des 10 risques les plus critiques pour les applications web</td><td>Mensuelle</td></tr>
+<tr><td><a href="https://symfony.com/blog/category/security-advisories">Symfony Security Advisories</a></td><td>Bulletins de sécurité Symfony - correctifs à appliquer</td><td>À chaque release</td></tr>
+<tr><td><a href="https://github.com/advisories">GitHub Security Advisories</a></td><td>CVE sur les dépendances Composer et npm</td><td>Automatique (Dependabot)</td></tr>
+<tr><td><a href="https://www.cnil.fr/fr/securite">CNIL - Sécurité</a></td><td>Recommandations CNIL sur la protection des données</td><td>Trimestrielle</td></tr>
+</tbody>
+</table>
+
+<h2>3. Menaces Spécifiques à CALENDRIA</h2>
+<h3>3.1 Risques liés aux APIs Externes</h3>
+<p>CALENDRIA s'appuie sur 3 APIs externes (Gemini, Telegram, Retell AI). Chaque intégration crée un vecteur d'attaque potentiel :</p>
+<table>
+<thead><tr><th>Menace</th><th>Vecteur</th><th>Contre-mesure Implémentée</th></tr></thead>
+<tbody>
+<tr><td><strong>Fuite de clé API</strong></td><td>Clé commitée dans Git</td><td>Variables d'environnement Railway + <code>.gitignore</code> sur <code>.env</code></td></tr>
+<tr><td><strong>Webhook spoofing</strong></td><td>Requête falsifiée sur <code>/api/chatbot/call</code></td><td>Firewall public limité aux actions conversationnelles sans accès aux données restaurateur</td></tr>
+<tr><td><strong>Déni de service via chatbot</strong></td><td>Spam de messages sur le bot Telegram</td><td>Rate limiting Symfony + quotas API Gemini côté Google</td></tr>
+</tbody>
+</table>
+
+<h3>3.2 Risques liés à l'Authentification</h3>
+<table>
+<thead><tr><th>Menace</th><th>Contre-mesure</th></tr></thead>
+<tbody>
+<tr><td>Brute force sur <code>/api/login</code></td><td><code>LoginRateLimiterSubscriber</code> : 5 tentatives / 15 min par IP</td></tr>
+<tr><td>Vol de token JWT</td><td>Stockage en mémoire React (pas dans localStorage/cookies), expiration courte</td></tr>
+<tr><td>Token JWT non révocable</td><td>Rotation automatique à chaque redéploiement (nouvelles clés RSA)</td></tr>
+<tr><td>Élévation de privilèges</td><td>Firewall Symfony distinguant <code>/api</code> (JWT requis) et <code>/api/chatbot</code> (public)</td></tr>
+</tbody>
+</table>
+
+<h3>3.3 Risques liés aux Données Personnelles</h3>
+<table>
+<thead><tr><th>Menace</th><th>Contre-mesure</th></tr></thead>
+<tbody>
+<tr><td>Exfiltration en base de données</td><td>PostgreSQL accessible uniquement sur réseau privé Railway (pas d'exposition publique)</td></tr>
+<tr><td>Injection via formulaires</td><td>Validation Symfony Validator sur tous les inputs, ORM Doctrine pour les requêtes</td></tr>
+<tr><td>Interception des données en transit</td><td>HTTPS obligatoire (Let's Encrypt) sur les deux domaines Railway</td></tr>
+<tr><td>Violation RGPD</td><td>Consentement explicite, droit à l'oubli, données minimales collectées</td></tr>
+</tbody>
+</table>
+
+<h2>4. Veille sur les Dépendances (Supply Chain Security)</h2>
+<p>Les attaques sur la chaîne d'approvisionnement logicielle (supply chain attacks) sont en forte hausse depuis 2021 (ex: incident SolarWinds, event-stream npm). Pour CALENDRIA :</p>
+<ul>
+<li><strong>Composer</strong> : <code>composer audit</code> exécuté régulièrement pour détecter les CVE sur les packages PHP</li>
+<li><strong>npm</strong> : <code>npm audit</code> intégré au pipeline CI/CD</li>
+<li><strong>Dependabot</strong> (GitHub) : Alertes automatiques sur les vulnérabilités connues dans les dépendances</li>
+<li><strong>Versions LTS</strong> : Choix délibéré de Symfony 6.4 LTS (support sécurité jusqu'en 2027) pour minimiser les mises à jour forcées</li>
+</ul>
+
+<h2>5. Incidents Sécurité Traités en Cours de Projet</h2>
+<h3>Incident 1 - Exposition des clés JWT</h3>
+<p><strong>Situation</strong> : Les clés JWT RSA étaient initialement générées localement et risquaient d'être committées par erreur.
+<strong>Solution</strong> : Génération des clés directement dans le <code>Dockerfile</code> au build time - les clés ne transitent jamais dans le dépôt Git. Ajout d'un <code>.gitignore</code> couvrant <code>config/jwt/*.pem</code>.</p>
+
+<h3>Incident 2 - Headers d'information exposés</h3>
+<p><strong>Situation</strong> : Le header <code>X-Powered-By: PHP/8.4</code> exposait la version du serveur dans les réponses API.
+<strong>Solution</strong> : Suppression dans la configuration nginx (<code>fastcgi_hide_header X-Powered-By;</code>) et ajout de <code>expose_php = Off</code> dans <code>php.ini</code>.</p>
+
+<h2>6. Perspectives Sécurité</h2>
+<p>Si le projet était poursuivi, les améliorations sécurité prioritaires seraient :</p>
+<ol>
+<li><strong>Content Security Policy (CSP)</strong> : En-tête HTTP définissant les sources de contenu autorisées - protection XSS avancée</li>
+<li><strong>Audit de sécurité externe</strong> : Scan OWASP ZAP ou Burp Suite sur l'API en production</li>
+<li><strong>SIEM</strong> : Centralisation des logs de sécurité (Sentry ou Elastic Stack) pour détecter les tentatives d'intrusion</li>
+<li><strong>Rotation automatique des clés JWT</strong> : Mécanisme de refresh token pour éviter l'invalidation à chaque déploiement</li>
+</ol>
+
+<!-- ============================================================ -->
+<!-- SECTION XIV - DIFFICULTÉS RENCONTRÉES                       -->
+<!-- ============================================================ -->
+<h1>Section XIV - Difficultés Rencontrées et Solutions</h1>
+
+<p>Le développement de CALENDRIA a confronté plusieurs obstacles techniques significatifs. Chaque problème a été une opportunité d'apprentissage et a conduit à une solution documentée.</p>
+
+<h2>Problème 1 - Configuration CORS en Production</h2>
+<p><strong>Symptôme</strong> : Les requêtes du frontend vers le backend échouaient avec l'erreur <code>CORS policy: No 'Access-Control-Allow-Origin'</code> en production.</p>
+<p><strong>Cause</strong> : L'URL du backend Railway (auto-générée) ne correspondait pas à la configuration CORS statique de Symfony. De plus, Railway peut modifier le sous-domaine lors de redéploiements.</p>
+<p><strong>Solution</strong> : Variable d'environnement <code>CORS_ALLOW_ORIGIN</code> configurée comme regex dans Railway (<code>^https://frontend-production-8a43\.up\.railway\.app$</code>). NelmioCorsBundle lit cette variable à l'exécution, permettant une configuration dynamique sans rebuild.</p>
+<hr />
+
+<h2>Problème 2 - Clés JWT Perdues entre Redéploiements</h2>
+<p><strong>Symptôme</strong> : Tous les utilisateurs étaient déconnectés à chaque redéploiement de l'application en production.</p>
+<p><strong>Cause</strong> : Les clés JWT RSA sont générées au build time dans le Dockerfile (<code>openssl genrsa 4096</code>). Chaque rebuild génère de nouvelles clés, invalidant les tokens existants.</p>
+<p><strong>Solution</strong> : Comportement documenté et accepté pour le MVP (déploiements rares, usage professionnel). La solution long terme serait de stocker les clés RSA dans un secret Railway et de les monter au démarrage plutôt que de les générer.</p>
+<hr />
+
+<h2>Problème 3 - Variables d'Environnement Telegram/Gemini Non Définies</h2>
+<p><strong>Symptôme</strong> : Le conteneur Docker backend plantait au démarrage avec <code>Environment variable "TELEGRAM_BOT_TOKEN" is not defined</code>, même quand la fonctionnalité Telegram n'était pas utilisée.</p>
+<p><strong>Cause</strong> : <code>services.yaml</code> injectait ces variables dans tous les services via la section <code>bind</code> de Symfony, rendant leur présence obligatoire au démarrage du container, même si les services associés ne sont pas activés.</p>
+<p><strong>Solution</strong> : Déclaration de valeurs par défaut vides dans la section <code>parameters</code> de <code>services.yaml</code> :</p>
+<pre><code class="language-yaml">parameters:
+    telegram_bot_token: '%env(default::TELEGRAM_BOT_TOKEN)%'
+    gemini_api_key: '%env(default::GEMINI_API_KEY)%'</code></pre>
+<hr />
+
+<h2>Problème 4 - Doublement du Suffixe <code>_test</code> dans la CI</h2>
+<p><strong>Symptôme</strong> : La CI échouait avec <code>FATAL: database "calendria_test_test" does not exist</code></p>
+<p><strong>Cause</strong> : <code>DATABASE_URL</code> contenait déjà <code>calendria_test</code> dans le workflow GitHub Actions. Symfony ajoute automatiquement le suffixe <code>_test</code> quand <code>APP_ENV=test</code>, ce qui donnait <code>calendria_test_test</code>.</p>
+<p><strong>Solution</strong> : <code>DATABASE_URL</code> pointe vers la base <code>calendria</code> (sans suffixe) - Symfony ajoute <code>_test</code> → connexion à <code>calendria_test</code>. Le service PostgreSQL du CI crée donc la base <code>calendria_test</code> directement.</p>
+<hr />
+
+<h2>Problème 5 - Port Mismatch sur Railway</h2>
+<p><strong>Symptôme</strong> : L'application backend répondait en local mais retournait <code>502 Bad Gateway</code> sur Railway.</p>
+<p><strong>Cause</strong> : Railway utilise une variable d'environnement dynamique <code>$PORT</code> pour exposer le conteneur sur un port aléatoire. La configuration nginx du Dockerfile était hardcodée sur le port 8080, mais Railway attendait que le conteneur écoute sur <code>$PORT</code>.</p>
+<p><strong>Solution</strong> : Le script <code>entrypoint.sh</code> lit la variable <code>$PORT</code> au démarrage et réécrit dynamiquement la configuration nginx via <code>sed</code> avant de lancer supervisord :</p>
+<pre><code class="language-bash">PORT=${PORT:-8080}
+sed -i "s/__PORT__/${PORT}/g" /etc/nginx/conf.d/default.conf
+exec /usr/bin/supervisord -c /etc/supervisord.conf</code></pre>
+
+<!-- ============================================================ -->
+<!-- SECTION XV - CONCLUSION ET PERSPECTIVES                      -->
+<!-- ============================================================ -->
+<h1>Section XV - Conclusion et Perspectives</h1>
+
+<h2>1. Bilan Fonctionnel Final</h2>
+<h3>1.1 Fonctionnalités Livrées vs Planifiées</h3>
+<table>
+<thead><tr><th>Fonctionnalité Prévue (CDCF)</th><th>Statut</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Dashboard restaurateur avec CRUD réservations</td><td>✅ Livré</td><td>Complet : liste, détail, création, modification, annulation</td></tr>
+<tr><td>Plan de salle interactif avec statuts en temps réel</td><td>✅ Livré</td><td>Slider temporel, tooltips, codes couleur</td></tr>
+<tr><td>Gestion des restaurants et des tables</td><td>✅ Livré</td><td>CRUD complet avec protection d'intégrité</td></tr>
+<tr><td>Authentification sécurisée (JWT)</td><td>✅ Livré</td><td>RS256 via LexikJWTAuthenticationBundle</td></tr>
+<tr><td>Chatbot IA (canal Web Widget)</td><td>✅ Livré</td><td>Gemini 2.5 Flash, extraction NLP, réservation automatique</td></tr>
+<tr><td>Canal Telegram Bot</td><td>✅ Livré</td><td>Webhook, gestion de session, confirmation</td></tr>
+<tr><td>Agent Vocal IA (Retell AI)</td><td>✅ Livré</td><td>Webhook public, messages d'erreur intelligents</td></tr>
+<tr><td>Algorithme de disponibilité intelligente</td><td>✅ Livré</td><td>Attribution table capacité min., alternatives horaires</td></tr>
+<tr><td>Mode sombre (Dark Mode)</td><td>✅ Livré</td><td>Persistant en localStorage</td></tr>
+<tr><td>Containerisation Docker</td><td>✅ Livré</td><td>nginx + PHP-FPM + supervisord, build multi-stage</td></tr>
+<tr><td>Déploiement en production</td><td>✅ Livré</td><td>Railway (backend + frontend + PostgreSQL)</td></tr>
+<tr><td>Pipeline CI/CD</td><td>✅ Livré</td><td>GitHub Actions : PHPUnit + TypeScript à chaque push</td></tr>
+<tr><td>Protection brute-force login</td><td>✅ Livré</td><td>5 tentatives max / 15 min par IP</td></tr>
+<tr><td>WhatsApp Business / SMS (Twilio)</td><td>🔄 Remplacé</td><td>Remplacé par Bot Telegram (même fonctionnalité)</td></tr>
+<tr><td>Statistiques avancées</td><td>🟡 Partiel</td><td>Visible via dashboard, pas de graphique dédié</td></tr>
+</tbody>
+</table>
+<p><strong>Taux de couverture fonctionnelle : 15/17 (88%) - 2 remplacements stratégiques validés</strong></p>
+
+<h3>1.2 Bilan Technique</h3>
+<table>
+<thead><tr><th>Compétence CDA</th><th>Implémentation dans CALENDRIA</th></tr></thead>
+<tbody>
+<tr><td><strong>Architecture logicielle</strong></td><td>API REST Symfony 6.4 + SPA React - séparation stricte back/front</td></tr>
+<tr><td><strong>Base de données relationnelle</strong></td><td>PostgreSQL 15 + Doctrine ORM + MERISE (MCD→MLD→MPD)</td></tr>
+<tr><td><strong>Sécurité applicative</strong></td><td>JWT RS256, Argon2id, rate limiting, CORS, OWASP Top 10</td></tr>
+<tr><td><strong>Intégration API externe</strong></td><td>Google Gemini 2.5 Flash + Retell AI + API Telegram</td></tr>
+<tr><td><strong>Containerisation</strong></td><td>Docker multi-stage (nginx + PHP-FPM), Docker Compose</td></tr>
+<tr><td><strong>CI/CD</strong></td><td>GitHub Actions : PHPUnit + TypeScript build à chaque push</td></tr>
+<tr><td><strong>Déploiement continu</strong></td><td>Railway - déploiement automatique depuis GitHub</td></tr>
+<tr><td><strong>Tests automatisés</strong></td><td>PHPUnit (unitaires + fonctionnels), TypeScript strict</td></tr>
+<tr><td><strong>Gestion de version Git</strong></td><td>Commits sémantiques, branches feature, tag v1.0</td></tr>
+</tbody>
+</table>
+<hr />
+
+<h2>2. Perspectives d'Évolution</h2>
+<p>Si le projet devait être poursuivi au-delà de la formation, les évolutions prioritaires seraient :</p>
+<ol>
+<li><strong>Notifications push (SMS)</strong> : Rappel automatique J-1 via Twilio ou une API alternative open-source - fonctionnalité à fort impact sur la réduction des no-show</li>
+<li><strong>Tableau de bord statistiques avancé</strong> : Graphiques de taux de remplissage, analyse des no-show par période, recettes estimées</li>
+<li><strong>Système multi-restaurant</strong> : Association d'un restaurateur à plusieurs restaurants - architecture prévue (clé étrangère nullable dès le MVP)</li>
+<li><strong>Application mobile React Native</strong> : Réutilisation des composants existants et de l'API REST</li>
+<li><strong>WebSockets temps réel</strong> : Synchronisation instantanée du plan de salle entre plusieurs postes simultanément</li>
+<li><strong>API Platform avancée</strong> : Exposition complète des endpoints avec documentation OpenAPI/Swagger automatique</li>
+<li><strong>Rotation des clés JWT</strong> : Mécanisme de refresh token pour éviter l'invalidation à chaque déploiement</li>
+</ol>
+<hr />
+
+<h2>3. Conclusion</h2>
+<p>Le projet <strong>CALENDRIA</strong> est un projet complet, déployé en production et fonctionnel à 88% des fonctionnalités prévues. Les deux fonctionnalités remplacées (WhatsApp/SMS → Telegram) l'ont été par des solutions équivalentes ou supérieures, plus accessibles pour la démonstration.</p>
+<p>Ce projet a permis d'acquérir une expérience concrète sur des sujets professionnellement pertinents :</p>
+<ul>
+<li>Architecture d'API REST sécurisée avec Symfony</li>
+<li>Intégration d'IA générative dans une application métier réelle</li>
+<li>Déploiement continu sur infrastructure cloud</li>
+<li>Gestion de la qualité via CI/CD automatisée</li>
+<li>Méthodologie Agile Scrum adaptée au développement solo</li>
+</ul>
+<p>CALENDRIA constitue un produit réel, maintenable et extensible, prêt à être présenté devant le jury et potentiellement commercialisé auprès de restaurateurs indépendants.</p>
+<hr />
+<p><em>BOUGHERARA Safi - Formation CDA - Juillet 2026</em><br />
+<em>Dépôt GitHub : https://github.com/SafiBougherara/projet_fin_annee</em><br />
+<em>Production : https://frontend-production-8a43.up.railway.app</em></p>
+
+<!-- ============================================================ -->
+<!-- SECTION XVI - REMERCIEMENTS                                  -->
+<!-- ============================================================ -->
+<h1>Section XVI - Remerciements</h1>
+
+<p>Je tiens à exprimer ma sincère gratitude à toutes les personnes qui ont contribué, de près ou de loin, à la réalisation de ce projet.</p>
+
+<h2>À mon Formateur</h2>
+<p>Mes remerciements les plus chaleureux vont à mon formateur référent, dont l'encadrement pédagogique, les retours constructifs et les conseils techniques tout au long des six jalons ont été déterminants. Sa disponibilité et sa rigueur m'ont permis de maintenir le cap face aux difficultés rencontrées, et d'élever la qualité du livrable final.</p>
+
+<h2>À l'Équipe Pédagogique</h2>
+<p>Je remercie l'ensemble de l'équipe pédagogique du centre de formation pour la qualité du cursus CDA proposé, qui m'a fourni les bases solides en développement full-stack, en architecture logicielle et en gestion de projet nécessaires à la réalisation d'un projet de cette envergure.</p>
+
+<h2>À la Communauté Open Source</h2>
+<p>Ce projet n'aurait pas été possible sans les contributions des milliers de développeurs qui maintiennent les outils utilisés : Symfony, React, Doctrine, TypeScript, Docker, et l'ensemble des packages open source intégrés. La richesse de cet écosystème et la qualité de sa documentation constituent un patrimoine collectif exceptionnel.</p>
+
+<h2>Aux Auteurs de Documentation</h2>
+<p>Je remercie les équipes documentation de Symfony, React, et Google pour la qualité et l'exhaustivité des guides officiels, qui ont été mes premières ressources face à chaque obstacle technique.</p>
+
+<h2>Note de Contexte</h2>
+<p>Ce projet a été développé dans un contexte de formation professionnelle, avec un commanditaire fictif représentant un cas d'usage réaliste. Toutes les données utilisées pendant le développement étaient fictives, en conformité avec les exigences RGPD et éthiques.</p>
+
+<!-- ============================================================ -->
+<!-- SECTION XVII - ANNEXES                                       -->
+<!-- ============================================================ -->
+<h1>Section XVII - Annexes</h1>
+
+<h2>A. Glossaire</h2>
+<table>
+<thead><tr><th>Terme</th><th>Définition</th></tr></thead>
+<tbody>
+<tr><td><strong>API REST</strong></td><td>Architecture d'API basée sur HTTP et les verbes REST (GET, POST, PUT, DELETE)</td></tr>
+<tr><td><strong>CDCF</strong></td><td>Cahier des Charges Fonctionnel</td></tr>
+<tr><td><strong>CDA</strong></td><td>Concepteur Développeur d'Applications - certification RNCP Niveau 6</td></tr>
+<tr><td><strong>CI/CD</strong></td><td>Continuous Integration / Continuous Deployment (intégration et déploiement continus)</td></tr>
+<tr><td><strong>Couverts</strong></td><td>Nombre de personnes pour une réservation</td></tr>
+<tr><td><strong>Doctrine</strong></td><td>ORM (Object-Relational Mapping) pour PHP/Symfony</td></tr>
+<tr><td><strong>Gemini</strong></td><td>Modèle d'IA générative de Google (utilisé pour le NLP du chatbot)</td></tr>
+<tr><td><strong>JWT</strong></td><td>JSON Web Token (système d'authentification par tokens)</td></tr>
+<tr><td><strong>MCD/MLD/MPD</strong></td><td>Modèle Conceptuel/Logique/Physique de Données (méthode MERISE)</td></tr>
+<tr><td><strong>MERISE</strong></td><td>Méthode française de modélisation des systèmes d'information</td></tr>
+<tr><td><strong>MVP</strong></td><td>Minimum Viable Product (produit minimum viable)</td></tr>
+<tr><td><strong>NLP</strong></td><td>Natural Language Processing - traitement automatique du langage naturel</td></tr>
+<tr><td><strong>No-show</strong></td><td>Client qui ne se présente pas à sa réservation sans prévenir</td></tr>
+<tr><td><strong>ORM</strong></td><td>Object-Relational Mapping (mapping objet-relationnel)</td></tr>
+<tr><td><strong>OWASP</strong></td><td>Open Web Application Security Project</td></tr>
+<tr><td><strong>PaaS</strong></td><td>Platform as a Service (Railway est un PaaS)</td></tr>
+<tr><td><strong>Railway</strong></td><td>Plateforme cloud de déploiement Docker (hébergement de CALENDRIA)</td></tr>
+<tr><td><strong>Retell AI</strong></td><td>Plateforme d'agents vocaux IA utilisée pour le canal téléphonique</td></tr>
+<tr><td><strong>RGPD</strong></td><td>Règlement Général sur la Protection des Données</td></tr>
+<tr><td><strong>RSA</strong></td><td>Algorithme de chiffrement asymétrique utilisé pour les clés JWT</td></tr>
+<tr><td><strong>Service</strong></td><td>Période de service (midi ou soir) dans un restaurant</td></tr>
+<tr><td><strong>SPA</strong></td><td>Single Page Application (application web monopage)</td></tr>
+<tr><td><strong>Telegram Bot</strong></td><td>Robot conversationnel sur la plateforme Telegram</td></tr>
+<tr><td><strong>Webhook</strong></td><td>URL appelée automatiquement par un service externe lors d'un événement</td></tr>
+</tbody>
+</table>
+<hr />
+
+<h2>B. Références Réglementaires</h2>
+<h3>RGPD</h3>
+<ul>
+<li><a href="https://www.cnil.fr/fr/reglement-europeen-protection-donnees">Texte officiel RGPD - CNIL</a></li>
+<li><a href="https://www.cnil.fr/fr/guide-rgpd-du-developpeur">Guide RGPD du développeur - CNIL</a></li>
+</ul>
+<h3>Sécurité</h3>
+<ul>
+<li><a href="https://owasp.org/www-project-top-ten/">OWASP Top 10</a></li>
+<li><a href="https://symfony.com/doc/current/security.html">Symfony Security Best Practices</a></li>
+</ul>
+<hr />
+
+<h2>C. Ressources Techniques</h2>
+<h3>Documentation Frameworks</h3>
+<ul>
+<li><a href="https://symfony.com/doc/current/index.html">Symfony Documentation</a></li>
+<li><a href="https://react.dev/">React Documentation</a></li>
+<li><a href="https://api-platform.com/docs/">API Platform</a></li>
+<li><a href="https://doctrine-orm.readthedocs.io/">Doctrine ORM</a></li>
+</ul>
+<h3>Documentation APIs Utilisées</h3>
+<ul>
+<li><a href="https://ai.google.dev/api/generate-content">Google Gemini API</a></li>
+<li><a href="https://core.telegram.org/bots/api">Telegram Bot API</a></li>
+<li><a href="https://docs.retellai.com/">Retell AI Documentation</a></li>
+</ul>
+<h3>Outils de Développement</h3>
+<table>
+<thead><tr><th>Catégorie</th><th>Outil</th><th>Usage</th></tr></thead>
+<tbody>
+<tr><td><strong>IDE</strong></td><td>VS Code / PhpStorm</td><td>Développement PHP/TypeScript</td></tr>
+<tr><td><strong>Maquettes</strong></td><td>Figma</td><td>Design UI/UX</td></tr>
+<tr><td><strong>Diagrammes</strong></td><td>PlantUML</td><td>UML, MCD/MLD, architecture</td></tr>
+<tr><td><strong>BDD</strong></td><td>pgAdmin / DBeaver</td><td>Gestion PostgreSQL</td></tr>
+<tr><td><strong>API Testing</strong></td><td>Postman</td><td>Tests d'API REST</td></tr>
+<tr><td><strong>Versioning</strong></td><td>Git + GitHub</td><td>Contrôle de version</td></tr>
+<tr><td><strong>CI/CD</strong></td><td>GitHub Actions</td><td>Automatisation tests/déploiement</td></tr>
+<tr><td><strong>Cloud</strong></td><td>Railway</td><td>Hébergement production</td></tr>
+</tbody>
+</table>
+<hr />
+
+<h2>D. Liens du Projet</h2>
+<table>
+<thead><tr><th>Ressource</th><th>URL</th></tr></thead>
+<tbody>
+<tr><td><strong>Application en production</strong></td><td><a href="https://frontend-production-8a43.up.railway.app">https://frontend-production-8a43.up.railway.app</a></td></tr>
+<tr><td><strong>API Backend</strong></td><td><a href="https://backend-production-dd10b.up.railway.app">https://backend-production-dd10b.up.railway.app</a></td></tr>
+<tr><td><strong>Health Check</strong></td><td><a href="https://backend-production-dd10b.up.railway.app/api/health">https://backend-production-dd10b.up.railway.app/api/health</a></td></tr>
+<tr><td><strong>Dépôt GitHub</strong></td><td><a href="https://github.com/SafiBougherara/projet_fin_annee">https://github.com/SafiBougherara/projet_fin_annee</a></td></tr>
+<tr><td><strong>Badge CI</strong></td><td><a href="https://github.com/SafiBougherara/projet_fin_annee/actions/workflows/ci.yml">GitHub Actions - ci.yml</a></td></tr>
+</tbody>
+</table>
+<hr />
+
+<h2>E. Identifiants de Démo</h2>
+<table>
+<thead><tr><th>Champ</th><th>Valeur</th></tr></thead>
+<tbody>
+<tr><td>Email</td><td>admin@calendria.com</td></tr>
+<tr><td>Mot de passe</td><td>password123</td></tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ Ces identifiants sont destinés uniquement à la démonstration. Ils ne donnent accès qu'aux données fictives du restaurant de démo.</p>
+</blockquote>
+<hr />
+
+<p style="text-align: center; color: #777; font-style: italic; margin-top: 3em;">
+  BOUGHERARA Safi - Formation CDA - Juillet 2026<br/>
+  CALENDRIA v2 - Rapport Final restructuré<br/>
+  Formation CDA - Projet Fil Rouge - 2025-2026
+</p>
+
+</body>
+</html>
