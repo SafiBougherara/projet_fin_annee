@@ -118,6 +118,21 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
          border-radius:8px;background:#fff;padding:6px}
 .cap{font-size:12px;color:var(--grey);font-style:italic}
 
+/* CARROUSEL D'IMAGES (1 visuel plein cadre + onglets) */
+.carousel{flex:1;display:flex;flex-direction:column;min-height:0;gap:10px}
+.ctabs{display:flex;gap:8px;justify-content:center}
+.ctab{font-family:'Outfit';font-size:12.5px;font-weight:600;padding:5px 14px;border-radius:20px;
+      background:var(--bg-soft);color:var(--primary);border:1px solid var(--border);cursor:pointer}
+.ctab.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.cstage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;min-height:0}
+.cstage img{display:none;max-width:100%;max-height:100%;object-fit:contain;cursor:pointer;
+            border:1px solid var(--border);border-radius:8px;background:#fff;padding:6px}
+.cstage img.on{display:block}
+.cnav{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;
+      border:1px solid var(--border);background:#fff;color:var(--primary);font-family:'Outfit';
+      font-size:18px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(26,82,118,.18);z-index:3}
+.cnav.prev{left:0}.cnav.next{right:0}
+
 /* BADGES / PILLS */
 .pills{display:flex;flex-wrap:wrap;gap:8px}
 .pill{font-size:12.5px;font-family:'Outfit';font-weight:600;padding:5px 12px;border-radius:20px;
@@ -151,11 +166,34 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
        font-size:14.5px;color:#7B3A31}
 .note{font-size:13px;color:var(--grey);font-style:italic}
 
+/* ============ SLIDE FINALE : démo live embarquée + remerciements ============ */
+.slide.finale{background:linear-gradient(135deg,var(--night) 0%,var(--primary) 55%,var(--primary-light) 130%);
+              color:#fff;padding:42px 56px 54px}
+.finale h1{font-family:'Outfit';font-size:44px;font-weight:800;letter-spacing:-.02em;color:#fff}
+.finale .rule{background:var(--secondary);width:80px;margin:12px 0 16px}
+.finale .grid{flex:1;display:grid;grid-template-columns:1fr 392px;gap:32px;min-height:0}
+.finale .left{display:flex;flex-direction:column;min-height:0}
+.finale .steps{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.finale .steps li{padding:8px 11px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);
+                  border-left:3px solid var(--secondary);border-radius:7px;font-size:12.5px;
+                  line-height:1.4;color:#CFE6F5}
+.finale .steps li::before{display:none}
+.finale .steps li b{display:block;font-family:'Outfit';font-size:13.5px;color:#fff;margin-bottom:2px}
+.finale .thanks{font-size:15px;color:#BFE0F2;margin-top:16px}
+.finale .meta{display:grid;grid-template-columns:1fr 1fr;gap:9px 26px;margin-top:auto;padding-top:16px;
+              font-size:12px;color:#D6EAF8}
+.finale .meta b{display:block;font-family:'Outfit';font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+                color:#7FB7D8;font-weight:700;margin-bottom:2px}
+.finale .live{display:flex;flex-direction:column;min-height:0;gap:9px}
+.finale .live .tag{font-family:'Outfit';font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+                   color:#8FD0F0;font-weight:700;text-align:center}
+.finale iframe{flex:1;width:100%;border:0;border-radius:12px;background:#fff;
+               box-shadow:0 16px 44px rgba(0,0,0,.4)}
+
 /* ============ CHROME (barre, numéro, progression) ============ */
 .chrome{position:absolute;left:64px;right:64px;bottom:20px;display:flex;justify-content:space-between;
         align-items:center;font-size:11.5px;color:#9BB0BE;font-family:'Outfit';letter-spacing:.06em}
-.slide.cover .chrome,.slide.section .chrome{color:rgba(255,255,255,.55)}
-#bar{position:absolute;left:0;bottom:0;height:4px;background:var(--secondary);width:0;transition:width .3s;z-index:5}
+.slide.cover .chrome,.slide.section .chrome,.slide.finale .chrome{color:rgba(255,255,255,.55)}#bar{position:absolute;left:0;bottom:0;height:4px;background:var(--secondary);width:0;transition:width .3s;z-index:5}
 #hint{position:fixed;bottom:12px;right:16px;color:#5d7f95;font-size:11.5px;font-family:'Outfit';
       letter-spacing:.05em;z-index:20}
 #timer{position:fixed;top:12px;right:16px;font-family:'JetBrains Mono';font-size:13px;color:#8FB4C9;
@@ -180,6 +218,9 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   #deck{width:1280px;height:auto;box-shadow:none;transform:none!important}
   .slide{display:flex!important;position:relative;width:1280px;height:720px;page-break-after:always;animation:none}
   #hint,#timer,#overview,#bar{display:none!important}
+  .cnav{display:none!important}
+  .cstage{flex-direction:row;gap:8px}
+  .cstage img{display:block!important;max-width:32%}
 }
 </style>
 </head>
@@ -217,42 +258,42 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       <div class="card"><span class="ico">🗄️</span><h4>4. Modélisation données</h4><p>Démarche MERISE : MCD, MLD, MPD et dictionnaire de données.</p></div>
       <div class="card"><span class="ico">🏛️</span><h4>5. Architecture &amp; UML</h4><p>Cas d'utilisation, séquences, classes, architecture N-tiers et 4 couches.</p></div>
       <div class="card"><span class="ico">🔐</span><h4>6. Sécurité &amp; tests</h4><p>OWASP Top 10, RGPD, politique de tests PHPUnit, pipeline CI/CD.</p></div>
-      <div class="card red"><span class="ico">🚀</span><h4>7. Démonstration</h4><p>Application en production : dashboard, plan de salle, chatbot IA multi-canal.</p></div>
-      <div class="card"><span class="ico">🔭</span><h4>8. Veille</h4><p>Veille technologique et veille sécurité menées pendant 6 mois.</p></div>
-      <div class="card green"><span class="ico">✅</span><h4>9. Bilan</h4><p>Difficultés rencontrées, taux de couverture fonctionnelle, perspectives.</p></div>
+      <div class="card"><span class="ico">🔭</span><h4>7. Veille</h4><p>Veille technologique et veille sécurité menées pendant 6 mois.</p></div>
+      <div class="card green"><span class="ico">✅</span><h4>8. Bilan</h4><p>Difficultés rencontrées, taux de couverture fonctionnelle, perspectives.</p></div>
+      <div class="card red"><span class="ico">🚀</span><h4>9. Démonstration</h4><p>Application en production : dashboard, plan de salle, chatbot IA, widget en iframe et Telegram.</p></div>
     </div>
   </div>
   <div class="chrome"><span>CALENDRIA — Soutenance CDA</span><span class="pg"></span></div>
 </section>
 
-<!-- ═══════════════ 3. PRÉSENTATION EN ANGLAIS ═══════════════ -->
-<section class="slide" data-title="English introduction">
-  <div class="kicker">Section I — Oral in English</div>
-  <h2>Who I am &amp; what I built</h2>
+<!-- ═══════════════ 3. PRÉSENTATION PERSONNELLE ═══════════════ -->
+<section class="slide" data-title="Présentation personnelle">
+  <div class="kicker">Section I — Présentation personnelle</div>
+  <h2>Qui je suis &amp; ce que j'ai construit</h2>
   <div class="rule"></div>
   <div class="body">
     <div class="cols c21">
       <div>
-        <h3>About me</h3>
+        <h3>À propos de moi</h3>
         <ul>
-          <li>My name is <strong>Safi Bougherara</strong>, student in the <strong>CDA</strong> program (French RNCP Level 6, equivalent to a Bachelor's degree).</li>
-          <li>My interests lie at the crossroads of <strong>backend architecture</strong>, <strong>frontend experience</strong> and <strong>AI-driven automation</strong>.</li>
-          <li>This project is the capstone of six months of full-stack development.</li>
+          <li>Je m'appelle <strong>Safi Bougherara</strong>, candidat au titre professionnel <strong>Concepteur Développeur d'Applications</strong> (RNCP niveau 6).</li>
+          <li>Mes centres d'intérêt se situent à la croisée de l'<strong>architecture back-end</strong>, de l'<strong>expérience front-end</strong> et de l'<strong>automatisation par l'IA</strong>.</li>
+          <li>Ce projet est l'aboutissement de six mois de développement full-stack.</li>
         </ul>
-        <h3 style="margin-top:16px">The project in one sentence</h3>
-        <p><strong>CALENDRIA</strong> is an AI-powered, multi-channel restaurant booking assistant that answers customers 24/7 — through a web widget, a Telegram bot or a voice agent — checks availability in real time, assigns the best table and confirms the reservation automatically.</p>
+        <h3 style="margin-top:16px">Le projet en une phrase</h3>
+        <p><strong>CALENDRIA</strong> est un assistant de réservation multi-canal propulsé par l'IA : il répond aux clients 24h/24 — via un widget web, un bot Telegram ou un agent vocal —, vérifie la disponibilité en temps réel, attribue la meilleure table et confirme la réservation automatiquement.</p>
       </div>
       <div>
-        <h3>Key figures</h3>
+        <h3>Chiffres clés</h3>
         <table class="t-sm">
-          <tr><th>Indicator</th><th>Value</th></tr>
-          <tr><td>Functional coverage</td><td><b>88%</b> (15/17)</td></tr>
-          <tr><td>Automated tests</td><td>12 tests — 0 failure</td></tr>
-          <tr><td>Backend (PHP)</td><td>~4 500 lines</td></tr>
-          <tr><td>Frontend (TS/TSX)</td><td>~7 200 lines</td></tr>
-          <tr><td>API endpoints</td><td>28 routes</td></tr>
-          <tr><td>Database tables</td><td>9 tables</td></tr>
-          <tr><td>Production uptime</td><td>99.9% (Railway)</td></tr>
+          <tr><th>Indicateur</th><th>Valeur</th></tr>
+          <tr><td>Couverture fonctionnelle</td><td><b>88%</b> (15/17)</td></tr>
+          <tr><td>Tests automatisés</td><td>12 tests — 0 échec</td></tr>
+          <tr><td>Back-end (PHP)</td><td>~4 500 lignes</td></tr>
+          <tr><td>Front-end (TS/TSX)</td><td>~7 200 lignes</td></tr>
+          <tr><td>Endpoints d'API</td><td>28 routes</td></tr>
+          <tr><td>Tables en base</td><td>9 tables</td></tr>
+          <tr><td>Disponibilité en production</td><td>99,9% (Railway)</td></tr>
         </table>
         <div class="pills" style="margin-top:12px">
           <span class="pill">Symfony 6.4</span><span class="pill">PHP 8.4</span><span class="pill">React 18</span>
@@ -262,7 +303,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       </div>
     </div>
   </div>
-  <div class="chrome"><span>I — Personal introduction</span><span class="pg"></span></div>
+  <div class="chrome"><span>I — Présentation personnelle</span><span class="pg"></span></div>
 </section>
 
 <!-- ═══════════════ 4. SECTION : LE PROJET ═══════════════ -->
@@ -481,7 +522,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
         <tr><td>Product Owner</td><td>Moi-même — backlog géré dans GitHub Issues</td></tr>
         <tr><td>Scrum Master</td><td>Moi-même — auto-discipline</td></tr>
         <tr><td>Sprint Planning</td><td>~1h en début de mois, backlog dans GitHub Projects</td></tr>
-        <tr><td>Daily Standup</td><td><b>Journal de bord quotidien</b> dans <code>JOURNAL.md</code></td></tr>
+        <tr><td>Daily Standup</td><td>Sans objet en solo — suivi quotidien par l'<b>historique Git</b></td></tr>
         <tr><td>Sprint Review</td><td>Présentation au référent à chaque jalon</td></tr>
         <tr><td>Rétrospective</td><td>Auto-analyse écrite en fin de sprint</td></tr>
         <tr><td>Durée du sprint</td><td><b>1 mois</b> — aligné sur les jalons</td></tr>
@@ -508,44 +549,46 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
 <!-- ═══════════════ 14. GIT ═══════════════ -->
 <section class="slide" data-title="Gestion du code source">
   <div class="kicker">Section IV — Gestion de version</div>
-  <h2>Git Flow simplifié &amp; Conventional Commits</h2>
+  <h2>Trunk-based development &amp; Conventional Commits</h2>
   <div class="rule"></div>
   <div class="body">
     <div class="cols c2">
       <div>
-        <h3>Stratégie de branches</h3>
-<pre class="sm"><span class="k">main</span>              <span class="c">← versions stables (releases jalons)</span>
-│
-├── <span class="k">develop</span>       <span class="c">← intégration continue</span>
-│   │
-│   ├── feature/telegram-chatbot
-│   ├── feature/dashboard-react
-│   ├── feature/widget-web
-│   └── feature/table-algorithm
-│
-└── <span class="k">hotfix/*</span>      <span class="c">← corrections urgentes sur main</span></pre>
+        <h3>Stratégie retenue : une seule branche</h3>
+<pre class="sm"><span class="k">main</span>  <span class="c">← unique branche de travail et de livraison</span>
+ │
+ │  <span class="c">79 commits · CI GitHub Actions à chaque push</span>
+ │
+ ├─ <span class="n">tag v0.9-beta</span>  <span class="c">Jalon 5 : plan de salle, tests</span>
+ │
+ └─ <span class="n">tag v1.0</span>       <span class="c">livraison finale</span></pre>
+        <div class="card orange" style="margin-top:12px">
+          <h4>Pourquoi pas de Git Flow ?</h4>
+          <p>Git Flow existe pour <strong>synchroniser plusieurs développeurs</strong> et permettre la revue croisée. Seul sur le projet, des branches <code>feature/*</code> que je serais le seul à ouvrir, relire et fusionner n'auraient été qu'une cérémonie sans bénéfice. J'ai choisi le <strong>trunk-based development</strong> : commits petits et fréquents sur <code>main</code>, la <strong>CI bloquante</strong> jouant le rôle du relecteur.</p>
+        </div>
       </div>
       <div>
         <h3>Convention de commits</h3>
-<pre class="sm"><span class="n">&lt;type&gt;</span>(<span class="k">&lt;scope&gt;</span>): &lt;description&gt;
+<pre class="sm"><span class="n">&lt;type&gt;</span>: &lt;description&gt;
 
 <span class="s">feat</span>     nouvelle fonctionnalité
 <span class="s">fix</span>      correction de bug
 <span class="s">docs</span>     documentation
-<span class="s">refactor</span> refactoring
 <span class="s">test</span>     tests
 <span class="s">chore</span>    maintenance
 
-<span class="c">› feat(api): add reservation CRUD endpoints
-› fix(chatbot): fix date parsing for French format
-› test(api): add unit tests for table algorithm</span></pre>
+<span class="c">› feat: add service/opening hours CRUD
+› fix: CI DATABASE_URL use 'calendria'
+› test: add unit tests for DisponibiliteService
+› docs: rapport final Jalon 6</span></pre>
+        <p class="note" style="margin-top:10px"><strong>59 commits sur 79</strong> respectent la convention. Les premiers commits du projet ne la suivaient pas encore : la discipline s'est installée à partir du Jalon 3.</p>
       </div>
     </div>
     <div class="cols c4">
-      <div class="card"><h4>Traçabilité</h4><p>Chaque commit relié à une issue du backlog.</p></div>
-      <div class="card"><h4>Revue</h4><p>Merge sur <code>main</code> uniquement si la CI est verte.</p></div>
-      <div class="card"><h4>Releases</h4><p>Un tag Git par jalon, tag <code>v1.0</code> pour la version finale.</p></div>
-      <div class="card"><h4>Journal</h4><p><code>JOURNAL.md</code> quotidien + rétrospectives.</p></div>
+      <div class="card"><h4>1 branche</h4><p><code>main</code> — trunk-based, dev solo.</p></div>
+      <div class="card"><h4>79 commits</h4><p>Dont 59 en Conventional Commits.</p></div>
+      <div class="card"><h4>2 tags de release</h4><p><code>v0.9-beta</code> (Jalon 5) et <code>v1.0</code> (livraison).</p></div>
+      <div class="card orange"><h4>Limite assumée</h4><p>En équipe, je passerais à des branches de feature + Pull Request obligatoire.</p></div>
     </div>
   </div>
   <div class="chrome"><span>IV — Méthodologie et organisation</span><span class="pg"></span></div>
@@ -639,54 +682,52 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="chrome"><span>V — Conception UI/UX</span><span class="pg"></span></div>
 </section>
 
-<!-- ═══════════════ 19. WIREFRAMES ═══════════════ -->
-<section class="slide" data-title="Wireframes">
-  <div class="kicker">Section V — Maquettes fil de fer</div>
-  <h2>Du wireframe au plan de salle interactif</h2>
+<!-- ═══════════════ 19. ZONING ═══════════════ -->
+<section class="slide" data-title="Zoning">
+  <div class="kicker">Section V — Étape 1 : zoning</div>
+  <h2>Zoning — découpage des zones fonctionnelles</h2>
   <div class="rule"></div>
   <div class="body">
-    <div class="cols c2">
-<pre class="sm"><span class="c">DASHBOARD — DESKTOP</span>
-┌──────────┬────────────────────────────────────┐
-│ SIDEBAR  │ TABLEAU DE BORD      📅 26 Fév 2026│
-│ 🏠 Accueil│ ┌──────┐┌──────┐┌──────┐┌───────┐ │
-│ 📅 Calend.│ │📋 12 ││👥 48 ││📈 85%││⚠️ 2   │ │
-│ 🗺️ Plan  │ │Résa  ││Couv. ││Rempl.││No-show│ │
-│ 📋 Résa  │ └──────┘└──────┘└──────┘└───────┘ │
-│ 👥 Clients│ PROCHAINES ARRIVÉES               │
-│ 📊 Stats │ 12:00 │ M. Dupont │ 4 │ T3 │🟢    │
-│ ⚙️ Param.│ 12:15 │Mme Martin │ 2 │ T1 │🟡    │
-└──────────┴────────────────────────────────────┘</pre>
-<pre class="sm"><span class="c">PLAN DE SALLE — TEMPS RÉEL</span>
-┌───────────────┐  TIMELINE 12h → 22h30
-│ ┌───┐  ┌───┐  │  ┌───────────────────────┐
-│ │T1 │  │T2 │  │  │T1 ████░░░░░░░░░░░░░░░│
-│ │🔴 │  │🟡 │  │  │T2 ██████░░░░░░░░░░░░░│
-│ └───┘  └───┘  │  │T3 ░░████████░░░░░░░░░│
-│ ┌───┐  ┌───┐  │  └───────────────────────┘
-│ │T3 │  │T4 │  │  Turnover : ──●── 1h30
-│ │🟢 │  │🔵 │  │  30min           3h
-│ └───┘  └───┘  │
-└───────────────┘</pre>
+    <div class="carousel" data-carousel>
+      <div class="ctabs">
+        <button class="ctab" data-go="0">Login</button>
+        <button class="ctab" data-go="1">Dashboard</button>
+        <button class="ctab" data-go="2">Paramètres restaurant</button>
+      </div>
+      <div class="cstage">
+        <button class="cnav prev">‹</button>
+        <img src="Jalon2/zoning - login.png" alt="Zoning — écran de connexion">
+        <img src="Jalon2/zoning - dashboard.png" alt="Zoning — dashboard">
+        <img src="Jalon2/zoning - restaurant settings.png" alt="Zoning — paramètres du restaurant">
+        <button class="cnav next">›</button>
+      </div>
     </div>
-    <div class="cols c3">
-      <div class="card"><h4>📱 Mobile first</h4><p>Bottom navigation bar &lt; 768px — le restaurateur consulte pendant le service.</p></div>
-      <div class="card"><h4>💻 Tablet</h4><p>Sidebar repliable, grille 2 colonnes entre 768 et 1024px.</p></div>
-      <div class="card"><h4>🖥️ Desktop</h4><p>Sidebar étendue, grille multi-colonnes, tableau complet &gt; 1024px.</p></div>
-    </div>
+    <p class="note">Le zoning fixe la <strong>hiérarchie de l'information</strong> avant toute décision graphique : en-tête, navigation latérale, zone de contenu principal et zone d'actions. Objectif : valider les priorités d'écran avec le commanditaire sans le distraire par l'esthétique.</p>
   </div>
   <div class="chrome"><span>V — Conception UI/UX</span><span class="pg"></span></div>
 </section>
 
-<!-- ═══════════════ 20. MAQUETTES FIGMA ═══════════════ -->
-<section class="slide" data-title="Maquettes haute fidélité">
-  <div class="kicker">Section V — Figma</div>
-  <h2>Maquettes haute fidélité</h2>
+<!-- ═══════════════ 20. WIREFRAMES ═══════════════ -->
+<section class="slide" data-title="Wireframes">
+  <div class="kicker">Section V — Étape 2 : wireframes</div>
+  <h2>Wireframes — du zoning à l'écran détaillé</h2>
   <div class="rule"></div>
   <div class="body">
-    <div class="fig"><img src="Jalon2/Maquette CALENDRIA.png" alt="Maquettes haute fidélité CALENDRIA" onerror="this.parentNode.innerHTML='<div class=card>Maquettes Figma : dashboard desktop 1440px, dashboard mobile 375px, login, réservations, widget chatbot.</div>'">
-      <div class="cap">Maquettes Figma — dashboard desktop 1440 px &amp; mobile 375 px, login, réservations, widget chatbot</div>
+    <div class="carousel" data-carousel>
+      <div class="ctabs">
+        <button class="ctab" data-go="0">Login</button>
+        <button class="ctab" data-go="1">Dashboard</button>
+        <button class="ctab" data-go="2">Paramètres restaurant</button>
+      </div>
+      <div class="cstage">
+        <button class="cnav prev">‹</button>
+        <img src="Jalon2/wireframe - login.png" alt="Wireframe — écran de connexion">
+        <img src="Jalon2/wireframe - dashboard.png" alt="Wireframe — dashboard">
+        <img src="Jalon2/wireframe - restaurant settings.png" alt="Wireframe — paramètres du restaurant">
+        <button class="cnav next">›</button>
+      </div>
     </div>
+    <p class="note">Mobile first (bottom navigation &lt; 768 px) · tablette : sidebar repliable et grille 2 colonnes · desktop : sidebar étendue et tableau complet au-delà de 1024 px.</p>
   </div>
   <div class="chrome"><span>V — Conception UI/UX</span><span class="pg"></span></div>
 </section>
@@ -777,21 +818,10 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="kicker">Section VII — Vue fonctionnelle</div>
   <h2>Diagramme des cas d'utilisation</h2>
   <div class="rule"></div>
-  <div class="body">
-    <div class="cols c21" style="min-height:0">
-      <div class="fig"><img src="Jalon4/diagramme_cas_utilisation.png" alt="Diagramme des cas d'utilisation"></div>
-      <div>
-        <h3>3 acteurs</h3>
-        <ul>
-          <li><strong>Le Client</strong> — réserve, modifie ou annule via l'un des trois canaux.</li>
-          <li><strong>Le Restaurateur</strong> — s'authentifie et pilote son établissement depuis le dashboard.</li>
-          <li><strong>Le Système automatique</strong> — IA conversationnelle et traitements planifiés.</li>
-        </ul>
-        <h3 style="margin-top:14px">3 packages</h3>
-        <div class="pills"><span class="pill">Dashboard</span><span class="pill">IA Multi-Canal</span><span class="pill">Traitement automatique</span></div>
-      </div>
-    </div>
-  </div>
+  <div class="body"><div class="fig">
+    <img src="Jalon4/diagramme_cas_utilisation.png" alt="Diagramme des cas d'utilisation">
+    <div class="cap">Figure 7.1 — <b>3 acteurs</b> : le Client (réserve via l'un des 3 canaux), le Restaurateur (pilote depuis le dashboard), le Système automatique (IA et traitements planifiés) · <b>3 packages</b> : Dashboard, IA multi-canal, Traitement automatique</div>
+  </div></div>
   <div class="chrome"><span>VII — Conception de l'application (UML)</span><span class="pg"></span></div>
 </section>
 
@@ -835,20 +865,10 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="kicker">Section VII — Vue statique</div>
   <h2>Diagramme de classes — 4 packages</h2>
   <div class="rule"></div>
-  <div class="body">
-    <div class="cols c21" style="min-height:0">
-      <div class="fig"><img src="Jalon4/diagramme_classes.png" alt="Diagramme de classes UML"></div>
-      <div>
-        <ul>
-          <li><strong>Entity</strong> — modèles ORM Doctrine (POPO, sans logique d'infrastructure).</li>
-          <li><strong>Repository</strong> — accès aux données en DQL orienté objet.</li>
-          <li><strong>Service</strong> — logique métier complexe et intégrations externes.</li>
-          <li><strong>Controller</strong> — exposition HTTP de l'API.</li>
-        </ul>
-        <p class="note" style="margin-top:12px">Le diagramme de classes va <strong>au-delà du MLD</strong> : il montre comment les concepts métier sont traduits en objets PHP et comment les couches communiquent.</p>
-      </div>
-    </div>
-  </div>
+  <div class="body"><div class="fig">
+    <img src="Jalon4/diagramme_classes.png" alt="Diagramme de classes UML">
+    <div class="cap">Figure 7.4 — <b>Entity</b> (POPO Doctrine) · <b>Repository</b> (accès aux données en DQL) · <b>Service</b> (logique métier et intégrations) · <b>Controller</b> (exposition HTTP). Le diagramme va au-delà du MLD : il montre la traduction des concepts métier en objets PHP.</div>
+  </div></div>
   <div class="chrome"><span>VII — Conception de l'application (UML)</span><span class="pg"></span></div>
 </section>
 
@@ -858,12 +878,10 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <h2>Architecture 3-tiers</h2>
   <div class="rule"></div>
   <div class="body">
-    <div class="cols c3">
-      <div class="card"><h4>Tier 1 — Présentation</h4><p><strong>Navigateur web / mobile</strong><br>SPA React compilée par Vite, servie en statique par nginx. Routage client, UI et UX.</p></div>
-      <div class="card"><h4>Tier 2 — Logique applicative</h4><p><strong>Symfony 6.4 / PHP 8.4</strong><br>API REST stateless JSON + webhooks externes. CORS filtré par NelmioCorsBundle.</p></div>
-      <div class="card"><h4>Tier 3 — Données</h4><p><strong>PostgreSQL 15</strong><br>Isolée du réseau public, joignable uniquement par le Tier 2 sur le port interne 5432.</p></div>
+    <div class="fig">
+      <img src="Jalon4/Architecture_N_Tiers.png" alt="Architecture N-Tiers">
+      <div class="cap">Figure 8.1 — <b>Tier 1</b> : SPA React compilée par Vite, servie en statique par nginx · <b>Tier 2</b> : API REST Symfony 6.4 / PHP 8.4, stateless, CORS filtré par NelmioCors · <b>Tier 3</b> : PostgreSQL 15 isolée du réseau public, joignable uniquement par le Tier 2</div>
     </div>
-    <div class="fig"><img src="Jalon4/Architecture_N_Tiers.png" alt="Architecture N-Tiers"></div>
     <div class="quote">⚠️ Distinction à retenir : l'architecture <strong>physique</strong> est 3-tiers (navigateur / API / SGBD) ; l'architecture <strong>logique</strong> interne au backend est en <strong>4 couches</strong>.</div>
   </div>
   <div class="chrome"><span>VIII — Architecture multi-couches</span><span class="pg"></span></div>
@@ -1100,24 +1118,7 @@ nginx:alpine
   <div class="chrome"><span>XI — Déploiement et mise en production</span><span class="pg"></span></div>
 </section>
 
-<!-- ═══════════════ 40. DÉMO ═══════════════ -->
-<section class="slide section" data-title="DÉMONSTRATION LIVE">
-  <div class="num">07</div>
-  <h2>Démonstration live</h2>
-  <p style="margin-bottom:22px">Application déployée en production — https://frontend-production-8a43.up.railway.app</p>
-  <div class="cols c4" style="width:100%">
-    <div class="card" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);border-left-color:var(--secondary)">
-      <h4 style="color:#fff">1 · Connexion</h4><p style="color:#CFE6F5">Login JWT, puis dashboard du jour : couverts, taux de remplissage, prochaines arrivées.</p></div>
-    <div class="card" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);border-left-color:var(--secondary)">
-      <h4 style="color:#fff">2 · Plan de salle</h4><p style="color:#CFE6F5">Statuts temps réel, slider temporel et configuration du turnover.</p></div>
-    <div class="card" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);border-left-color:var(--secondary)">
-      <h4 style="color:#fff">3 · Chatbot IA</h4><p style="color:#CFE6F5">Widget web : réservation complète en langage naturel + proposition d'alternatives.</p></div>
-    <div class="card" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);border-left-color:var(--secondary)">
-      <h4 style="color:#fff">4 · Telegram</h4><p style="color:#CFE6F5">Même réservation depuis le bot — la donnée apparaît instantanément côté dashboard.</p></div>
-  </div>
-</section>
-
-<!-- ═══════════════ 41. VEILLE TECHNO ═══════════════ -->
+<!-- ═══════════════ 40. VEILLE TECHNO ═══════════════ -->
 <section class="slide" data-title="Veille technologique">
   <div class="kicker">Section XII — Veille technologique</div>
   <h2>Une veille qui a changé le projet</h2>
@@ -1199,7 +1200,7 @@ nginx:alpine
       <tr><td><b>4. CI cassée : base <code>calendria_test_test</code></b></td><td>Symfony ajoute <code>_test</code> quand <code>APP_ENV=test</code>, en plus du suffixe déjà présent dans l'URL.</td><td><code>DATABASE_URL</code> pointe vers <code>calendria</code> sans suffixe — Symfony complète tout seul.</td></tr>
       <tr><td><b>5. 502 Bad Gateway sur Railway</b></td><td>nginx écoutait un port codé en dur, Railway impose <code>$PORT</code> dynamique.</td><td><code>entrypoint.sh</code> réécrit la conf nginx via <code>sed</code> avant de lancer supervisord.</td></tr>
     </table>
-    <p class="note">Chaque incident a été journalisé dans <code>JOURNAL.md</code> puis reporté dans le rapport — la démarche de diagnostic compte autant que le correctif.</p>
+    <p class="note">Chaque incident est traçable dans l'historique Git par son commit de correction, puis documenté dans le rapport final — la démarche de diagnostic compte autant que le correctif.</p>
   </div>
   <div class="chrome"><span>XIV — Difficultés rencontrées</span><span class="pg"></span></div>
 </section>
@@ -1240,7 +1241,7 @@ nginx:alpine
       <tr><td><b>Containerisation</b></td><td>Docker multi-stage (nginx + PHP-FPM + supervisord), Docker Compose en développement</td></tr>
       <tr><td><b>CI/CD &amp; déploiement continu</b></td><td>GitHub Actions (PHPUnit + build TypeScript), déploiement automatique sur Railway</td></tr>
       <tr><td><b>Tests automatisés</b></td><td>PHPUnit unitaires et fonctionnels, TypeScript en mode strict</td></tr>
-      <tr><td><b>Gestion de version</b></td><td>Git Flow simplifié, Conventional Commits, tags de release, journal de bord</td></tr>
+      <tr><td><b>Gestion de version</b></td><td>Trunk-based development sur <code>main</code>, Conventional Commits, tags de release <code>v0.9-beta</code> et <code>v1.0</code></td></tr>
     </table>
   </div>
   <div class="chrome"><span>XV — Conclusion</span><span class="pg"></span></div>
@@ -1296,19 +1297,36 @@ nginx:alpine
   <div class="chrome"><span>XV — Conclusion et perspectives</span><span class="pg"></span></div>
 </section>
 
-<!-- ═══════════════ 48. MERCI / QUESTIONS ═══════════════ -->
-<section class="slide cover" data-title="Merci — Questions">
-  <div class="kicker" style="color:#8FD0F0">Fin de la présentation</div>
-  <h1 style="font-size:66px">Merci de votre attention</h1>
-  <div class="tag">Je suis à votre disposition pour vos questions.</div>
-  <div class="rule"></div>
-  <div class="meta">
-    <div><b>Production</b>frontend-production-8a43.up.railway.app</div>
-    <div><b>API</b>backend-production-dd10b.up.railway.app</div>
-    <div><b>Dépôt</b>github.com/SafiBougherara/projet_fin_annee</div>
-    <div><b>Démo</b>admin@calendria.com</div>
+<!-- ═══════════════ 47. DÉMONSTRATION LIVE + REMERCIEMENTS ═══════════════ -->
+<section class="slide finale" data-title="Démonstration live &amp; Merci">
+  <div class="grid">
+    <div class="left">
+      <div class="kicker" style="color:#8FD0F0">Fin de la présentation — Démonstration &amp; questions</div>
+      <h1>Démonstration live</h1>
+      <div class="rule"></div>
+      <ul class="steps">
+        <li><b>1 · Connexion</b>Login JWT, puis dashboard du jour : couverts, taux de remplissage, prochaines arrivées.</li>
+        <li><b>2 · Plan de salle</b>Statuts temps réel, slider temporel et configuration du turnover.</li>
+        <li><b>3 · Chatbot IA</b>Réservation complète en langage naturel + proposition d'alternatives.</li>
+        <li><b>4 · Widget en iframe</b>Le chatbot ci-contre tourne <strong style="color:#fff">dans cette slide</strong>, hors du dashboard et sans authentification.</li>
+        <li><b>5 · Telegram</b>Même réservation depuis le bot — la donnée apparaît instantanément côté dashboard.</li>
+        <li style="border-left-color:#8FD0F0"><b>Le code remis au restaurateur</b><code style="background:rgba(0,0,0,.3);color:#9BE7A8;font-size:11px">&lt;iframe src="…/widget?restaurantId=4"&gt;</code></li>
+      </ul>
+      <p class="thanks"><strong style="color:#fff">Merci de votre attention</strong> — je suis à votre disposition pour vos questions.</p>
+      <div class="meta">
+        <div><b>Production</b>frontend-production-8a43.up.railway.app</div>
+        <div><b>API</b>backend-production-dd10b.up.railway.app</div>
+        <div><b>Dépôt</b>github.com/SafiBougherara/projet_fin_annee</div>
+        <div><b>Compte de démo</b>admin@calendria.com</div>
+      </div>
+    </div>
+    <div class="live">
+      <div class="tag">▸ Widget réellement embarqué dans cette slide</div>
+      <iframe src="https://frontend-production-8a43.up.railway.app/widget?restaurantId=4"
+              title="Assistant de réservation CALENDRIA — démonstration embarquée"></iframe>
+    </div>
   </div>
-  <div class="url">BOUGHERARA Safi — Formation CDA — Promotion 2025-2026</div>
+  <div class="chrome"><span>BOUGHERARA Safi — Formation CDA — Promotion 2025-2026</span><span class="pg"></span></div>
 </section>
 
 <div id="bar"></div>
@@ -1316,7 +1334,7 @@ nginx:alpine
 </div>
 
 <div id="timer">00:00</div>
-<div id="hint">← → navigation · <b>O</b> vue d'ensemble · <b>T</b> chrono · <b>F</b> plein écran · <b>Ctrl+P</b> PDF</div>
+<div id="hint">← → navigation · ↑ ↓ images · <b>O</b> vue d'ensemble · <b>T</b> chrono · <b>F</b> plein écran · <b>Ctrl+P</b> PDF</div>
 <div id="overview"></div>
 
 <script>
@@ -1357,6 +1375,27 @@ nginx:alpine
     ov.appendChild(t);
   });
 
+  /* --- carrousels d'images --- */
+  document.querySelectorAll('[data-carousel]').forEach(c => {
+    const imgs = Array.from(c.querySelectorAll('.cstage img'));
+    const tabs = Array.from(c.querySelectorAll('.ctab'));
+    let i = 0;
+    const go = n => {
+      i = (n + imgs.length) % imgs.length;
+      imgs.forEach((im, k) => im.classList.toggle('on', k === i));
+      tabs.forEach((t, k) => t.classList.toggle('on', k === i));
+    };
+    c._step = d => go(i + d);
+    c.addEventListener('click', e => {
+      e.stopPropagation();          /* sinon le clic ferait avancer la slide */
+      const tab = e.target.closest('.ctab');
+      if (tab) return go(+tab.dataset.go);
+      if (e.target.closest('.cnav.prev')) return go(i - 1);
+      go(i + 1);
+    });
+    go(0);
+  });
+
   /* --- chrono de soutenance --- */
   let t0 = null, tick = null;
   function toggleTimer(){
@@ -1374,6 +1413,10 @@ nginx:alpine
     else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); prev(); }
     else if (k === 'Home') show(0);
     else if (k === 'End') show(slides.length - 1);
+    else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      const c = slides[idx].querySelector('[data-carousel]');
+      if (c) { e.preventDefault(); c._step(k === 'ArrowDown' ? 1 : -1); }
+    }
     else if (k === 'o' || k === 'O') ov.classList.toggle('on');
     else if (k === 'Escape') ov.classList.remove('on');
     else if (k === 't' || k === 'T') toggleTimer();
