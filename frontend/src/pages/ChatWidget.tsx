@@ -6,6 +6,15 @@ import SendIcon from '@mui/icons-material/Send';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import './ChatWidget.css';
 
+/**
+ * PAGE : widget de chat public (/widget?restaurantId=1).
+ *
+ * Page volontairement sans authentification : elle est destinée à être intégrée
+ * en iframe sur le site vitrine du restaurant. Toute la logique conversationnelle
+ * est côté serveur (backend/src/Service/ChatbotService.php) ; ce composant ne fait
+ * qu'afficher les messages et relayer la saisie de l'utilisateur.
+ */
+
 interface Message {
   id: string;
   sender: 'bot' | 'user';
@@ -27,6 +36,7 @@ export default function ChatWidget() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Ancre invisible en bas de liste : permet de suivre automatiquement les nouveaux messages.
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -65,6 +75,7 @@ export default function ChatWidget() {
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Garde-fou : pas d'envoi à vide, sans session, ou pendant que le bot répond.
     if (!inputValue.trim() || !sessionId || isTyping) return;
 
     const userText = inputValue.trim();

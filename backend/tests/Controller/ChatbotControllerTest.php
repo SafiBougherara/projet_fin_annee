@@ -5,6 +5,11 @@ namespace App\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Tests fonctionnels du webhook vocal /api/chatbot/call.
+ * On vérifie la robustesse aux entrées invalides (champs manquants, JSON malformé),
+ * cas fréquents avec un fournisseur téléphonique externe.
+ */
 class ChatbotControllerTest extends WebTestCase
 {
     public function testCallWebhookMissingParameters()

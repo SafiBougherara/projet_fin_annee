@@ -1,3 +1,8 @@
+/*
+ * Styles globaux hérités des pages non Material UI (Login, Register).
+ * Le reste de l'application est stylé via le thème MUI défini dans App.tsx.
+ */
+
 /* Reset de base */
 * {
   box-sizing: border-box;

@@ -15,18 +15,33 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * FEATURE : Assistant conversationnel de réservation (multi-canal).
+ *
+ * Trois canaux d'entrée partagent le même moteur (App\Service\ChatbotService) :
+ *  - Widget web    : /api/chatbot/init/{restaurantId} puis /api/chatbot/message
+ *  - Telegram      : /api/chatbot/telegram (webhook appelé par les serveurs Telegram)
+ *  - Agent vocal   : /api/chatbot/call (webhook appelé par le service téléphonique)
+ *
+ * Côté front : frontend/src/pages/ChatWidget.tsx et frontend/src/services/chatbot.service.ts.
+ */
 #[Route('/api/chatbot', name: 'api_chatbot_')]
 class ChatbotController extends AbstractController
 {
     private string $telegramBotToken;
     private string $telegramBotUsername;
 
+    // Injectés depuis config/services.yaml à partir des variables d'environnement.
     public function __construct(string $telegramBotToken, string $telegramBotUsername)
     {
         $this->telegramBotToken = $telegramBotToken;
         $this->telegramBotUsername = $telegramBotUsername;
     }
 
+    /**
+     * Expose le pseudo du bot Telegram au front (pour générer le QR code du dashboard).
+     * Le token, lui, ne sort jamais du serveur.
+     */
     #[Route('/config', name: 'config', methods: ['GET'])]
     public function config(): JsonResponse
     {
@@ -35,6 +50,10 @@ class ChatbotController extends AbstractController
         ]);
     }
 
+    /**
+     * Démarre une conversation web : génère un identifiant de session aléatoire
+     * qui servira de clé de cache pour l'historique côté ChatbotService.
+     */
     #[Route('/init/{restaurantId}', name: 'init', methods: ['GET'])]
     public function init(int $restaurantId, RestaurantRepository $restaurantRepository): JsonResponse
     {
@@ -61,6 +80,9 @@ class ChatbotController extends AbstractController
         ]);
     }
 
+    /**
+     * Reçoit un message du widget web et renvoie la réponse de l'IA.
+     */
     #[Route('/message', name: 'message', methods: ['POST'])]
     public function message(Request $request, ChatbotService $chatbotService): JsonResponse
     {
@@ -82,6 +104,11 @@ class ChatbotController extends AbstractController
         return $this->json($result);
     }
 
+    /**
+     * Webhook Telegram : reçoit les updates, délègue au ChatbotService puis renvoie
+     * la réponse via l'API sendMessage. La session est isolée par `telegram_<chatId>`.
+     * Commandes supportées : /start (accueil) et /reset|/clear (purge de la session).
+     */
     #[Route('/telegram', name: 'telegram', methods: ['POST'])]
     public function telegram(
         Request $request,
@@ -147,6 +174,12 @@ class ChatbotController extends AbstractController
         return $this->json(['status' => 'success', 'response' => $responseText]);
     }
 
+    /**
+     * Webhook de l'agent vocal téléphonique : reçoit une demande déjà structurée
+     * (nom, téléphone, date, heure, couverts) et crée la réservation en un seul appel.
+     * Les noms de champs varient selon le fournisseur, d'où l'extraction tolérante ci-dessous.
+     * En cas d'indisponibilité, on renvoie un message prêt à être lu à voix haute + des alternatives.
+     */
     #[Route('/call', name: 'call', methods: ['POST'])]
     public function callWebhook(
         Request $request,

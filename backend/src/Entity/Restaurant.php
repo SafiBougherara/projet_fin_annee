@@ -7,6 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * ENTITÉ : Restaurant — racine de la configuration métier.
+ * `dureeRepas` + `bufferNettoyage` (minutes) déterminent la durée pendant laquelle
+ * une table reste bloquée après une réservation (utilisé par DisponibiliteService).
+ */
 #[ORM\Entity(repositoryClass: RestaurantRepository::class)]
 class Restaurant
 {

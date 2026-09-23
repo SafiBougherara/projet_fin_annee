@@ -7,6 +7,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Accès aux tables (méthodes standard find/findAll héritées de Doctrine).
+ *
  * @extends ServiceEntityRepository<Table>
  */
 class TableRepository extends ServiceEntityRepository

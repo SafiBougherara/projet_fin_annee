@@ -6,6 +6,11 @@ use App\Repository\ServiceRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * ENTITÉ : Service d'ouverture (midi / soir).
+ * Définit les plages horaires réservables ; `joursOuverture` est un tableau JSON
+ * de jours en français minuscule ("lundi", "mardi"…).
+ */
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
 class Service
 {

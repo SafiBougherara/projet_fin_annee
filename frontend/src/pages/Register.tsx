@@ -4,6 +4,12 @@ import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import '../App.css';
 
+/**
+ * PAGE : création d'un compte restaurateur (/register).
+ * Poste vers POST /api/register, puis redirige vers /login après 2 secondes.
+ * Les règles de validation (email, 8 caractères mini, confirmation) sont gérées
+ * par react-hook-form côté client et revérifiées côté serveur.
+ */
 interface RegisterFormData {
     email: string;
     password: string;

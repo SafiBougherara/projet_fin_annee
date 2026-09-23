@@ -12,6 +12,17 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * FEATURE : Authentification du restaurateur (inscription / connexion JWT).
+ *
+ * Endpoints exposés :
+ *  - GET  /api/health   : sonde de vie utilisée par Docker et les tests.
+ *  - POST /api/register : création d'un compte restaurateur.
+ *  - POST /api/login    : déclarée ici pour la documentation, mais réellement
+ *                         interceptée par LexikJWTAuthenticationBundle (voir config/packages/security.yaml).
+ *
+ * Côté front, ces routes sont consommées par frontend/src/services/auth.service.ts.
+ */
 #[Route('/api', name: 'api_')]
 class AuthController extends AbstractController
 {
@@ -22,12 +33,22 @@ class AuthController extends AbstractController
     ) {
     }
 
+    /**
+     * Healthcheck : permet à Docker/monitoring de vérifier que l'API répond.
+     */
     #[Route('/health', name: 'health', methods: ['GET'])]
     public function health(): JsonResponse
     {
         return $this->json(['status' => 'ok']);
     }
 
+    /**
+     * Crée un compte restaurateur.
+     *
+     * Étapes : validation du payload -> contrôle d'unicité de l'email ->
+     * hachage du mot de passe (bcrypt/argon selon security.yaml) -> persistance.
+     * Le mot de passe en clair n'est jamais stocké ni retourné.
+     */
     #[Route('/register', name: 'register', methods: ['POST'])]
     public function register(Request $request): JsonResponse
     {
@@ -90,6 +111,10 @@ class AuthController extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
+    /**
+     * Point d'entrée de connexion : le corps de la méthode n'est jamais exécuté.
+     * Le firewall `login` intercepte la requête et renvoie le token JWT.
+     */
     #[Route('/login', name: 'login', methods: ['POST'])]
     public function login(): JsonResponse
     {

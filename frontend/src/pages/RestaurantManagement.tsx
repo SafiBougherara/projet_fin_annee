@@ -42,6 +42,19 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 
+/**
+ * PAGE : back-office de paramétrage (route "/admin", protégée).
+ *
+ * Gère trois entités via une liste maître à gauche et un panneau de détail à droite :
+ *  - Restaurants (dont durée de repas et marge de nettoyage)
+ *  - Services d'ouverture (midi / soir + jours)
+ *  - Tables (numéro, capacité, emplacement, statut)
+ *
+ * Ces données conditionnent directement le moteur de disponibilité côté backend.
+ * API : services/restaurant.service.ts -> RestaurantAdminController.php.
+ */
+
+// Les jours sont stockés en français minuscule côté base : la valeur doit rester identique au backend.
 const JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
 const JOURS_LABELS: Record<string, string> = {
   lundi: 'Lun', mardi: 'Mar', mercredi: 'Mer', jeudi: 'Jeu',
@@ -106,6 +119,7 @@ export default function RestaurantManagement() {
   }, []);
 
   useEffect(() => {
+    // Recharge les horaires dès qu'un autre restaurant est sélectionné dans la liste.
     if (selectedRestaurant) {
       loadServices(selectedRestaurant.id);
     } else {
@@ -119,7 +133,7 @@ export default function RestaurantManagement() {
       const data = await restaurantService.getRestaurants();
       setRestaurants(data);
       if (data.length > 0) {
-        // Maintain selected restaurant if possible
+        // On conserve la sélection courante après un rechargement pour ne pas perdre le contexte utilisateur.
         if (selectedRestaurant) {
           const current = data.find((r) => r.id === selectedRestaurant.id);
           setSelectedRestaurant(current || data[0]);
@@ -145,7 +159,9 @@ export default function RestaurantManagement() {
     }
   };
 
-  // RESTAURANTS HANDLERS
+  // --- RESTAURANTS ---
+  // Le même formulaire sert à la création et à la modification :
+  // `editingRestaurantId` à null signifie « création ».
   const handleOpenRestaurantCreate = () => {
     setEditingRestaurantId(null);
     setRestaurantForm(initialRestaurantForm);
@@ -195,7 +211,8 @@ export default function RestaurantManagement() {
     setNameToDelete(restaurant.nom);
   };
 
-  // TABLES HANDLERS
+  // --- TABLES ---
+  // Même principe création/édition ; la table est toujours rattachée au restaurant sélectionné.
   const handleOpenTableCreate = () => {
     if (!selectedRestaurant) return;
     setEditingTableId(null);
@@ -252,7 +269,7 @@ export default function RestaurantManagement() {
     setNameToDelete(`Table ${table.numeroTable}`);
   };
 
-  // SERVICES HANDLERS
+  // --- SERVICES D'OUVERTURE ---
   const handleOpenServiceCreate = () => {
     setEditingServiceId(null);
     setServiceForm(initialServiceForm);
@@ -300,6 +317,7 @@ export default function RestaurantManagement() {
     setNameToDelete(`Service ${service.type} (${service.heureDebut}-${service.heureFin})`);
   };
 
+  // Coche/décoche un jour d'ouverture dans le formulaire de service.
   const handleJourToggle = (jour: string) => {
     setServiceForm((prev) => ({
       ...prev,
@@ -309,7 +327,9 @@ export default function RestaurantManagement() {
     }));
   };
 
-  // COMMON DELETE CONFIRM
+  // --- SUPPRESSION ---
+  // Une seule modale de confirmation partagée par les trois entités ;
+  // `deleteConfirmType` détermine l'appel API à effectuer.
   const handleConfirmDelete = async () => {
     if (idToDelete === null || !deleteConfirmType) return;
     setError(null);

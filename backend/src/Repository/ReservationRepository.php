@@ -7,6 +7,10 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Accès aux réservations.
+ * Les requêtes de détection de conflit sont construites directement dans
+ * DisponibiliteService via createQueryBuilder(), hérité de cette classe.
+ *
  * @extends ServiceEntityRepository<Reservation>
  */
 class ReservationRepository extends ServiceEntityRepository

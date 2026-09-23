@@ -12,6 +12,13 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * Jeu de données de démonstration chargé par `php bin/console doctrine:fixtures:load`.
+ *
+ * Crée : 1 compte admin (admin@calendria.com / password123), 1 restaurant,
+ * 10 tables de capacités variées, 2 services (midi/soir), 5 clients et 7 réservations.
+ * C'est ce jeu qui sert de base pour la démonstration de soutenance.
+ */
 class AppFixtures extends Fixture
 {
     private UserPasswordHasherInterface $passwordHasher;

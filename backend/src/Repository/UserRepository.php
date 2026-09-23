@@ -10,6 +10,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
+ * Accès aux comptes restaurateurs. Implémente PasswordUpgraderInterface pour que
+ * Symfony puisse re-hacher automatiquement les mots de passe lorsque l'algorithme évolue.
+ *
  * @extends ServiceEntityRepository<User>
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface

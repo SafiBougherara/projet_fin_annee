@@ -14,6 +14,17 @@ use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+/**
+ * FEATURE : Moteur conversationnel de réservation (Google Gemini 2.5 Flash).
+ *
+ * Principe : l'IA ne touche jamais à la base. Elle sert uniquement à dialoguer et à
+ * extraire 5 informations (nom, téléphone, date, heure, couverts) dans une réponse JSON stricte.
+ * C'est ensuite le code PHP qui vérifie la disponibilité (DisponibiliteService) puis persiste.
+ * Cela évite toute hallucination sur les créneaux réellement libres.
+ *
+ * L'état de la conversation (historique + données collectées) vit dans le cache Symfony,
+ * clé `chatbot_session_<sessionId>`, expiration 30 minutes : le service reste sans état.
+ */
 class ChatbotService
 {
     private EntityManagerInterface $entityManager;
@@ -65,6 +76,7 @@ class ChatbotService
         $cacheKey = "chatbot_session_" . $sessionId;
         $sessionData = $this->cache->get($cacheKey, function (ItemInterface $item) {
             $item->expiresAfter(1800); // 30 minutes
+
             return [
                 'history' => [],
                 'collected_data' => [
@@ -122,6 +134,7 @@ class ChatbotService
         $currentDateStr = $now->format('Y-m-d');
 
         // Calculer dynamiquement la capacité de la plus grande table disponible
+        // (injectée dans le prompt pour que l'IA refuse d'emblée les groupes trop nombreux)
         $maxCapacity = 0;
         foreach ($restaurant->getTables() as $table) {
             if ($table->getCapacite() > $maxCapacity) {
@@ -174,6 +187,7 @@ PROMPT;
 
         try {
             // Appeler l'API Gemini 2.5 Flash
+            // `responseMimeType: application/json` force un JSON parsable au lieu de texte libre.
             $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $this->geminiApiKey;
 
             $response = $this->httpClient->request('POST', $url, [
@@ -280,7 +294,7 @@ PROMPT;
                 $demandes = $sessionData['collected_data']['demandesSpeciales'];
 
                 if ($nom && $tel && $date && $heure && $nbPers) {
-                    // Vérifier la disponibilité en temps réel
+                    // Dernier contrôle anti-double-réservation juste avant d'écrire en base
                     $resAvailability = $this->disponibiliteService->verifierDisponibilite(
                         $restaurantId,
                         $date,
@@ -364,6 +378,7 @@ PROMPT;
             ];
 
             // Sauvegarder la session en cache
+            // delete + get : l'API CacheInterface ne permet pas d'écraser une entrée directement.
             $this->cache->delete($cacheKey);
             $this->cache->get($cacheKey, function (ItemInterface $item) use ($sessionData) {
                 $item->expiresAfter(1800);
@@ -377,6 +392,7 @@ PROMPT;
             ];
 
         } catch (\Exception $e) {
+            // Panne API ou JSON invalide : on dégrade proprement sans casser la conversation.
             return [
                 'response' => "Désolé, j'ai rencontré un problème technique. Pouvez-vous répéter ?",
                 'ready_to_book' => false,

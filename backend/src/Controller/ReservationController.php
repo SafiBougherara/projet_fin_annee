@@ -16,9 +16,27 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * FEATURE : CRUD des réservations + lecture des restaurants/tables pour le tableau de bord.
+ *
+ * Endpoints exposés :
+ *  - GET    /api/restaurants       : liste des restaurants avec leurs tables (alimente le plan de salle).
+ *  - GET    /api/tables            : liste à plat de toutes les tables.
+ *  - GET    /api/reservations      : liste des réservations (aplaties en JSON pour le front).
+ *  - POST   /api/reservations      : création avec contrôle de disponibilité.
+ *  - PUT    /api/reservations/{id} : modification.
+ *  - DELETE /api/reservations/{id} : suppression.
+ *
+ * La logique métier de disponibilité est déléguée à App\Service\DisponibiliteService.
+ * Côté front : frontend/src/services/reservation.service.ts et frontend/src/pages/Dashboard.tsx.
+ */
 #[Route('/api', name: 'api_')]
 class ReservationController extends AbstractController
 {
+    /**
+     * Retourne chaque restaurant avec ses tables imbriquées.
+     * On sérialise à la main pour éviter les références circulaires Doctrine (restaurant <-> table).
+     */
     #[Route('/restaurants', name: 'restaurants_list', methods: ['GET'])]
     public function listRestaurants(RestaurantRepository $restaurantRepository): JsonResponse
     {
@@ -52,6 +70,9 @@ class ReservationController extends AbstractController
         return $this->json($payload);
     }
 
+    /**
+     * Liste à plat de toutes les tables, tous restaurants confondus.
+     */
     #[Route('/tables', name: 'tables_list', methods: ['GET'])]
     public function listTables(TableRepository $tableRepository): JsonResponse
     {
@@ -70,6 +91,10 @@ class ReservationController extends AbstractController
         return $this->json($payload);
     }
 
+    /**
+     * Liste des réservations avec client / restaurant / table imbriqués.
+     * Les dates sont formatées en chaînes ISO pour être directement exploitables par React.
+     */
     #[Route('/reservations', name: 'reservations_list', methods: ['GET'])]
     public function listReservations(ReservationRepository $reservationRepository): JsonResponse
     {
@@ -103,6 +128,13 @@ class ReservationController extends AbstractController
         return $this->json($payload);
     }
 
+    /**
+     * Crée une réservation depuis le back-office.
+     *
+     * Enchaînement : validation du payload -> résolution du restaurant ->
+     * récupération ou création du client (clé métier = téléphone) ->
+     * contrôle de capacité de la table -> contrôle de disponibilité -> persistance.
+     */
     #[Route('/reservations', name: 'reservations_create', methods: ['POST'])]
     public function createReservation(
         Request $request,
@@ -130,6 +162,7 @@ class ReservationController extends AbstractController
             return $this->json(['error' => 'Restaurant introuvable'], Response::HTTP_NOT_FOUND);
         }
 
+        // Le numéro de téléphone sert de clé métier : on réutilise le client s'il existe déjà.
         $client = $clientRepository->findOneBy(['telephone' => $data['clientPhone']]);
         if (!$client) {
             $client = new Client();
@@ -218,6 +251,9 @@ class ReservationController extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
+    /**
+     * Met à jour une réservation existante (mise à jour partielle : seuls les champs fournis sont modifiés).
+     */
     #[Route('/reservations/{id}', name: 'reservations_update', methods: ['PUT'])]
     public function updateReservation(
         int $id,
@@ -352,6 +388,9 @@ class ReservationController extends AbstractController
         ]);
     }
 
+    /**
+     * Supprime définitivement une réservation (confirmée côté front par une modale).
+     */
     #[Route('/reservations/{id}', name: 'reservations_delete', methods: ['DELETE'])]
     public function deleteReservation(
         int $id,

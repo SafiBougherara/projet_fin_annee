@@ -1,5 +1,12 @@
 import api from './api';
 
+/**
+ * FEATURE (front) : CRUD des réservations.
+ * Consomme backend/src/Controller/ReservationController.php.
+ * Utilisé par pages/Dashboard.tsx.
+ */
+
+// Reflet du JSON renvoyé par GET /api/reservations (client/restaurant/table imbriqués).
 export interface ReservationItem {
   id: number;
   statut: string;

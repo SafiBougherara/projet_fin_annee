@@ -7,6 +7,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Accès aux restaurants (méthodes standard find/findAll héritées de Doctrine).
+ *
  * @extends ServiceEntityRepository<Restaurant>
  */
 class RestaurantRepository extends ServiceEntityRepository

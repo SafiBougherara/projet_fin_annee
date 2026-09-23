@@ -7,6 +7,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Accès aux clients. Recherche principale : findOneBy(['telephone' => ...]),
+ * le téléphone servant de clé métier anti-doublon.
+ *
  * @extends ServiceEntityRepository<Client>
  */
 class ClientRepository extends ServiceEntityRepository

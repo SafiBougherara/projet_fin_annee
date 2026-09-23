@@ -15,9 +15,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * FEATURE : Back-office de paramétrage (restaurants, tables, services d'ouverture).
+ *
+ * Endpoints exposés :
+ *  - Restaurants : POST /api/restaurants, PUT|DELETE /api/restaurants/{id}
+ *  - Tables      : POST /api/tables, PUT|DELETE /api/tables/{id}
+ *  - Services    : GET /api/restaurants/{id}/services, POST /api/services, PUT|DELETE /api/services/{id}
+ *
+ * Ces données conditionnent tout le moteur de disponibilité (horaires, capacités, durée de repas).
+ * Côté front : frontend/src/pages/RestaurantManagement.tsx.
+ */
 #[Route('/api', name: 'api_admin_')]
 class RestaurantAdminController extends AbstractController
 {
+    /**
+     * Crée un restaurant. `dureeRepas` et `bufferNettoyage` (en minutes) définissent
+     * la durée d'occupation d'une table utilisée par le calcul de disponibilité.
+     */
     #[Route('/restaurants', name: 'restaurant_create', methods: ['POST'])]
     public function createRestaurant(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
@@ -54,6 +69,9 @@ class RestaurantAdminController extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
+    /**
+     * Mise à jour partielle : seuls les champs présents dans le JSON sont modifiés.
+     */
     #[Route('/restaurants/{id}', name: 'restaurant_update', methods: ['PUT'])]
     public function updateRestaurant(int $id, Request $request, RestaurantRepository $restaurantRepository, EntityManagerInterface $entityManager): JsonResponse
     {
@@ -84,6 +102,9 @@ class RestaurantAdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Suppression bloquée si des réservations existent, afin de préserver l'historique métier.
+     */
     #[Route('/restaurants/{id}', name: 'restaurant_delete', methods: ['DELETE'])]
     public function deleteRestaurant(int $id, RestaurantRepository $restaurantRepository, EntityManagerInterface $entityManager): JsonResponse
     {
@@ -104,6 +125,9 @@ class RestaurantAdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Ajoute une table à un restaurant (numéro, capacité, type, statut).
+     */
     #[Route('/tables', name: 'table_create', methods: ['POST'])]
     public function createTable(Request $request, RestaurantRepository $restaurantRepository, EntityManagerInterface $entityManager): JsonResponse
     {
@@ -178,6 +202,9 @@ class RestaurantAdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Suppression bloquée si la table porte déjà des réservations.
+     */
     #[Route('/tables/{id}', name: 'table_delete', methods: ['DELETE'])]
     public function deleteTable(int $id, TableRepository $tableRepository, EntityManagerInterface $entityManager): JsonResponse
     {
@@ -198,6 +225,10 @@ class RestaurantAdminController extends AbstractController
         ]);
     }
 
+    /**
+     * Liste les services (midi/soir) d'un restaurant : ce sont eux qui définissent
+     * les plages horaires réservables utilisées par DisponibiliteService.
+     */
     #[Route('/restaurants/{id}/services', name: 'services_list', methods: ['GET'])]
     public function listServices(int $id, RestaurantRepository $restaurantRepository): JsonResponse
     {
@@ -220,6 +251,10 @@ class RestaurantAdminController extends AbstractController
         return $this->json($services);
     }
 
+    /**
+     * Crée un service. `joursOuverture` est un tableau de jours en minuscules
+     * ("lundi", "mardi"…) comparé tel quel dans DisponibiliteService.
+     */
     #[Route('/services', name: 'service_create', methods: ['POST'])]
     public function createService(Request $request, RestaurantRepository $restaurantRepository, EntityManagerInterface $entityManager): JsonResponse
     {

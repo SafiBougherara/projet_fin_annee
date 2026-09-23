@@ -5,6 +5,10 @@ import { authService } from '../services/auth.service';
 import type { LoginCredentials } from '../services/auth.service';
 import '../App.css'; // On utilisera le CSS global pour le style simple
 
+/**
+ * PAGE : connexion du restaurateur (/login).
+ * Appelle authService.login qui stocke le JWT, puis redirige vers le tableau de bord.
+ */
 export default function Login() {
     const navigate = useNavigate();
     const [error, setError] = useState<string | null>(null);

@@ -9,6 +9,13 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Http\Event\LoginFailureEvent;
 
+/**
+ * SÉCURITÉ : protection contre le bruteforce sur /api/login (OWASP A07).
+ *
+ * Compte les échecs de connexion par adresse IP dans le cache ; au-delà de 5 tentatives
+ * sur une fenêtre de 15 minutes, la requête est refusée avec un HTTP 429 avant même
+ * d'atteindre le firewall (priorité 10 sur KernelEvents::REQUEST).
+ */
 class LoginRateLimiterSubscriber implements EventSubscriberInterface
 {
     private const MAX_ATTEMPTS = 5;

@@ -7,6 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * ENTITÉ : Client final du restaurant (distinct de User, qui est le restaurateur connecté).
+ * Le téléphone sert de clé métier pour éviter les doublons lors des réservations.
+ * `consentementRgpd` trace l'accord de conservation des données.
+ */
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 class Client
 {

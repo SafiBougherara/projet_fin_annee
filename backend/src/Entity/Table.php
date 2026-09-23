@@ -7,7 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * ENTITÉ : Table physique du restaurant (numéro, capacité, type intérieur/terrasse, statut).
+ */
 #[ORM\Entity(repositoryClass: TableRepository::class)]
+// `table` est un mot réservé SQL, d'où l'échappement par backticks.
 #[ORM\Table(name: '`table`')]
 class Table
 {

@@ -8,6 +8,17 @@ use App\Repository\ReservationRepository;
 use App\Repository\RestaurantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * FEATURE : Moteur de disponibilité — cœur métier du projet.
+ *
+ * Règles appliquées :
+ *  1. Le créneau doit tomber dans un service ouvert ce jour-là (entité Service).
+ *  2. Une table est occupée pendant `dureeRepas + bufferNettoyage` minutes.
+ *  3. On affecte la plus petite table capable d'accueillir le groupe (optimisation du taux de remplissage).
+ *  4. Si rien n'est libre, on propose jusqu'à 3 créneaux alternatifs le même jour.
+ *
+ * Utilisé par ReservationController (back-office) et ChatbotService (IA / téléphone).
+ */
 class DisponibiliteService
 {
     private EntityManagerInterface $entityManager;
@@ -26,6 +37,9 @@ class DisponibiliteService
 
     /**
      * Vérifie la disponibilité d'une table et retourne les détails ou des alternatives.
+     *
+     * `raison` vaut 'ferme' (hors service) ou 'complet' (toutes les tables occupées),
+     * ce qui permet aux appelants d'afficher un message précis au client.
      *
      * @return array{disponible: bool, table: ?Table, alternatives: array<array{heure: string, tableId: int}>}
      */
@@ -81,6 +95,7 @@ class DisponibiliteService
 
     /**
      * Vérifie si l'heure proposée est dans un service ouvert pour ce jour.
+     * Les jours sont stockés en français minuscule dans Service::joursOuverture.
      */
     private function estDansServiceOuvert(Restaurant $restaurant, \DateTime $dateTime): bool
     {
@@ -115,6 +130,8 @@ class DisponibiliteService
 
     /**
      * Trouve la table la plus adaptée et disponible pour le créneau proposé.
+     * Stratégie « best fit » : on parcourt les tables par capacité croissante pour
+     * ne pas gaspiller une grande table sur un petit groupe.
      */
     private function trouverTableDisponible(Restaurant $restaurant, \DateTime $proposedDateTime, int $nombrePersonnes): ?Table
     {
@@ -162,7 +179,7 @@ class DisponibiliteService
                     $resStart = (new \DateTime($resDateStr . ' ' . $resTimeStr))->getTimestamp();
                     $resEnd = $resStart + $dureeTotale;
 
-                    // Condition d'intersection / conflit
+                    // Chevauchement de deux intervalles [début, fin[ : A.début < B.fin && B.début < A.fin
                     if ($resStart < $proposedEnd && $proposedStart < $resEnd) {
                         $estLibre = false;
                         break;
@@ -252,6 +269,7 @@ class DisponibiliteService
 
     /**
      * Vérifie si une table spécifique est disponible sur un créneau (sans changer de table).
+     * Utilisé quand le restaurateur impose lui-même la table depuis le back-office.
      */
     public function verifierTableSpecifiqueDisponible(int $restaurantId, int $tableId, string $dateStr, string $heureStr): bool
     {

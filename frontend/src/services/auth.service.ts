@@ -1,5 +1,12 @@
 import api from './api';
 
+/**
+ * FEATURE (front) : authentification du restaurateur.
+ * Dialogue avec backend/src/Controller/AuthController.php et le firewall JWT.
+ * Le token est conservé dans localStorage ; il est ensuite réinjecté par
+ * l'intercepteur de services/api.ts sur chaque appel protégé.
+ */
+
 // Types pour TypeScript (pour savoir quelles données on manipule)
 export interface LoginCredentials {
     email: string;

@@ -41,6 +41,20 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import axios from 'axios';
 import '../App.css';
 
+/**
+ * PAGE : tableau de bord des réservations (route "/", protégée).
+ *
+ * Trois blocs fonctionnels :
+ *  1. Plan de salle interactif : un curseur horaire recalcule en direct l'état
+ *     de chaque table (libre / réservée / arrivée imminente / occupée).
+ *  2. Formulaire de création de réservation + QR code du bot Telegram.
+ *  3. Liste des réservations avec édition et suppression.
+ *
+ * Données fournies par services/reservation.service.ts et services/restaurant.service.ts.
+ */
+
+// Valeurs par défaut du formulaire de création (tous les champs sont des chaînes
+// car ils proviennent d'inputs HTML ; la conversion en nombre se fait à l'envoi).
 const initialForm = {
   clientName: '',
   clientPhone: '',
@@ -53,6 +67,7 @@ const initialForm = {
   demandesSpeciales: '',
 };
 
+// Convertit une date ISO (AAAA-MM-JJ) renvoyée par l'API en format français JJ/MM/AAAA.
 const formatDateFr = (dateStr: string | undefined | null) => {
   if (!dateStr) return '';
   if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) return dateStr;
@@ -68,6 +83,7 @@ const formatDateFr = (dateStr: string | undefined | null) => {
   return dateStr;
 };
 
+// Convertit une heure HH:MM en notation française 12h30.
 const formatTimeFr = (timeStr: string | undefined | null) => {
   if (!timeStr) return '';
   try {
@@ -92,6 +108,7 @@ export default function Dashboard() {
   const [mapDate, setMapDate] = useState<string>(() => {
     return new Date().toISOString().split('T')[0];
   });
+  // Position du curseur horaire, exprimée en minutes depuis minuit (660 = 11h00, 1410 = 23h30).
   const [mapTimeMinutes, setMapTimeMinutes] = useState<number>(() => {
     const now = new Date();
     return Math.max(660, Math.min(1410, now.getHours() * 60 + now.getMinutes()));
@@ -107,6 +124,16 @@ export default function Dashboard() {
     return restaurants.find((r) => r.id === activeRestaurantId) || restaurants[0] || null;
   }, [activeRestaurantId, restaurants]);
 
+  /**
+   * Cœur du plan de salle : détermine l'état d'une table à l'instant pointé par le curseur.
+   *
+   * Reprend la même règle métier que le backend (DisponibiliteService) :
+   * une table est occupée pendant dureeRepas + bufferNettoyage minutes.
+   *  - occupied : le repas est en cours
+   *  - imminent : arrivée prévue dans moins de 30 minutes
+   *  - reserved : réservation plus tard dans la journée
+   *  - free     : aucune réservation
+   */
   const getTableStatus = (tableId: number) => {
     if (!activeRestaurant) return { status: 'free', reservation: null };
 
@@ -203,6 +230,7 @@ export default function Dashboard() {
 
   const today = new Date().toISOString().split('T')[0];
 
+  // Les réservations à venir remontent en haut de liste, les passées sont reléguées à la fin.
   const sortedReservations = useMemo(() => {
     return [...reservations].sort((a, b) => {
       const aDate = a.dateReservation ?? '';
@@ -225,6 +253,7 @@ export default function Dashboard() {
   );
 
   useEffect(() => {
+    // Chargement initial : restaurants et réservations en parallèle pour réduire le temps d'affichage.
     const loadData = async () => {
       try {
         const [restaurantsData, reservationsData] = await Promise.all([
@@ -284,6 +313,7 @@ export default function Dashboard() {
     setSuccess(null);
     setSaving(true);
 
+    // Validation côté client ; le backend revalide et vérifie en plus la disponibilité.
     if (!form.clientName || !form.clientPhone || !form.dateReservation || !form.heureReservation || !form.restaurantId) {
       setError('Veuillez remplir tous les champs obligatoires.');
       setSaving(false);
@@ -325,6 +355,7 @@ export default function Dashboard() {
   };
 
   const handleOpenEdit = (res: ReservationItem) => {
+    // Pré-remplit la modale d'édition à partir de la ligne sélectionnée.
     setError(null);
     setSuccess(null);
     setEditForm({
@@ -462,7 +493,7 @@ export default function Dashboard() {
                 </Box>
               </Box>
 
-              {/* Time slider section */}
+              {/* Curseur horaire : fait « rejouer » la journée de 11h00 à 23h30 par pas de 15 min */}
               <Box sx={{ px: 2, mb: 4 }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                   <Box display="flex" alignItems="center" gap={0.5}>
@@ -519,7 +550,7 @@ export default function Dashboard() {
                 />
               </Box>
 
-              {/* Interactive room plan grid */}
+              {/* Grille du plan de salle : une carte colorée par table selon son état à l'heure du curseur */}
               <Box
                 sx={{
                   display: 'grid',
@@ -698,7 +729,7 @@ export default function Dashboard() {
                 )}
               </Box>
 
-              {/* Color Legend */}
+              {/* Légende des couleurs du plan de salle */}
               <Box display="flex" flexWrap="wrap" gap={3} justifyContent="center" sx={{ mt: 2, pt: 2, borderTop: '1px solid #eee' }}>
                 <Box display="flex" alignItems="center" gap={1}>
                   <Box sx={{ width: 16, height: 16, borderRadius: '50%', bgcolor: 'rgba(16, 185, 129, 0.2)', border: '2px solid #10b981' }} />
@@ -988,7 +1019,7 @@ export default function Dashboard() {
         </Grid>
       </Grid>
 
-      {/* Modal Edition */}
+      {/* Modale d'édition d'une réservation */}
       <Dialog open={editOpen} onClose={() => setEditOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle sx={{ fontWeight: 'bold' }}>Modifier la réservation</DialogTitle>
         <Box component="form" onSubmit={handleEditSubmit}>
@@ -1140,7 +1171,7 @@ export default function Dashboard() {
         </Box>
       </Dialog>
 
-      {/* Modal Deletion Confirm */}
+      {/* Modale de confirmation de suppression (action irréversible) */}
       <Dialog open={deleteConfirmOpen} onClose={saving ? undefined : () => setDeleteConfirmOpen(false)}>
         <DialogTitle sx={{ fontWeight: 'bold' }}>Confirmer la suppression</DialogTitle>
         <DialogContent>
@@ -1167,7 +1198,7 @@ export default function Dashboard() {
         </DialogActions>
       </Dialog>
 
-      {/* Toast notifications */}
+      {/* Notifications éphémères de succès / erreur */}
       <Snackbar
         open={!!error}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}

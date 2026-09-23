@@ -1,5 +1,13 @@
 import api from './api';
 
+/**
+ * FEATURE (front) : paramétrage des restaurants, tables et services d'ouverture.
+ * Consomme backend/src/Controller/RestaurantAdminController.php (écriture)
+ * et la route GET /api/restaurants de ReservationController.php (lecture).
+ * Utilisé par pages/RestaurantManagement.tsx et pages/Dashboard.tsx.
+ */
+
+// Les interfaces ci-dessous reflètent exactement le JSON renvoyé par l'API.
 export interface RestaurantTable {
   id: number;
   numeroTable: string;

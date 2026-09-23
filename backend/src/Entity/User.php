@@ -7,7 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * ENTITÉ : Compte restaurateur utilisé par le firewall Symfony et l'authentification JWT.
+ * L'email fait office d'identifiant de connexion ; seul le mot de passe haché est stocké.
+ */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+// `user` est un mot réservé PostgreSQL, d'où l'échappement par backticks.
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface

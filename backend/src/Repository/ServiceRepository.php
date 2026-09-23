@@ -7,6 +7,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Accès aux services d'ouverture (midi / soir) d'un restaurant.
+ *
  * @extends ServiceEntityRepository<Service>
  */
 class ServiceRepository extends ServiceEntityRepository

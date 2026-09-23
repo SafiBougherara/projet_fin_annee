@@ -5,6 +5,11 @@ namespace App\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Tests fonctionnels de l'authentification : un vrai noyau Symfony est démarré
+ * et les requêtes HTTP traversent tout la chaîne (routing, sécurité, Doctrine).
+ * Nécessite donc une base de test accessible.
+ */
 class AuthControllerTest extends WebTestCase
 {
     public function testHealthEndpointReturnsOk(): void

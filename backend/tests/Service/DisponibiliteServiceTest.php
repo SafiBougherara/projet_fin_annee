@@ -12,6 +12,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Tests unitaires du moteur de disponibilité.
+ *
+ * Aucune base de données n'est sollicitée : l'EntityManager et les repositories
+ * sont mockés, ce qui permet de tester la règle métier (ouverture, chevauchement
+ * de créneaux, choix de la table) de manière rapide et déterministe.
+ *
+ * Lancer avec : php bin/phpunit tests/Service/DisponibiliteServiceTest.php
+ */
 class DisponibiliteServiceTest extends TestCase
 {
     private function makeService(): DisponibiliteService

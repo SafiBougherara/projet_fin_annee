@@ -6,6 +6,12 @@ use App\Repository\ReservationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * ENTITÉ : Réservation — table de liaison métier entre Client, Restaurant et Table.
+ * `tableReservee` est nullable : une réservation peut être prise sans affectation
+ * de table précise, l'assignation étant faite plus tard par le restaurateur.
+ * Statuts utilisés : confirmée / annulée / terminée.
+ */
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
 {

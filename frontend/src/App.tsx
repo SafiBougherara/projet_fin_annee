@@ -11,6 +11,16 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 
+/**
+ * Racine de l'application React.
+ *
+ * Responsabilités :
+ *  - définir le thème Material UI (clair/sombre) et le partager via un Context ;
+ *  - déclarer le routage (routes publiques /login, /register, /widget ;
+ *    routes protégées / et /admin) ;
+ *  - fournir la barre de navigation commune aux pages protégées.
+ */
+
 interface ThemeContextType {
   darkMode: boolean;
   toggleDarkMode: () => void;
@@ -23,6 +33,8 @@ export const ThemeContext = createContext<ThemeContextType>({
 
 export const useAppTheme = () => useContext(ThemeContext);
 
+// Thème Material UI centralisé : palette, typographie et surcharges de composants.
+// La même fonction sert pour le mode clair et le mode sombre.
 export function getAppTheme(mode: 'light' | 'dark') {
   const isDark = mode === 'dark';
   return createTheme({
@@ -93,6 +105,7 @@ export function getAppTheme(mode: 'light' | 'dark') {
 }
 
 // Composant pour protéger les routes qui nécessitent d'être connecté
+// Garde-fou UX uniquement : la vraie sécurité est assurée par le JWT côté API.
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   if (!authService.isAuthenticated()) {
     // Si pas connecté, on redirige vers le login
@@ -101,6 +114,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+// Barre de navigation + conteneur communs à toutes les pages authentifiées.
 const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -226,6 +240,7 @@ const NavigationLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+// Table de routage de l'application.
 function AppContent() {
   return (
     <Routes>
@@ -264,6 +279,7 @@ function AppContent() {
 }
 
 function App() {
+  // Préférence de thème persistée dans localStorage pour survivre aux rechargements.
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     return localStorage.getItem('theme') === 'dark';
   });
@@ -277,6 +293,7 @@ function App() {
   };
 
   useEffect(() => {
+    // Expose le mode au CSS global via [data-theme] (utilisé par index.css / ChatWidget.css).
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
   }, [darkMode]);
 
