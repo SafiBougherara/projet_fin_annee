@@ -133,6 +133,22 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       font-size:18px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(26,82,118,.18);z-index:3}
 .cnav.prev{left:0}.cnav.next{right:0}
 
+/* AGRANDISSEMENT D'IMAGE (bouton ⤢ en haut à droite + lightbox) */
+.fig{position:relative}
+.zoombtn{position:absolute;top:4px;right:4px;z-index:4;width:30px;height:30px;border-radius:7px;
+         border:1px solid var(--border);background:rgba(255,255,255,.93);color:var(--primary);
+         font-family:'Outfit';font-size:15px;line-height:1;cursor:pointer;
+         box-shadow:0 2px 8px rgba(26,82,118,.2)}
+.zoombtn:hover{background:#fff;color:var(--secondary)}
+#lb{position:fixed;inset:0;z-index:60;background:rgba(6,20,30,.95);display:none;
+    align-items:center;justify-content:center;padding:26px;cursor:zoom-out}
+#lb.on{display:flex}
+#lb img{max-width:100%;max-height:100%;object-fit:contain;background:#fff;border-radius:8px;padding:8px}
+#lb .close{position:absolute;top:18px;right:22px;width:42px;height:42px;border-radius:9px;
+           border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.14);color:#fff;
+           font-family:'Outfit';font-size:19px;line-height:1;cursor:pointer}
+#lb .close:hover{background:var(--secondary);border-color:var(--secondary)}
+
 /* BADGES / PILLS */
 .pills{display:flex;flex-wrap:wrap;gap:8px}
 .pill{font-size:12.5px;font-family:'Outfit';font-weight:600;padding:5px 12px;border-radius:20px;
@@ -180,8 +196,12 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
 .finale .steps li::before{display:none}
 .finale .steps li b{display:block;font-family:'Outfit';font-size:13.5px;color:#fff;margin-bottom:2px}
 .finale .thanks{font-size:15px;color:#BFE0F2;margin-top:16px}
-.finale .meta{display:grid;grid-template-columns:1fr 1fr;gap:9px 26px;margin-top:auto;padding-top:16px;
-              font-size:12px;color:#D6EAF8}
+.finale .bottom{display:flex;gap:24px;align-items:flex-end;margin-top:auto;padding-top:16px}
+.finale .qr{flex:0 0 auto;text-align:center}
+.finale .qr img{display:block;width:104px;height:104px;background:#fff;padding:6px;border-radius:8px}
+.finale .qr span{display:block;font-family:'Outfit';font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+                 color:#8FD0F0;font-weight:700;margin-top:6px}
+.finale .meta{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:9px 26px;font-size:12px;color:#D6EAF8}
 .finale .meta b{display:block;font-family:'Outfit';font-size:10px;letter-spacing:.14em;text-transform:uppercase;
                 color:#7FB7D8;font-weight:700;margin-bottom:2px}
 .finale .live{display:flex;flex-direction:column;min-height:0;gap:9px}
@@ -218,7 +238,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   #deck{width:1280px;height:auto;box-shadow:none;transform:none!important}
   .slide{display:flex!important;position:relative;width:1280px;height:720px;page-break-after:always;animation:none}
   #hint,#timer,#overview,#bar{display:none!important}
-  .cnav{display:none!important}
+  .cnav,.zoombtn,#lb{display:none!important}
   .cstage{flex-direction:row;gap:8px}
   .cstage img{display:block!important;max-width:32%}
 }
@@ -262,6 +282,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       <div class="card green"><span class="ico">✅</span><h4>8. Bilan</h4><p>Difficultés rencontrées, taux de couverture fonctionnelle, perspectives.</p></div>
       <div class="card red"><span class="ico">🚀</span><h4>9. Démonstration</h4><p>Application en production : dashboard, plan de salle, chatbot IA, widget en iframe et Telegram.</p></div>
     </div>
+    <p class="note">Minutage visé — projet et gestion de projet <b>8 min</b> · conception UI/UX et données <b>8 min</b> · architecture et code <b>10 min</b> · sécurité, tests et déploiement <b>8 min</b> · veille et bilan <b>5 min</b> · démonstration live <b>6 min</b>.</p>
   </div>
   <div class="chrome"><span>CALENDRIA — Soutenance CDA</span><span class="pg"></span></div>
 </section>
@@ -287,13 +308,13 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
         <h3>Chiffres clés</h3>
         <table class="t-sm">
           <tr><th>Indicateur</th><th>Valeur</th></tr>
-          <tr><td>Couverture fonctionnelle</td><td><b>88%</b> (15/17)</td></tr>
+          <tr><td>Couverture fonctionnelle</td><td><b>82%</b> (14/17)</td></tr>
           <tr><td>Tests automatisés</td><td>12 tests — 0 échec</td></tr>
-          <tr><td>Back-end (PHP)</td><td>~4 500 lignes</td></tr>
-          <tr><td>Front-end (TS/TSX)</td><td>~7 200 lignes</td></tr>
-          <tr><td>Endpoints d'API</td><td>28 routes</td></tr>
-          <tr><td>Tables en base</td><td>9 tables</td></tr>
-          <tr><td>Disponibilité en production</td><td>99,9% (Railway)</td></tr>
+          <tr><td>Back-end (PHP)</td><td>~3 400 lignes</td></tr>
+          <tr><td>Front-end (TS/TSX)</td><td>~3 200 lignes</td></tr>
+          <tr><td>Endpoints d'API</td><td>24 routes</td></tr>
+          <tr><td>Entités persistées</td><td>6 tables</td></tr>
+          <tr><td>Canaux de réservation</td><td>3 (web, Telegram, vocal)</td></tr>
         </table>
         <div class="pills" style="margin-top:12px">
           <span class="pill">Symfony 6.4</span><span class="pill">PHP 8.4</span><span class="pill">React 18</span>
@@ -445,7 +466,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
           <li>Algorithme d'attribution intelligente des tables</li>
           <li>Calcul de disponibilité temps réel + alternatives à 30 min</li>
           <li>Dashboard React : CRUD réservations, plan de salle interactif</li>
-          <li>Gestion des tables, services et fermetures exceptionnelles</li>
+          <li>Gestion des tables et des services (horaires d'ouverture)</li>
           <li>Fiche client avec historique · mode sombre persistant</li>
           <li>Authentification JWT RS256 · rate limiting</li>
           <li>Containerisation Docker + CI/CD + déploiement cloud</li>
@@ -459,6 +480,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
           <li>Application mobile native</li>
           <li>Multi-langues (français uniquement)</li>
           <li>Multi-restaurants dans le MVP <span class="note">(architecture prévue : FK nullable)</span></li>
+          <li>Fermetures exceptionnelles <span class="note">(modélisées au MCD, reportées au-delà du MVP)</span></li>
           <li>Intégration avec les logiciels de caisse</li>
           <li>Système de fidélité ou d'avis clients</li>
         </ul>
@@ -511,34 +533,37 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
 </section>
 
 <!-- ═══════════════ 13. SCRUM SOLO ═══════════════ -->
-<section class="slide" data-title="Scrum adapté solo">
+<section class="slide" data-title="Méthodologie agile">
   <div class="kicker">Section IV — Méthodologie</div>
-  <h2>Scrum adapté à un développeur unique</h2>
+  <h2>Une méthode agile adaptée au travail seul</h2>
   <div class="rule"></div>
   <div class="body">
     <div class="cols c21">
-      <table class="t-sm">
-        <tr><th>Élément Scrum</th><th>Adaptation solo retenue</th></tr>
-        <tr><td>Product Owner</td><td>Moi-même — backlog géré dans GitHub Issues</td></tr>
-        <tr><td>Scrum Master</td><td>Moi-même — auto-discipline</td></tr>
-        <tr><td>Sprint Planning</td><td>~1h en début de mois, backlog dans GitHub Projects</td></tr>
-        <tr><td>Daily Standup</td><td>Sans objet en solo — suivi quotidien par l'<b>historique Git</b></td></tr>
-        <tr><td>Sprint Review</td><td>Présentation au référent à chaque jalon</td></tr>
-        <tr><td>Rétrospective</td><td>Auto-analyse écrite en fin de sprint</td></tr>
-        <tr><td>Durée du sprint</td><td><b>1 mois</b> — aligné sur les jalons</td></tr>
-      </table>
       <div>
-        <h3>Pourquoi Scrum plutôt que le cycle en V ?</h3>
+        <h3>Ce que j'ai gardé de Scrum</h3>
+        <table class="t-sm">
+          <tr><th>Pratique</th><th>Comment je l'ai appliquée</th></tr>
+          <tr><td><b>Sprint</b></td><td><b>1 mois = 1 jalon</b> — 6 sprints de janvier à juin</td></tr>
+          <tr><td><b>Backlog priorisé</b></td><td>Liste de fonctionnalités classées en <b>MoSCoW</b>, figée au Jalon 1 et révisée à chaque jalon</td></tr>
+          <tr><td><b>Incrément livrable</b></td><td>Chaque jalon produit un livrable démontrable, pas un document isolé</td></tr>
+          <tr><td><b>Revue de sprint</b></td><td>Présentation au référent à la fin de chaque jalon</td></tr>
+          <tr><td><b>Rétrospective</b></td><td>Bilan écrit en fin de jalon — c'est ce qui a déclenché le passage de WhatsApp à Telegram</td></tr>
+        </table>
+        <p class="note" style="margin-top:10px">Ce que j'ai <strong>volontairement abandonné</strong> : les rôles (Product Owner, Scrum Master) et la mêlée quotidienne. Ce sont des rituels de <strong>coordination d'équipe</strong> : seul, ils n'ont aucun destinataire.</p>
+      </div>
+      <div>
+        <h3>Pourquoi l'agilité plutôt que le cycle en V ?</h3>
         <ul>
-          <li><strong>Flexibilité encadrée</strong> : le périmètre a dû évoluer (WhatsApp → Telegram) sans casser le planning.</li>
-          <li><strong>Sprints = jalons</strong> : correspondance naturelle avec les 6 livrables mensuels imposés.</li>
-          <li><strong>Détection précoce des risques</strong> : chaque revue de sprint produit un incrément démontrable.</li>
+          <li><strong>Le périmètre a dû bouger</strong> : WhatsApp Business exigeait 4 à 6 semaines de vérification. En cycle en V, ce blocage aurait fait tomber tout le planning ; en agile, j'ai basculé sur Telegram au sprint suivant.</li>
+          <li><strong>Les jalons imposés sont déjà des sprints</strong> : un livrable démontrable chaque mois.</li>
+          <li><strong>Les risques sortent tôt</strong> : un incrément qui tourne révèle les problèmes bien avant un document de spécification.</li>
         </ul>
         <div class="card orange" style="margin-top:12px">
-          <h4>Backlog MoSCoW</h4>
-          <p><b>Must</b> : réserver via chatbot · dashboard du jour · configuration tables &amp; horaires · confirmation immédiate.<br>
-          <b>Should</b> : multi-canal · statistiques de remplissage.<br>
-          <b>Won't</b> : paiement, commande, multi-langues, mobile natif.</p>
+          <h4>Le backlog MoSCoW</h4>
+          <p><b>M</b>ust (indispensable, sinon pas de produit) : réserver via le chatbot · dashboard du jour · configuration tables &amp; horaires · confirmation immédiate.<br>
+          <b>S</b>hould (important, si le temps le permet) : multi-canal · statistiques de remplissage.<br>
+          <b>C</b>ould (confort) : mode sombre · fiche client.<br>
+          <b>W</b>on't (explicitement hors périmètre) : paiement, commande, multi-langues, mobile natif.</p>
         </div>
       </div>
     </div>
@@ -608,9 +633,6 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       <div class="j"><div class="m">Mai</div><div class="t">Jalon 5</div><p>Widget web, tests automatisés et durcissement sécurité.</p></div>
       <div class="j"><div class="m">Juin</div><div class="t">Jalon 6</div><p>Déploiement Railway, CI/CD, documentation et rapport final.</p></div>
     </div>
-    <div class="fig" style="margin-top:4px">
-      <img src="Jalon2/CALENDRIA - Planning Global du Projet (Janvier - Juin 2026).png" alt="Planning global du projet" onerror="this.style.display='none'">
-    </div>
     <div class="cols c4">
       <div class="card orange"><h4>⚠️ Risque</h4><p>Complexité de l'algorithme de tables → mocks de scénarios + tests exhaustifs.</p></div>
       <div class="card orange"><h4>⚠️ Risque</h4><p>Crédits API → Gemini Flash et Telegram en tier gratuit.</p></div>
@@ -621,7 +643,19 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="chrome"><span>IV — Méthodologie et organisation</span><span class="pg"></span></div>
 </section>
 
-<!-- ═══════════════ 16. SECTION : UI/UX ═══════════════ -->
+<!-- ═══════════════ 16. DIAGRAMME DE GANTT ═══════════════ -->
+<section class="slide" data-title="Planning de Gantt">
+  <div class="kicker">Section IV — Planification détaillée</div>
+  <h2>Le planning de Gantt du projet</h2>
+  <div class="rule"></div>
+  <div class="body"><div class="fig">
+    <img src="Jalon2/CALENDRIA - Planning Global du Projet (Janvier - Juin 2026).png" alt="Diagramme de Gantt du projet CALENDRIA">
+    <div class="cap">Janvier → juin 2026 — tâches et jalons découpés par sprint mensuel, avec les dépendances entre lots (modélisation avant API, API avant chatbot, chatbot avant déploiement)</div>
+  </div></div>
+  <div class="chrome"><span>IV — Méthodologie et organisation</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 17. SECTION : UI/UX ═══════════════ -->
 <section class="slide section" data-title="Partie 3 — Conception UI/UX">
   <div class="num">03</div>
   <h2>Conception UI / UX</h2>
@@ -750,22 +784,22 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       <div class="card"><span class="ico">🔗</span><h4>MLD — Logique</h4><p>Tables, clés primaires et étrangères, résolution des associations N:M.</p></div>
       <div class="card"><span class="ico">🗄️</span><h4>MPD — Physique</h4><p>Types SQL PostgreSQL 15, INDEX, contraintes CHECK, normalisation 3NF.</p></div>
     </div>
-    <h3 style="margin-top:6px">Les 9 entités du modèle</h3>
+    <h3 style="margin-top:6px">9 entités modélisées — <span style="color:var(--secondary)">6 implémentées dans le MVP</span></h3>
     <div class="cols c3">
-      <table class="t-sm"><tr><th>#</th><th>Entité</th><th>Rôle</th></tr>
-        <tr><td>1</td><td><b>RESTAURANT</b></td><td>Établissement racine</td></tr>
-        <tr><td>2</td><td><b>USER</b></td><td>Compte dashboard (JWT)</td></tr>
-        <tr><td>3</td><td><b>TABLE_RESTAURANT</b></td><td>Table physique</td></tr></table>
-      <table class="t-sm"><tr><th>#</th><th>Entité</th><th>Rôle</th></tr>
-        <tr><td>4</td><td><b>SERVICE</b></td><td>Midi / soir + jours d'ouverture</td></tr>
-        <tr><td>5</td><td><b>FERMETURE_EXCEPT.</b></td><td>Dates de fermeture</td></tr>
-        <tr><td>6</td><td><b>CLIENT</b></td><td>Personne qui réserve</td></tr></table>
-      <table class="t-sm"><tr><th>#</th><th>Entité</th><th>Rôle</th></tr>
-        <tr><td>7</td><td><b>RESERVATION</b></td><td>Entité centrale</td></tr>
-        <tr><td>8</td><td><b>CONVERSATION_IA</b></td><td>Historique multi-canal</td></tr>
-        <tr><td>9</td><td><b>NOTIFICATION_SMS</b></td><td>Confirmation / rappel</td></tr></table>
+      <table class="t-sm"><tr><th>Entité</th><th>Rôle</th><th>MVP</th></tr>
+        <tr><td><b>RESTAURANT</b></td><td>Établissement racine</td><td>✅</td></tr>
+        <tr><td><b>USER</b></td><td>Compte dashboard (JWT)</td><td>✅</td></tr>
+        <tr><td><b>TABLE_RESTAURANT</b></td><td>Table physique</td><td>✅</td></tr></table>
+      <table class="t-sm"><tr><th>Entité</th><th>Rôle</th><th>MVP</th></tr>
+        <tr><td><b>SERVICE</b></td><td>Midi / soir + jours d'ouverture</td><td>✅</td></tr>
+        <tr><td><b>CLIENT</b></td><td>Personne qui réserve</td><td>✅</td></tr>
+        <tr><td><b>RESERVATION</b></td><td>Entité centrale</td><td>✅</td></tr></table>
+      <table class="t-sm"><tr><th>Entité</th><th>Rôle</th><th>MVP</th></tr>
+        <tr><td>FERMETURE_EXCEPT.</td><td>Dates de fermeture</td><td>❌</td></tr>
+        <tr><td>CONVERSATION_IA</td><td>Historique multi-canal</td><td>❌</td></tr>
+        <tr><td>NOTIFICATION_SMS</td><td>Confirmation / rappel</td><td>❌</td></tr></table>
     </div>
-    <p class="note">Choix structurants : <code>jours_ouverture</code> en <b>JSONB</b> (souplesse sans table de jonction), <code>consentement_rgpd</code> + <code>date_consentement</code> portés par CLIENT, <code>table_id</code> nullable sur RESERVATION (réservation en attente d'attribution).</p>
+    <p class="note">Le MCD décrit la <strong>cible fonctionnelle</strong> ; le MVP en implémente 6 entités sur 9. Les sessions de dialogue vivent aujourd'hui dans le <strong>cache Symfony</strong> plutôt qu'en base — suffisant pour une conversation éphémère, à persister le jour où l'on voudra analyser les échanges. Choix structurants retenus : <code>jours_ouverture</code> en <b>JSON</b> (souplesse sans table de jonction), <code>consentement_rgpd</code> porté par CLIENT, <code>table_id</code> nullable sur RESERVATION (en attente d'attribution).</p>
   </div>
   <div class="chrome"><span>VI — Modélisation de la base de données</span><span class="pg"></span></div>
 </section>
@@ -777,7 +811,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="rule"></div>
   <div class="body"><div class="fig">
     <img src="Jalon3/MCD.png" alt="Modèle Conceptuel de Données">
-    <div class="cap">Figure 6.1 — MCD : entités métier, associations et cardinalités</div>
+    <div class="cap">Figure 6.1 — MCD : entités métier, associations et cardinalités. <b>Le MVP implémente 6 de ces 9 entités</b> ; FERMETURE_EXCEPTIONNELLE, CONVERSATION_IA et NOTIFICATION_SMS restent des évolutions planifiées.</div>
   </div></div>
   <div class="chrome"><span>VI — Modélisation de la base de données</span><span class="pg"></span></div>
 </section>
@@ -912,7 +946,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       <div>
         <h3>Principes SOLID appliqués</h3>
         <div class="card"><h4>SRP</h4><p>La séparation Controller / Service / Repository garantit qu'une classe n'a qu'une seule raison de changer.</p></div>
-        <div class="card" style="margin-top:8px"><h4>OCP</h4><p>Les State Providers / Persisters d'API Platform étendent le comportement sans modifier le cœur.</p></div>
+        <div class="card" style="margin-top:8px"><h4>OCP</h4><p>Ajouter un canal (Telegram, agent vocal) n'a demandé <strong>aucune modification</strong> de <code>DisponibiliteService</code> ni de <code>ReservationService</code> : seul un nouveau contrôleur-adaptateur a été ajouté.</p></div>
         <div class="card" style="margin-top:8px"><h4>DIP</h4><p>Injection de dépendances Symfony : les contrôleurs reçoivent leurs services par constructeur, jamais d'instanciation en dur.</p></div>
       </div>
     </div>
@@ -930,7 +964,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       <div>
 <pre class="sm"><span class="c">// DisponibiliteService — logique nominale</span>
 1. <span class="k">Restaurant</span> existe ?              <span class="c">→ sinon indisponible</span>
-2. <span class="k">Date</span> valide &amp; hors fermeture ?   <span class="c">→ sinon "ferme"</span>
+2. <span class="k">Date</span> au bon format ?           <span class="c">→ sinon "date invalide"</span>
 3. Un <span class="k">SERVICE</span> couvre-t-il l'heure ?  <span class="c">→ sinon "ferme"</span>
 4. Fenêtre d'occupation =
       <span class="n">duree_repas</span> + <span class="n">buffer_nettoyage</span>
@@ -958,6 +992,82 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="num">06</div>
   <h2>Sécurité, qualité &amp; déploiement</h2>
   <p>OWASP Top 10, conformité RGPD, politique de tests, containerisation et mise en production.</p>
+</section>
+
+<!-- ═══════════════ 34b. EXTRAIT DE CODE ═══════════════ -->
+<section class="slide" data-title="Extrait de code commenté">
+  <div class="kicker">Section VIII — Le code derrière l'algorithme</div>
+  <h2>Extrait commenté : <code>DisponibiliteService</code></h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c21">
+<pre class="sm"><span class="c">// 1. Trier les tables par capacité croissante</span>
+usort($tables, <span class="k">function</span> (Table $a, Table $b) {
+    <span class="k">if</span> ($a-&gt;getCapacite() === $b-&gt;getCapacite()) {
+        <span class="k">return</span> $a-&gt;getId() &lt;=&gt; $b-&gt;getId();
+    }
+    <span class="k">return</span> $a-&gt;getCapacite() &lt;=&gt; $b-&gt;getCapacite();
+});
+
+<span class="c">// 2. Ne garder que les tables assez grandes</span>
+$tablesCandidates = array_filter($tables, fn(Table $t) =&gt;
+    $t-&gt;getCapacite() &gt;= $nombrePersonnes);
+
+<span class="c">// 3. Fenêtre d'occupation, paramétrable par restaurant</span>
+$dureeTotale = ($restaurant-&gt;getDureeRepas()
+              + $restaurant-&gt;getBufferNettoyage()) * <span class="n">60</span>;
+$proposedEnd = $proposedStart + $dureeTotale;
+
+<span class="c">// 4. Test de chevauchement de deux intervalles [début, fin[</span>
+<span class="k">if</span> ($resStart &lt; $proposedEnd &amp;&amp; $proposedStart &lt; $resEnd) {
+    $estLibre = <span class="k">false</span>;   <span class="c">// table occupée</span>
+    <span class="k">break</span>;
+}</pre>
+      <div>
+        <h3>Ce que je défends dans ce code</h3>
+        <ul>
+          <li><strong>Le tri croissant est une décision métier</strong>, pas un détail : placer 2 personnes sur une table de 8 gâche 6 couverts pour tout le service.</li>
+          <li><strong>Le test de chevauchement</strong> <code>A.début &lt; B.fin &amp;&amp; B.début &lt; A.fin</code> couvre les 4 cas de recouvrement en une seule condition — plus sûr qu'une cascade de <code>if</code>.</li>
+          <li><strong>Aucun paramètre en dur</strong> : <code>dureeRepas</code> et <code>bufferNettoyage</code> viennent de l'entité RESTAURANT, donc modifiables depuis le dashboard sans redéploiement.</li>
+          <li><strong>Zéro SQL concaténé</strong> : la requête passe par le QueryBuilder Doctrine et <code>setParameter()</code>.</li>
+        </ul>
+        <div class="card green" style="margin-top:10px"><h4>Limite connue</h4><p>La détection de chevauchement se fait en PHP après chargement des réservations du jour. À l'échelle d'un restaurant (quelques dizaines de lignes) c'est négligeable ; en multi-restaurant, je la déplacerais dans la requête SQL.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>VIII — Architecture multi-couches</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 34c. JEU D'ESSAI ═══════════════ -->
+<section class="slide" data-title="Jeu d'essai">
+  <div class="kicker">Section X — Jeu d'essai</div>
+  <h2>Le jeu d'essai : des données reproductibles</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c21">
+      <div>
+        <table class="t-sm">
+          <tr><th>Donnée</th><th>Contenu du jeu d'essai</th><th>Pourquoi</th></tr>
+          <tr><td><b>1 compte admin</b></td><td><code>admin@calendria.com</code> / mot de passe haché Argon2id</td><td>Tester l'authentification JWT</td></tr>
+          <tr><td><b>1 restaurant</b></td><td>50 couverts · repas 90 min · buffer 15 min</td><td>Paramètres réalistes du turnover</td></tr>
+          <tr><td><b>10 tables</b></td><td>4 tables de 2 · 3 de 4 · 3 de 6 · intérieur et terrasse</td><td><b>Forcer l'algorithme à arbitrer</b> entre plusieurs capacités</td></tr>
+          <tr><td><b>2 services</b></td><td>Midi et soir, avec jours d'ouverture</td><td>Tester le cas « restaurant fermé »</td></tr>
+          <tr><td><b>Clients + réservations</b></td><td>Plusieurs statuts et créneaux</td><td>Tester les chevauchements et le plan de salle</td></tr>
+        </table>
+      </div>
+      <div>
+<pre class="sm"><span class="c"># Rejouer le jeu d'essai à l'identique</span>
+php bin/console doctrine:migrations:migrate
+php bin/console doctrine:fixtures:load
+
+<span class="c"># Même commande en CI, avant PHPUnit</span></pre>
+        <div class="card" style="margin-top:12px"><h4>Pourquoi des fixtures et non un dump SQL</h4><p>Le jeu d'essai est du <strong>code versionné</strong> : il évolue avec le schéma, se rejoue en une commande et donne le <strong>même état initial</strong> en local, en CI et en démo.</p></div>
+        <div class="card green" style="margin-top:8px"><h4>Le choix des 10 tables n'est pas décoratif</h4><p>Les capacités 2 / 4 / 6 sont choisies pour qu'une demande de 3 personnes n'ait <strong>aucune table exacte</strong> : c'est le cas qui prouve que l'algorithme prend bien la capacité immédiatement supérieure.</p></div>
+        <div class="pills" style="margin-top:10px"><span class="pill ok">Données 100% fictives</span><span class="pill ok">Conforme RGPD</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>X — Politique de tests</span><span class="pg"></span></div>
 </section>
 
 <!-- ═══════════════ 35. OWASP ═══════════════ -->
@@ -989,7 +1099,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="body">
     <div class="cols c2">
       <div class="card green"><h4>Minimisation des données</h4><p>Collecte réduite à l'essentiel : <strong>nom, téléphone, heure, couverts</strong>. L'email reste optionnel. Aucune donnée sensible au sens de l'article 9.</p></div>
-      <div class="card green"><h4>Consentement explicite</h4><p>Champs <code>consentement_rgpd</code> (BOOLEAN) et <code>date_consentement</code> (TIMESTAMP) portés par l'entité CLIENT — preuve horodatée.</p></div>
+      <div class="card green"><h4>Consentement explicite</h4><p>Champ <code>consentement_rgpd</code> (BOOLEAN) porté par l'entité CLIENT, positionné à la création de la réservation quel que soit le canal.</p></div>
       <div class="card green"><h4>Droit à l'oubli</h4><p>Suppression d'une fiche client depuis le dashboard, avec cascade maîtrisée en base de données.</p></div>
       <div class="card green"><h4>Durée de conservation</h4><p>Données clients : <strong>2 ans</strong> après la dernière réservation. Logs applicatifs : <strong>1 an</strong> maximum.</p></div>
       <div class="card green"><h4>Sécurisation des flux</h4><p>HTTPS bout en bout, base de données non exposée publiquement (réseau privé Railway).</p></div>
@@ -1208,19 +1318,20 @@ nginx:alpine
 <!-- ═══════════════ 44. BILAN ═══════════════ -->
 <section class="slide" data-title="Bilan fonctionnel">
   <div class="kicker">Section XV — Bilan</div>
-  <h2>Bilan : 15 fonctionnalités sur 17</h2>
+  <h2>Bilan : 14 fonctionnalités livrées sur 17</h2>
   <div class="rule"></div>
   <div class="body">
     <div class="kpis">
-      <div class="kpi accent"><div class="v">88%</div><div class="l">de couverture fonctionnelle (15/17)</div></div>
+      <div class="kpi accent"><div class="v">82%</div><div class="l">de couverture fonctionnelle (14/17)</div></div>
       <div class="kpi"><div class="v">12</div><div class="l">tests automatisés, 0 échec</div></div>
-      <div class="kpi"><div class="v">28</div><div class="l">endpoints d'API REST</div></div>
+      <div class="kpi"><div class="v">24</div><div class="l">endpoints d'API REST</div></div>
       <div class="kpi"><div class="v">3</div><div class="l">canaux de réservation livrés</div></div>
     </div>
     <div class="cols c3">
-      <div class="card green"><h4>✅ Livré</h4><ul class="check"><li>Dashboard CRUD complet</li><li>Plan de salle interactif</li><li>Chatbot IA Gemini</li><li>Bot Telegram</li><li>Agent vocal Retell AI</li><li>Algorithme de disponibilité</li></ul></div>
-      <div class="card green"><h4>✅ Livré (technique)</h4><ul class="check"><li>JWT RS256 + Argon2id</li><li>Rate limiting login</li><li>Docker multi-stage</li><li>CI/CD GitHub Actions</li><li>Déploiement Railway</li><li>Mode sombre persistant</li></ul></div>
-      <div class="card orange"><h4>🔄 Remplacé / partiel</h4><p><strong>WhatsApp &amp; SMS Twilio → Bot Telegram</strong> : même service rendu, sans barrière administrative ni coût.<br><br><strong>Statistiques avancées</strong> : indicateurs présents dans le dashboard, mais pas de module graphique dédié.</p></div>
+      <div class="card green"><h4>✅ Livré — métier</h4><ul class="check"><li>Dashboard CRUD complet</li><li>Plan de salle interactif</li><li>Algorithme d'attribution des tables</li><li>Disponibilité + alternatives à 30 min</li><li>Chatbot IA Gemini (widget web)</li><li>Widget embarquable en iframe</li><li>Bot Telegram</li></ul></div>
+      <div class="card green"><h4>✅ Livré — technique</h4><ul class="check"><li>JWT RS256 + Argon2id</li><li>Rate limiting login</li><li>Gestion tables &amp; services</li><li>Docker multi-stage</li><li>CI/CD GitHub Actions</li><li>Déploiement Railway</li><li>Mode sombre persistant</li></ul></div>
+      <div class="card orange"><h4>❌ Non livré (3)</h4><ul class="cross"><li><b>Fermetures exceptionnelles</b> — modélisées au MCD, non implémentées</li><li><b>Notifications SMS</b> — remplaçables par Telegram, coût Twilio non soutenable</li><li><b>Statistiques avancées</b> — indicateurs présents, pas de module graphique</li></ul>
+        <p class="note" style="margin-top:8px">Aucune de ces 3 absences n'est un échec technique : ce sont des arbitrages de périmètre assumés.</p></div>
     </div>
   </div>
   <div class="chrome"><span>XV — Conclusion</span><span class="pg"></span></div>
@@ -1237,7 +1348,7 @@ nginx:alpine
       <tr><td><b>Architecture logicielle</b></td><td>API REST Symfony 6.4 + SPA React — séparation stricte back / front, 4 couches, SOLID</td></tr>
       <tr><td><b>Base de données relationnelle</b></td><td>PostgreSQL 15 + Doctrine ORM + démarche MERISE complète (MCD → MLD → MPD), 3NF</td></tr>
       <tr><td><b>Sécurité applicative</b></td><td>JWT RS256, Argon2id, rate limiting, CORS, conformité OWASP Top 10 et RGPD</td></tr>
-      <tr><td><b>Intégration d'API externes</b></td><td>Google Gemini 2.5 Flash, Telegram Bot API, Retell AI (webhooks entrants et sortants)</td></tr>
+      <tr><td><b>Intégration d'API externes</b></td><td>Google Gemini 2.5 Flash, Telegram Bot API, webhook générique pour agent vocal (entrants et sortants)</td></tr>
       <tr><td><b>Containerisation</b></td><td>Docker multi-stage (nginx + PHP-FPM + supervisord), Docker Compose en développement</td></tr>
       <tr><td><b>CI/CD &amp; déploiement continu</b></td><td>GitHub Actions (PHPUnit + build TypeScript), déploiement automatique sur Railway</td></tr>
       <tr><td><b>Tests automatisés</b></td><td>PHPUnit unitaires et fonctionnels, TypeScript en mode strict</td></tr>
@@ -1313,11 +1424,19 @@ nginx:alpine
         <li style="border-left-color:#8FD0F0"><b>Le code remis au restaurateur</b><code style="background:rgba(0,0,0,.3);color:#9BE7A8;font-size:11px">&lt;iframe src="…/widget?restaurantId=4"&gt;</code></li>
       </ul>
       <p class="thanks"><strong style="color:#fff">Merci de votre attention</strong> — je suis à votre disposition pour vos questions.</p>
-      <div class="meta">
-        <div><b>Production</b>frontend-production-8a43.up.railway.app</div>
-        <div><b>API</b>backend-production-dd10b.up.railway.app</div>
-        <div><b>Dépôt</b>github.com/SafiBougherara/projet_fin_annee</div>
-        <div><b>Compte de démo</b>admin@calendria.com</div>
+      <div class="bottom">
+        <div class="qr">
+          <img src="qr-telegram.png"
+               onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&amp;data=https://t.me/CalendriaResaBot'"
+               alt="QR code du bot Telegram @CalendriaResaBot">
+          <span>Scannez → @CalendriaResaBot</span>
+        </div>
+        <div class="meta">
+          <div><b>Production</b>frontend-production-8a43.up.railway.app</div>
+          <div><b>API</b>backend-production-dd10b.up.railway.app</div>
+          <div><b>Dépôt</b>github.com/SafiBougherara/projet_fin_annee</div>
+          <div><b>Compte de démo</b>admin@calendria.com</div>
+        </div>
       </div>
     </div>
     <div class="live">
@@ -1329,12 +1448,34 @@ nginx:alpine
   <div class="chrome"><span>BOUGHERARA Safi — Formation CDA — Promotion 2025-2026</span><span class="pg"></span></div>
 </section>
 
+<!-- ═══════════════ ANNEXE : QUESTIONS ANTICIPÉES (slide de réserve) ═══════════════ -->
+<section class="slide" data-title="Annexe — Questions anticipées">
+  <div class="kicker">Annexe — à garder en réserve pendant les questions</div>
+  <h2>Questions anticipées</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <table class="t-sm">
+      <tr><th style="width:300px">Question probable</th><th>Ma réponse en une phrase</th></tr>
+      <tr><td><b>Pourquoi PostgreSQL et pas MySQL ?</b></td><td>Contraintes d'intégrité plus strictes, type JSON natif pour <code>jours_ouverture</code>, et meilleure gestion des accès concurrents — critique quand 3 canaux réservent en même temps.</td></tr>
+      <tr><td><b>Pourquoi pas de refresh token ?</b></td><td>Arbitrage de périmètre : le MVP vise un usage de bureau où le restaurateur se reconnecte. C'est la première évolution sécurité prévue.</td></tr>
+      <tr><td><b>Comment teste-t-on une IA non déterministe ?</b></td><td>On ne teste pas la réponse de Gemini : on teste les <strong>services métier</strong> qu'elle appelle, avec des mocks. La couche IA extrait des variables, la décision reste déterministe.</td></tr>
+      <tr><td><b>Pourquoi une seule branche Git ?</b></td><td>Trunk-based development : seul sur le projet, des branches de feature que j'ouvre et fusionne moi-même n'apportent rien. La CI bloquante joue le rôle du relecteur.</td></tr>
+      <tr><td><b>Que se passe-t-il si Gemini tombe ?</b></td><td>Le chatbot renvoie un message d'erreur maîtrisé ; le dashboard et la création manuelle de réservation restent pleinement fonctionnels. L'IA est un canal, pas le cœur.</td></tr>
+      <tr><td><b>Pourquoi <code>/api/chatbot/call</code> renvoie toujours 200 ?</b></td><td>L'agent vocal interprète tout code non-200 comme une erreur fatale et raccroche. Les erreurs métier passent donc par le corps JSON, pas par le code HTTP.</td></tr>
+      <tr><td><b>Comment passer en multi-restaurant ?</b></td><td>Les clés étrangères sont déjà en place ; il faut ajouter le filtrage par restaurant dans les requêtes et un sélecteur côté dashboard. Aucune migration structurelle.</td></tr>
+      <tr><td><b>Où sont stockés les secrets ?</b></td><td>Jamais dans Git : variables d'environnement Railway chiffrées au repos, clés JWT générées au build Docker, token Telegram révocable en une commande.</td></tr>
+    </table>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
 <div id="bar"></div>
 </div>
 </div>
 
 <div id="timer">00:00</div>
-<div id="hint">← → navigation · ↑ ↓ images · <b>O</b> vue d'ensemble · <b>T</b> chrono · <b>F</b> plein écran · <b>Ctrl+P</b> PDF</div>
+<div id="lb"><button class="close" type="button" title="Réduire (Échap)">✕</button><img alt=""></div>
+<div id="hint">← → navigation · ↑ ↓ images · <b>Z</b> agrandir · <b>O</b> vue d'ensemble · <b>T</b> chrono · <b>F</b> plein écran</div>
 <div id="overview"></div>
 
 <script>
@@ -1396,6 +1537,27 @@ nginx:alpine
     go(0);
   });
 
+  /* --- agrandissement d'image --- */
+  const lb = document.getElementById('lb');
+  const lbImg = lb.querySelector('img');
+  const zoomOut = () => lb.classList.remove('on');
+  const zoomIn = img => { if (!img) return; lbImg.src = img.currentSrc || img.src; lb.classList.add('on'); };
+  lb.addEventListener('click', zoomOut);
+
+  document.querySelectorAll('.fig, .cstage').forEach(box => {
+    if (!box.querySelector('img')) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'zoombtn';
+    btn.title = "Agrandir l'image";
+    btn.textContent = '⤢';
+    btn.addEventListener('click', e => {
+      e.stopPropagation();   /* sinon le carrousel changerait d'image */
+      zoomIn(box.querySelector('img.on') || box.querySelector('img'));
+    });
+    box.appendChild(btn);
+  });
+
   /* --- chrono de soutenance --- */
   let t0 = null, tick = null;
   function toggleTimer(){
@@ -1409,6 +1571,7 @@ nginx:alpine
 
   document.addEventListener('keydown', e => {
     const k = e.key;
+    if (lb.classList.contains('on')) { e.preventDefault(); zoomOut(); return; }
     if (k === 'ArrowRight' || k === 'PageDown' || k === ' ') { e.preventDefault(); next(); }
     else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); prev(); }
     else if (k === 'Home') show(0);
@@ -1418,6 +1581,10 @@ nginx:alpine
       if (c) { e.preventDefault(); c._step(k === 'ArrowDown' ? 1 : -1); }
     }
     else if (k === 'o' || k === 'O') ov.classList.toggle('on');
+    else if (k === 'z' || k === 'Z') {
+      const box = slides[idx].querySelector('.cstage, .fig');
+      if (box) zoomIn(box.querySelector('img.on') || box.querySelector('img'));
+    }
     else if (k === 'Escape') ov.classList.remove('on');
     else if (k === 't' || k === 'T') toggleTimer();
     else if (k === 'f' || k === 'F') {
