@@ -1,227 +1,341 @@
 @startuml Class_Diagram
-title **CALENDRIA – Diagramme de Classes (UML Focus Back-end)**\nArchitecture par packages (MVC / Doctrine)
+' =====================================================================
+'  CALENDRIA - Diagramme de classes (back-end Symfony)
+'
+'  Ce diagramme decrit le code REELLEMENT LIVRE :
+'  6 entites Doctrine, 6 repositories, 2 services metier, 4 controleurs.
+'
+'  Corrections apportees par rapport a la version precedente :
+'   - dates et heures typees DateTime / DateTimeImmutable (et non string)
+'   - Restaurant - User : association simple (et non composition), un
+'     utilisateur pouvant n'etre rattache a aucun restaurant
+'   - Client 0..1 ConversationIA : la conversation demarre avant
+'     l'identification de l'appelant
+'   - dependances reelles des services et des controleurs
+'   - signatures completes (parametres typees, add/remove symetriques)
+'   - suppression des classes fictives : ConversationIA, NotificationSMS,
+'     FermetureExceptionnelle, ReservationService, NotificationService et
+'     les controleurs API Platform ne sont pas implementes dans le MVP
+' =====================================================================
 
-skinparam backgroundColor #FEFEFE
-skinparam roundCorner 8
+title CALENDRIA - Diagramme de classes du back-end (code livre)
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
 skinparam classFontSize 12
-skinparam packageFontSize 14
+skinparam classAttributeFontSize 11
+skinparam packageFontSize 13
+skinparam nodesep 35
+skinparam ranksep 55
 
-' Couleurs pour lisibilité
 skinparam class {
-    BackgroundColor #FAFBFC
-    BorderColor #2E86C1
-    HeaderBackgroundColor #2E86C1
-    HeaderFontColor White
-    FontColor #2C3E50
-    StereotypeFontColor White
+  BackgroundColor #FFFFFF
+  BorderColor #000000
 }
-
 skinparam package {
-    BackgroundColor #F8F9F9
-    BorderColor #1A5276
+  BackgroundColor #FFFFFF
+  BorderColor #000000
 }
 
 ' ─────────────────────────────────────────────
-' PACKAGE ENTITIES (Modèle ORM)
+'  ENUMERATIONS
+'  Valeurs aujourd'hui portees par des chaines en base ;
+'  la migration vers des enums PHP 8.1 est identifiee
+'  comme amelioration (cf. section Perspectives).
 ' ─────────────────────────────────────────────
+
+package "Valeurs metier" <<Frame>> {
+  enum StatutReservation <<amelioration identifiee>> {
+    CONFIRMEE
+    ARRIVEE
+    ANNULEE
+    NO_SHOW
+  }
+  enum TypeService <<amelioration identifiee>> {
+    MIDI
+    SOIR
+  }
+  enum TypeTable <<amelioration identifiee>> {
+    INTERIEUR
+    TERRASSE
+  }
+}
+
+' ─────────────────────────────────────────────
+'  PACKAGE ENTITY
+' ─────────────────────────────────────────────
+
 package "src/Entity" {
-    
-    class Restaurant {
-        - id: int
-        - nom: string
-        - adresse: string
-        - telephone: string
-        - email: string
-        - capaciteTotale: int
-        - dureeRepas: int
-        - bufferNettoyage: int
-        --
-        + addTable()
-        + addService()
-        + getTables()
-    }
 
-    class User {
-        - id: int
-        - email: string
-        - roles: array
-        - password: string
-        --
-        + getRoles()
-        + eraseCredentials()
-    }
+  class Restaurant {
+    - id : int
+    - nom : string
+    - adresse : string
+    - telephone : string
+    - email : string
+    - capaciteTotale : int
+    - dureeRepas : int
+    - bufferNettoyage : int
+    - createdAt : DateTimeImmutable
+    --
+    + getTables() : Collection<Table>
+    + addTable(table : Table) : static
+    + removeTable(table : Table) : static
+    + getServices() : Collection<Service>
+    + addService(service : Service) : static
+    + removeService(service : Service) : static
+    + getDureeRepas() : int
+    + getBufferNettoyage() : int
+  }
 
-    class TableRestaurant {
-        - id: int
-        - numeroTable: int
-        - capacite: int
-        - type: string
-        - statut: string
-        --
-        + getStatut()
-        + setStatut()
-    }
+  class User <<UserInterface>> {
+    - id : int
+    - email : string
+    - roles : array
+    - password : string
+    --
+    + getUserIdentifier() : string
+    + getRoles() : array
+    + getPassword() : string
+    + eraseCredentials() : void
+  }
 
-    class Service {
-        - id: int
-        - type: string
-        - heureDebut: datetime
-        - heureFin: datetime
-        - joursOuverture: array
-    }
+  class Table {
+    - id : int
+    - numeroTable : string
+    - capacite : int
+    - type : string
+    - statut : string
+    - createdAt : DateTimeImmutable
+    --
+    + getCapacite() : int
+    + getStatut() : string
+    + setStatut(statut : string) : static
+  }
 
-    class FermetureExceptionnelle {
-        - id: int
-        - dateFermeture: date
-        - motif: string
-    }
+  class Service {
+    - id : int
+    - type : string
+    - heureDebut : DateTime
+    - heureFin : DateTime
+    - joursOuverture : array
+    - createdAt : DateTimeImmutable
+    --
+    + getHeureDebut() : DateTime
+    + getHeureFin() : DateTime
+    + getJoursOuverture() : array
+  }
 
-    class Client {
-        - id: int
-        - nom: string
-        - telephone: string
-        - email: string
-        - preferences: array
-        - consentementRgpd: bool
-        - tauxNoshow: float
-        --
-        + recalculerNoshow()
-    }
+  class Client {
+    - id : int
+    - nom : string
+    - telephone : string
+    - email : ?string
+    - preferences : ?array
+    - consentementRgpd : bool
+    - /tauxNoshow : ?float
+    - createdAt : DateTimeImmutable
+    --
+    + isConsentementRgpd() : bool
+    + setConsentementRgpd(v : bool) : static
+    + getReservations() : Collection<Reservation>
+  }
 
-    class Reservation {
-        - id: int
-        - dateReservation: date
-        - heureReservation: time
-        - nombrePersonnes: int
-        - statut: string
-        - demandesSpeciales: text
-        --
-        + getStatut()
-        + setStatut()
-    }
+  class Reservation {
+    - id : int
+    - dateReservation : DateTime
+    - heureReservation : DateTime
+    - nombrePersonnes : int
+    - statut : string
+    - demandesSpeciales : ?string
+    - createdAt : DateTimeImmutable
+    --
+    + getDateReservation() : DateTime
+    + getHeureReservation() : DateTime
+    + getTableReservee() : ?Table
+    + setTableReservee(t : ?Table) : static
+    + getStatut() : string
+    + setStatut(statut : string) : static
+  }
 
-    class ConversationIA {
-        - id: int
-        - telephoneAppelant: string
-        - canal: string
-        - dateDebut: datetime
-        - transcription: text
-        - donneesCollectees: json
-        - statut: string
-    }
-
-    class NotificationSMS {
-        - id: int
-        - telephoneDestinataire: string
-        - message: text
-        - type: string
-        - statutEnvoi: string
-        - dateEnvoi: datetime
-        - idExterneTwilio: string
-    }
-
-    ' Relations ORM
-    Restaurant "1" *-- "0..*" TableRestaurant
-    Restaurant "1" *-- "0..*" Service
-    Restaurant "1" *-- "0..*" FermetureExceptionnelle
-    Restaurant "1" *-- "0..*" User
-    Restaurant "1" -- "0..*" Reservation
-    Client "1" -- "0..*" Reservation
-    Client "1" -- "0..*" ConversationIA
-    Reservation "1" -- "0..*" NotificationSMS
-    Reservation "0..1" -- "0..1" ConversationIA
-    TableRestaurant "0..1" -- "0..*" Reservation
+  ' Relations Doctrine reelles
+  Restaurant "1" *-- "0..*" Table : orphanRemoval
+  Restaurant "1" *-- "0..*" Service
+  Restaurant "1" o-- "0..*" Reservation
+  Client "1" o-- "0..*" Reservation
+  Table "0..1" o-- "0..*" Reservation : tableReservee
 }
 
+Reservation ..> StatutReservation : <<devrait utiliser>>
+Service ..> TypeService : <<devrait utiliser>>
+Table ..> TypeTable : <<devrait utiliser>>
+
+note right of User
+  Aucune association Restaurant - User dans le MVP.
+  La composition precedente etait erronee : elle
+  interdisait un gerant multi-etablissements et un
+  super-administrateur rattache a aucun restaurant.
+  Une association simple sera ajoutee au passage
+  en multi-restaurant.
+end note
+
+note bottom of Client
+  Client n'est pas rattache a un Restaurant :
+  findOneBy(telephone) est donc global.
+  En multi-restaurant, consentementRgpd et
+  tauxNoshow devraient etre portes par une
+  classe d'association Client - Restaurant.
+end note
+
 ' ─────────────────────────────────────────────
-' PACKAGE REPOSITORIES (Accès Données)
+'  PACKAGE REPOSITORY
 ' ─────────────────────────────────────────────
+
 package "src/Repository" {
-    class RestaurantRepository <<Repository>> {
-        + findActif()
-    }
-    class ReservationRepository <<Repository>> {
-        + findByDate(date)
-        + findConflits(date, heure, table)
-    }
-    class ClientRepository <<Repository>> {
-        + findByTelephone(tel)
-    }
-    class "..." as autresRep <<Repository>> {
-        + (Autres Repositories)
-    }
+  class RestaurantRepository <<Repository>> {
+    + find(id : int) : ?Restaurant
+    + findAll() : array
+  }
+  class ReservationRepository <<Repository>> {
+    + createQueryBuilder(alias : string) : QueryBuilder
+    + findBy(criteria : array) : array
+  }
+  class ClientRepository <<Repository>> {
+    + findOneBy(criteria : array) : ?Client
+  }
+  class TableRepository <<Repository>> {
+    + find(id : int) : ?Table
+    + findBy(criteria : array) : array
+  }
+  class ServiceRepository <<Repository>> {
+    + findBy(criteria : array) : array
+  }
+  class UserRepository <<Repository>> {
+    + findOneBy(criteria : array) : ?User
+  }
 
-    ReservationRepository .up.> Reservation : manipule >
-    RestaurantRepository .up.> Restaurant : manipule >
-    ClientRepository .up.> Client : manipule >
+  RestaurantRepository ..> Restaurant
+  ReservationRepository ..> Reservation
+  ClientRepository ..> Client
+  TableRepository ..> Table
+  ServiceRepository ..> Service
+  UserRepository ..> User
 }
 
 ' ─────────────────────────────────────────────
-' PACKAGE SERVICES (Logique Métier métier)
+'  PACKAGE SERVICE
 ' ─────────────────────────────────────────────
+
 package "src/Service" {
-    
-    class ChatbotService <<Service>> {
-        - openaiClient
-        --
-        + traiterMessage(tel, canal, message)
-    }
 
-    class DisponibiliteService <<Service>> {
-        --
-        + verifierDisponibilite(rest_id, date, heure, nb)
-        + proposerAlternatives()
-    }
+  class DisponibiliteService <<Service>> {
+    - entityManager : EntityManagerInterface
+    - reservationRepository : ReservationRepository
+    - restaurantRepository : RestaurantRepository
+    --
+    + verifierDisponibilite(restaurantId : int, date : string,\n heure : string, nombrePersonnes : int) : array
+    + verifierTableSpecifiqueDisponible(restaurantId : int,\n tableId : int, date : string, heure : string) : bool
+    - trouverTableDisponible(restaurant : Restaurant,\n creneau : DateTime, nombrePersonnes : int) : ?Table
+    - trouverAlternatives(restaurant : Restaurant,\n creneau : DateTime, nombrePersonnes : int) : array
+  }
 
-    class ReservationService <<Service>> {
-        --
-        + creerReservation(data)
-        + changerStatut(id, nv_statut)
-    }
+  class ChatbotService <<Service>> {
+    - entityManager : EntityManagerInterface
+    - restaurantRepository : RestaurantRepository
+    - clientRepository : ClientRepository
+    - tableRepository : TableRepository
+    - disponibiliteService : DisponibiliteService
+    - httpClient : HttpClientInterface
+    - cache : CacheInterface
+    - geminiApiKey : string
+    --
+    + traiterMessage(sessionId : string, restaurantId : int,\n message : string) : array
+  }
 
-    class NotificationService <<Service>> {
-        - twilioClient
-        --
-        + envoyerConfirmation(resa_id)
-        + envoyerRappel(resa_id)
-    }
-
-    ' Dépendances Services -> Repositories
-    ChatbotService ..> ClientRepository : utilise >
-    DisponibiliteService ..> ReservationRepository : utilise >
-    ReservationService ..> ReservationRepository : utilise >
+  ChatbotService ..> DisponibiliteService : delegue la\nverification >
+  ChatbotService ..> ClientRepository
+  ChatbotService ..> RestaurantRepository
+  ChatbotService ..> TableRepository
+  DisponibiliteService ..> ReservationRepository
+  DisponibiliteService ..> RestaurantRepository
 }
 
 ' ─────────────────────────────────────────────
-' PACKAGE CONTROLLERS (API REST)
+'  PACKAGE CONTROLLER
 ' ─────────────────────────────────────────────
+
 package "src/Controller" {
-    class AuthController <<Controller>> {
-        + register()
-        + login()
-    }
 
-    class ChatbotController <<Controller>> {
-        + webhookWhatsApp()
-        + apiWidget()
-    }
+  class AuthController <<Controller>> {
+    - entityManager : EntityManagerInterface
+    - passwordHasher : UserPasswordHasherInterface
+    --
+    + health() : JsonResponse
+    + register(request : Request) : JsonResponse
+    + login() : JsonResponse
+  }
 
-    class ApiPlatformControllers <<API>> {
-        + (Générés par API Platform)
-    }
+  class ChatbotController <<Controller>> {
+    - telegramBotToken : string
+    - telegramBotUsername : string
+    --
+    + config() : JsonResponse
+    + init(restaurantId : int) : JsonResponse
+    + message(request : Request) : JsonResponse
+    + telegram(request : Request) : JsonResponse
+    + callWebhook(request : Request) : JsonResponse
+  }
 
-    ' Dépendances Controllers -> Services
-    ChatbotController ..> ChatbotService : injecte >
-    ApiPlatformControllers ..> ReservationService : events >
+  class ReservationController <<Controller>> {
+    + listRestaurants() : JsonResponse
+    + listTables() : JsonResponse
+    + listReservations() : JsonResponse
+    + createReservation(request : Request) : JsonResponse
+    + updateReservation(id : int, request : Request) : JsonResponse
+    + deleteReservation(id : int) : JsonResponse
+  }
+
+  class RestaurantAdminController <<Controller>> {
+    + createRestaurant(request : Request) : JsonResponse
+    + updateRestaurant(id : int, request : Request) : JsonResponse
+    + deleteRestaurant(id : int) : JsonResponse
+    + createTable(request : Request) : JsonResponse
+    + updateTable(id : int, request : Request) : JsonResponse
+    + deleteTable(id : int) : JsonResponse
+    + listServices(id : int) : JsonResponse
+    + createService(request : Request) : JsonResponse
+    + updateService(id : int, request : Request) : JsonResponse
+    + deleteService(id : int) : JsonResponse
+  }
+
+  AuthController ..> UserRepository
+  ChatbotController ..> ChatbotService
+  ChatbotController ..> DisponibiliteService
+  ReservationController ..> DisponibiliteService
+  ReservationController ..> ReservationRepository
+  RestaurantAdminController ..> RestaurantRepository
 }
 
-' LÉGENDE
+' ─────────────────────────────────────────────
+'  LEGENDE
+' ─────────────────────────────────────────────
+
 legend bottom
-  **Architecture Multi-Couches :**
-  **Controllers** : Expose l'API REST et route les requêtes (API Platform s'en charge pour le CRUD standard).
-  **Services** : Contient toute la logique métier complexe (algorithmes de dispo, appel IA, Twilio), évitant les "Fat Controllers".
-  **Repositories** : Couche d'accès exclusive à la BDD (requêtes DQL/SQL).
-  **Entities** : POJO (Plain Old Java/PHP Object) mappés à la base de données.
+  Architecture en quatre couches
+  ====
+  Controller : expose l'API REST, ne contient aucune regle metier
+  Service : logique metier (disponibilite, dialogue) testable hors HTTP
+  Repository : seul point d'acces a la base, en DQL
+  Entity : objets Doctrine mappes sur les tables
+  ----
+  Notations
+  ====
+  losange plein = composition (le tout supprime ses parties)
+  losange creux = agregation (les parties survivent au tout)
+  /attribut = attribut derive (calculable, non stocke a terme)
+  <<amelioration identifiee>> = evolution documentee, non implementee dans le MVP
 endlegend
 
 @enduml

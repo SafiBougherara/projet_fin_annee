@@ -780,15 +780,15 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="rule"></div>
   <div class="body">
     <div class="cols c3">
-      <div class="card"><span class="ico">🧠</span><h4>MCD — Conceptuel</h4><p>Entités métier, associations et cardinalités. <strong>Indépendant de toute technologie.</strong></p></div>
-      <div class="card"><span class="ico">🔗</span><h4>MLD — Logique</h4><p>Tables, clés primaires et étrangères, résolution des associations N:M.</p></div>
+      <div class="card"><span class="ico">🧠</span><h4>MCD — Conceptuel</h4><p>Entités, propriétés, associations en <strong>ovales</strong> et cardinalités. <strong>Ni table, ni clé.</strong></p></div>
+      <div class="card"><span class="ico">🔗</span><h4>MLD — Logique</h4><p>C'est <strong>ici seulement</strong> qu'apparaissent tables, clés primaires et clés étrangères.</p></div>
       <div class="card"><span class="ico">🗄️</span><h4>MPD — Physique</h4><p>Types SQL PostgreSQL 15, INDEX, contraintes CHECK, normalisation 3NF.</p></div>
     </div>
     <h3 style="margin-top:6px">9 entités modélisées — <span style="color:var(--secondary)">6 implémentées dans le MVP</span></h3>
     <div class="cols c3">
       <table class="t-sm"><tr><th>Entité</th><th>Rôle</th><th>MVP</th></tr>
         <tr><td><b>RESTAURANT</b></td><td>Établissement racine</td><td>✅</td></tr>
-        <tr><td><b>USER</b></td><td>Compte dashboard (JWT)</td><td>✅</td></tr>
+        <tr><td><b>UTILISATEUR</b></td><td>Compte dashboard (JWT)</td><td>✅</td></tr>
         <tr><td><b>TABLE_RESTAURANT</b></td><td>Table physique</td><td>✅</td></tr></table>
       <table class="t-sm"><tr><th>Entité</th><th>Rôle</th><th>MVP</th></tr>
         <tr><td><b>SERVICE</b></td><td>Midi / soir + jours d'ouverture</td><td>✅</td></tr>
@@ -797,7 +797,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       <table class="t-sm"><tr><th>Entité</th><th>Rôle</th><th>MVP</th></tr>
         <tr><td>FERMETURE_EXCEPT.</td><td>Dates de fermeture</td><td>❌</td></tr>
         <tr><td>CONVERSATION_IA</td><td>Historique multi-canal</td><td>❌</td></tr>
-        <tr><td>NOTIFICATION_SMS</td><td>Confirmation / rappel</td><td>❌</td></tr></table>
+        <tr><td>NOTIFICATION</td><td>Confirmation / rappel</td><td>❌</td></tr></table>
     </div>
     <p class="note">Le MCD décrit la <strong>cible fonctionnelle</strong> ; le MVP en implémente 6 entités sur 9. Les sessions de dialogue vivent aujourd'hui dans le <strong>cache Symfony</strong> plutôt qu'en base — suffisant pour une conversation éphémère, à persister le jour où l'on voudra analyser les échanges. Choix structurants retenus : <code>jours_ouverture</code> en <b>JSON</b> (souplesse sans table de jonction), <code>consentement_rgpd</code> porté par CLIENT, <code>table_id</code> nullable sur RESERVATION (en attente d'attribution).</p>
   </div>
@@ -811,7 +811,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="rule"></div>
   <div class="body"><div class="fig">
     <img src="Jalon3/MCD.png" alt="Modèle Conceptuel de Données">
-    <div class="cap">Figure 6.1 — MCD : entités métier, associations et cardinalités. <b>Le MVP implémente 6 de ces 9 entités</b> ; FERMETURE_EXCEPTIONNELLE, CONVERSATION_IA et NOTIFICATION_SMS restent des évolutions planifiées.</div>
+    <div class="cap">Figure 6.1 — MCD au formalisme MERISE : entités en rectangles, <b>associations en ovales</b>, cardinalités (min,max) sur chaque patte. <b>Aucune clé primaire ni étrangère à ce niveau</b> — elles apparaissent au MLD. Le MVP implémente 6 de ces 9 entités.</div>
   </div></div>
   <div class="chrome"><span>VI — Modélisation de la base de données</span><span class="pg"></span></div>
 </section>
@@ -854,7 +854,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="rule"></div>
   <div class="body"><div class="fig">
     <img src="Jalon4/diagramme_cas_utilisation.png" alt="Diagramme des cas d'utilisation">
-    <div class="cap">Figure 7.1 — <b>3 acteurs</b> : le Client (réserve via l'un des 3 canaux), le Restaurateur (pilote depuis le dashboard), le Système automatique (IA et traitements planifiés) · <b>3 packages</b> : Dashboard, IA multi-canal, Traitement automatique</div>
+    <div class="cap">Figure 7.1 — <b>3 acteurs</b> : le Client, le Restaurateur, l'Assistant IA (acteur système) · associations en <b>traits simples</b> · <code>&lt;&lt;include&gt;&gt;</code> part du cas de base, <code>&lt;&lt;extend&gt;&gt;</code> part au contraire du cas d'extension · seules les fonctionnalités <b>réellement livrées</b> figurent au diagramme</div>
   </div></div>
   <div class="chrome"><span>VII — Conception de l'application (UML)</span><span class="pg"></span></div>
 </section>
@@ -866,7 +866,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="rule"></div>
   <div class="body"><div class="fig">
     <img src="Jalon4/sequence_reservation_chatbot.png" alt="Séquence réservation via chatbot">
-    <div class="cap">Figure 7.2 — Collecte itérative des données, appel Gemini, puis orchestration <code>ChatbotService</code> → <code>DisponibiliteService</code> → <code>ReservationService</code></div>
+    <div class="cap">Figure 7.2 — Collecte itérative via Gemini, délégation à <code>DisponibiliteService</code>, puis persistance Doctrine. <b>Chaque accès à PostgreSQL porte sa flèche de retour</b> : le <code>flush()</code> est synchrone et transactionnel. L'état de session vit dans le cache Symfony, pas en base.</div>
   </div></div>
   <div class="chrome"><span>VII — Conception de l'application (UML)</span><span class="pg"></span></div>
 </section>
@@ -901,7 +901,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="rule"></div>
   <div class="body"><div class="fig">
     <img src="Jalon4/diagramme_classes.png" alt="Diagramme de classes UML">
-    <div class="cap">Figure 7.4 — <b>Entity</b> (POPO Doctrine) · <b>Repository</b> (accès aux données en DQL) · <b>Service</b> (logique métier et intégrations) · <b>Controller</b> (exposition HTTP). Le diagramme va au-delà du MLD : il montre la traduction des concepts métier en objets PHP.</div>
+    <div class="cap">Figure 7.4 — Le <b>code réellement livré</b> : 6 entités Doctrine, 6 repositories, 2 services métier, 4 contrôleurs. Les évolutions non implémentées (enums PHP, attributs dérivés, association Restaurant–User) portent le stéréotype <code>&lt;&lt;amélioration identifiée&gt;&gt;</code>.</div>
   </div></div>
   <div class="chrome"><span>VII — Conception de l'application (UML)</span><span class="pg"></span></div>
 </section>
@@ -1161,23 +1161,27 @@ Time: 00:02.841, Memory: 32.00 MB</span></pre>
 
 ┌─ <span class="k">JOB : Backend CI</span> ──────────────────┐
 │  ubuntu-latest + service PostgreSQL 15 │
-│  1. Checkout                           │
-│  2. Setup PHP 8.4                      │
-│  3. composer install                   │
-│  4. openssl genrsa  <span class="c">(clés JWT)</span>         │
-│  5. doctrine:migrations:migrate        │
-│  6. vendor/bin/phpunit                 │
+│  1. Setup PHP 8.4 + composer install   │
+│  2. openssl genrsa  <span class="c">(clés JWT)</span>         │
+│  3. doctrine:migrations:migrate        │
+│  4. vendor/bin/phpunit                 │
 └────────────────────────────────────────┘
           <span class="c">│ en parallèle</span>
 ┌─ <span class="k">JOB : Frontend CI</span> ─────────────────┐
-│  1. Checkout                           │
-│  2. Setup Node.js 20                   │
-│  3. npm install                        │
-│  4. npm run build  <span class="c">(tsc -b puis Vite)</span> │
+│  1. Setup Node.js 20 + npm install     │
+│  2. npm run build  <span class="c">(tsc -b puis Vite)</span> │
+└────────────────────────────────────────┘
+          <span class="c">│ en parallèle</span>
+┌─ <span class="n">JOB : Security CI</span> ─────────────────┐
+│  1. Checkout <span class="c">historique complet</span>       │
+│  2. <span class="s">composer audit --locked</span>            │
+│  3. <span class="s">npm audit --audit-level=high</span>       │
+│  4. <span class="s">gitleaks detect --exit-code 1</span>      │
 └────────────────────────────────────────┘</pre>
       <div>
-        <div class="fig" style="max-height:230px"><img src="Jalon6/cicd_pipeline.png" alt="Pipeline CI/CD"></div>
-        <div class="card green" style="margin-top:10px"><h4>Règle de merge</h4><p>Aucun merge sur <code>main</code> si un job échoue. Le déploiement Railway est déclenché automatiquement depuis GitHub après une CI verte.</p></div>
+        <div class="card red"><h4>🔐 Le 3<sup>e</sup> job : sécurité</h4><p>Un pipeline qui ne vérifie que la compilation laisse passer deux incidents très courants : la <strong>dépendance vulnérable</strong> et le <strong>secret commité</strong>. Gitleaks analyse <strong>tout l'historique Git</strong>, pas seulement le dernier commit.</p></div>
+        <div class="quote" style="margin-top:10px">Dès sa première exécution, le job a détecté <strong>4 vulnérabilités</strong> dont <strong>3 « high » sur react-router</strong> (open redirect, XSS, déni de service). Corrigées, build revalidé. Elles étaient en production sans aucun signal.</div>
+        <div class="card green" style="margin-top:10px"><h4>Règle de merge</h4><p>Aucun merge sur <code>main</code> si un job échoue. Railway déploie automatiquement après une CI verte.</p></div>
       </div>
     </div>
   </div>

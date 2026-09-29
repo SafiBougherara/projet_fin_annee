@@ -1,0 +1,44 @@
+# Configuration Gitleaks — recherche de secrets commités par erreur.
+# Étend le jeu de règles par défaut (clés AWS, tokens GitHub, clés privées, etc.)
+# et ajoute les secrets propres à CALENDRIA.
+
+title = "CALENDRIA - Secret scanning"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "telegram-bot-token"
+description = "Token de bot Telegram"
+regex = '''[0-9]{8,12}:AA[A-Za-z0-9_-]{32,}'''
+tags = ["telegram", "token"]
+
+[[rules]]
+id = "google-gemini-api-key"
+description = "Clé d'API Google (Gemini)"
+regex = '''AIza[0-9A-Za-z_\-]{35}'''
+tags = ["google", "gemini", "apikey"]
+
+[[rules]]
+id = "symfony-database-url"
+description = "URL de base de données avec identifiants en clair"
+regex = '''(?i)DATABASE_URL\s*=\s*["']?(postgresql|mysql)://[^:\s]+:[^@\s]+@'''
+tags = ["database", "credentials"]
+
+[allowlist]
+description = "Faux positifs : exemples, fixtures et valeurs factices de CI"
+paths = [
+  '''backend/\.env\.example''',
+  '''backend/\.env\.test''',
+  '''\.gitleaks\.toml''',
+  '''(.*?)(png|jpg|jpeg|svg|pdf|zip)$''',
+  '''package-lock\.json''',
+  '''composer\.lock''',
+]
+regexes = [
+  '''dummy_(bot_token|key_for_tests|key_for_dev)''',
+  '''change_me_in_production''',
+  '''\$ecretf0rt3st''',
+  '''calendria_user:calendria_pass''',
+  '''password123''',
+]
