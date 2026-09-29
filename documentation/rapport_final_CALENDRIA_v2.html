@@ -370,7 +370,7 @@ hr.deco { width: 60%; border: 2px solid #2E86C1; margin: 2em auto; }
 <table>
 <thead><tr><th>Composant</th><th>Technologie</th><th>Justification</th></tr></thead>
 <tbody>
-<tr><td><strong>SGBD</strong></td><td>PostgreSQL 15</td><td>Meilleure gestion des contraintes, types avancés (JSONB), performances</td></tr>
+<tr><td><strong>SGBD</strong></td><td>PostgreSQL 15</td><td>Meilleure gestion des contraintes, type JSON natif, performances</td></tr>
 <tr><td><strong>Modélisation</strong></td><td>Méthode MERISE</td><td>Imposée par le CDC (MCD/MLD/MPD)</td></tr>
 <tr><td><strong>Normalisation</strong></td><td>3NF</td><td>Forme normale 3 pour éviter les redondances</td></tr>
 </tbody>
@@ -449,33 +449,33 @@ hr.deco { width: 60%; border: 2px solid #2E86C1; margin: 2em auto; }
 <h1>Section IV - Méthodologie et Organisation</h1>
 
 <h2>1. Méthode de Gestion de Projet</h2>
-<h3>1.1 Méthodologie Retenue : Scrum Adapté Solo</h3>
-<p><strong>Choix : Méthode Agile Scrum</strong>, adaptée pour un développeur unique.</p>
+<h3>1.1 Méthodologie Retenue : une Méthode Agile Adaptée au Travail Seul</h3>
+<p><strong>Choix : démarche itérative inspirée de Scrum</strong>, et non Scrum à la lettre : Scrum suppose une équipe, ce projet a été mené par un développeur unique.</p>
 
 <h4>Justification du Choix</h4>
 <table>
-<thead><tr><th>Critère</th><th>Cycle en V</th><th>Kanban</th><th>Scrum Adapté</th><th>Choix</th></tr></thead>
+<thead><tr><th>Critère</th><th>Cycle en V</th><th>Kanban</th><th>Agile itératif</th><th>Choix</th></tr></thead>
 <tbody>
-<tr><td><strong>Flexibilité</strong></td><td>Rigide</td><td>Très flexible</td><td>Flexible avec cadre temporel</td><td>✅ Scrum</td></tr>
-<tr><td><strong>Correspondance jalons</strong></td><td>Bon</td><td>Pas de jalons naturels</td><td>Sprints = Jalons mensuels</td><td>✅ Scrum</td></tr>
-<tr><td><strong>Gestion des risques</strong></td><td>Détection tardive</td><td>Correcte</td><td>Détection précoce (revues de sprint)</td><td>✅ Scrum</td></tr>
-<tr><td><strong>Suivi d'avancement</strong></td><td>Jalons séquentiels</td><td>Flux continu</td><td>Incréments livrables à chaque sprint</td><td>✅ Scrum</td></tr>
+<tr><td><strong>Flexibilité</strong></td><td>Rigide</td><td>Très flexible</td><td>Flexible avec cadre temporel</td><td>✅ Agile</td></tr>
+<tr><td><strong>Correspondance jalons</strong></td><td>Bon</td><td>Pas de jalons naturels</td><td>Sprints = Jalons mensuels</td><td>✅ Agile</td></tr>
+<tr><td><strong>Gestion des risques</strong></td><td>Détection tardive</td><td>Correcte</td><td>Détection précoce (revues de jalon)</td><td>✅ Agile</td></tr>
+<tr><td><strong>Suivi d'avancement</strong></td><td>Jalons séquentiels</td><td>Flux continu</td><td>Incréments livrables à chaque sprint</td><td>✅ Agile</td></tr>
 </tbody>
 </table>
 
-<h4>Adaptation Scrum pour un Développeur Solo</h4>
+<h4>Pratiques conservées et pratiques abandonnées</h4>
 <table>
-<thead><tr><th>Élément Scrum</th><th>Version Équipe</th><th>Adaptation Solo</th></tr></thead>
+<thead><tr><th>Pratique</th><th>Application dans le projet</th></tr></thead>
 <tbody>
-<tr><td><strong>Product Owner</strong></td><td>Client/Partie prenante</td><td>Moi-même (backlog géré via GitHub Issues)</td></tr>
-<tr><td><strong>Scrum Master</strong></td><td>Facilitateur dédié</td><td>Moi-même (auto-discipline)</td></tr>
-<tr><td><strong>Sprint Planning</strong></td><td>Réunion d'équipe (2-4h)</td><td>Planification en début de mois (~1h), backlog défini dans GitHub Projects</td></tr>
-<tr><td><strong>Daily Standup</strong></td><td>Réunion quotidienne (15 min)</td><td><strong>Journal de bord quotidien</strong> dans <code>JOURNAL.md</code></td></tr>
-<tr><td><strong>Sprint Review</strong></td><td>Démonstration au PO</td><td>Présentation au référent lors des jalons</td></tr>
-<tr><td><strong>Sprint Retrospective</strong></td><td>Réunion d'amélioration</td><td>Auto-analyse en fin de sprint</td></tr>
-<tr><td><strong>Durée du Sprint</strong></td><td>1-4 semaines</td><td><strong>1 mois</strong> (aligné sur les jalons)</td></tr>
+<tr><td><strong>Sprint</strong></td><td><strong>1 mois = 1 jalon</strong> — 6 sprints de janvier à juin</td></tr>
+<tr><td><strong>Backlog priorisé</strong></td><td>Liste de fonctionnalités classées en MoSCoW, figée au Jalon 1 et révisée à chaque jalon</td></tr>
+<tr><td><strong>Incrément livrable</strong></td><td>Chaque jalon produit un livrable démontrable</td></tr>
+<tr><td><strong>Revue de sprint</strong></td><td>Présentation au référent à la fin de chaque jalon</td></tr>
+<tr><td><strong>Rétrospective</strong></td><td>Bilan écrit en fin de jalon — c'est elle qui a déclenché le passage de WhatsApp Business à Telegram</td></tr>
+<tr><td><strong>Suivi quotidien</strong></td><td>Historique Git, commits typés selon Conventional Commits</td></tr>
 </tbody>
 </table>
+<p>Les <strong>rôles</strong> (Product Owner, Scrum Master) et la <strong>mêlée quotidienne</strong> ont été volontairement abandonnés : ce sont des rituels de coordination d'équipe, qui n'ont aucun destinataire lorsque l'on travaille seul.</p>
 
 <h3>1.2 Backlog Produit (MoSCoW)</h3>
 <h4>Must Have (Obligatoire)</h4>
@@ -923,7 +923,7 @@ regex = '''AIza[0-9A-Za-z_\-]{35}'''</code></pre>
 <tr><td>type</td><td>Chaîne (20)</td><td>NOT NULL, ENUM: midi/soir</td><td>✅</td></tr>
 <tr><td>heure_debut</td><td>TIME</td><td>NOT NULL</td><td>✅</td></tr>
 <tr><td>heure_fin</td><td>TIME</td><td>NOT NULL</td><td>✅</td></tr>
-<tr><td>jours_ouverture</td><td>JSONB</td><td>NOT NULL, ex: ["lundi","mardi"]</td><td>✅</td></tr>
+<tr><td>jours_ouverture</td><td>JSON</td><td>NOT NULL, ex: ["lundi","mardi"]</td><td>✅</td></tr>
 <tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
 </tbody>
 </table>
@@ -1040,8 +1040,13 @@ regex = '''AIza[0-9A-Za-z_\-]{35}'''</code></pre>
 <ul>
 <li>3 <strong>acteurs</strong> : le Client, le Restaurateur et l'Assistant IA (acteur système)</li>
 <li>2 <strong>sous-systèmes</strong> : « Réservation multi-canal » et « Dashboard restaurateur »</li>
-<li>Les associations acteur / cas d'utilisation sont des <strong>traits simples</strong> : la flèche n'aurait de sens que pour indiquer une navigabilité, notion absente des cas d'utilisation</li>
-<li>Une relation <code>&lt;&lt;include&gt;&gt;</code> part du cas de <strong>base</strong> vers le cas inclus ; une relation <code>&lt;&lt;extend&gt;&gt;</code> part au contraire du cas d'<strong>extension</strong> vers le cas de base</li>
+<li>Les associations <strong>acteur / cas d'utilisation</strong> sont des <strong>traits simples sans pointe</strong> : la flèche n'aurait de sens que pour indiquer une navigabilité, notion absente des cas d'utilisation</li>
+<li>Les dépendances <code>&lt;&lt;include&gt;&gt;</code> et <code>&lt;&lt;extend&gt;&gt;</code> sont en revanche bien des <strong>flèches pointillées à pointe ouverte</strong>, mais orientées en sens inverse l'une de l'autre :</li>
+<ul>
+<li><code>&lt;&lt;include&gt;&gt;</code> part du cas de <strong>base</strong> vers le cas <strong>inclus</strong> — consulter le tableau de bord inclut toujours s'authentifier</li>
+<li><code>&lt;&lt;extend&gt;&gt;</code> part du cas d'<strong>extension</strong> vers le cas de <strong>base</strong> — « créer une réservation » n'est que l'aboutissement optionnel de « converser avec l'assistant », la flèche part donc de la création vers la conversation</li>
+</ul>
+<li>Chaque extension porte sa <strong>condition de déclenchement</strong> entre crochets (<code>[dialogue abouti]</code>, <code>[aucun créneau libre]</code>)</li>
 </ul>
 <div class="figure">
   <img src="Jalon4/diagramme_cas_utilisation.png" alt="Diagramme des Cas d'Utilisation" />
@@ -1121,7 +1126,7 @@ regex = '''AIza[0-9A-Za-z_\-]{35}'''</code></pre>
 <h3>A. Séparation en 4 Couches</h3>
 <ol>
 <li><strong>Controllers (Couche HTTP)</strong> : Point d'entrée des requêtes HTTP. Désérialisent les données JSON, appellent les services métier, retournent des réponses HTTP typées (201, 400, 401…). Les endpoints principaux sont des contrôleurs Symfony avec <code>#[Route]</code>, offrant un contrôle total.</li>
-<li><strong>Services (Couche Métier)</strong> : Logique métier complexe - algorithmes de disponibilité (<code>DisponibiliteService</code>), orchestration webhooks (<code>ChatbotService</code>), intégrations API (<code>NotificationService</code>). Indépendants du contexte HTTP.</li>
+<li><strong>Services (Couche Métier)</strong> : Logique métier complexe - algorithme de disponibilité et d'attribution des tables (<code>DisponibiliteService</code>), dialogue avec l'IA et orchestration de la réservation (<code>ChatbotService</code>). Indépendants du contexte HTTP, donc testables unitairement.</li>
 <li><strong>Entities (Couche Modèle)</strong> : POPO (Plain Old PHP Objects) représentant les entités métier. Pas de logique d'infrastructure, uniquement propriétés et getters/setters.</li>
 <li><strong>Repositories (Couche Persistance)</strong> : Data Access Layer via Doctrine ORM. Les requêtes SQL complexes (ex: réservations du jour) résident dans les repositories, pas dans les contrôleurs.</li>
 </ol>
@@ -1129,7 +1134,7 @@ regex = '''AIza[0-9A-Za-z_\-]{35}'''</code></pre>
 <h3>B. Principes SOLID Appliqués</h3>
 <ul>
 <li><strong>SRP</strong> : La séparation Controller / Service / Repository assure qu'une classe n'a qu'une seule raison de changer</li>
-<li><strong>OCP</strong> : State Providers/Persisters API Platform permettent d'étendre le comportement sans modifier le cœur</li>
+<li><strong>OCP</strong> : L'ajout des canaux Telegram et vocal n'a demandé aucune modification de <code>DisponibiliteService</code> : chaque canal est un nouveau point d'entrée qui réutilise le même service métier</li>
 <li><strong>DIP</strong> : L'Injection de Dépendances Symfony - les contrôleurs reçoivent les services dans leur constructeur</li>
 </ul>
 <hr />
@@ -1137,7 +1142,7 @@ regex = '''AIza[0-9A-Za-z_\-]{35}'''</code></pre>
 <h2>3. Composants Externes et Bibliothèques</h2>
 <h3>Back-end (Bundles Symfony)</h3>
 <ul>
-<li><strong>API Platform</strong> : Documentation OpenAPI/Swagger automatique sur <code>/api/docs</code></li>
+<li><strong>API Platform</strong> : Installé mais non exploité dans le MVP — les 24 endpoints sont des contrôleurs Symfony écrits à la main pour garder un contrôle total sur la validation et les codes de retour. Son exploitation (documentation OpenAPI automatique) est listée en perspectives.</li>
 <li><strong>Lexik JWT Authentication</strong> : Création et validation des tokens JWT RS256</li>
 <li><strong>Nelmio CORS</strong> : Politique CORS-Origin pour appels depuis le domaine frontend</li>
 <li><strong>Doctrine ORM</strong> : Pont entre les objets PHP et PostgreSQL, génération des migrations SQL</li>

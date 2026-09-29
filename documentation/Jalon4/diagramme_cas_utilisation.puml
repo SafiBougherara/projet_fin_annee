@@ -112,13 +112,15 @@ UC11 ..> UC6 : <<include>>
 '  RELATIONS <<extend>>  (extension --> base)
 ' ─────────────────────────────────────────────
 
-' Converser est une MANIERE OPTIONNELLE de creer une reservation :
-' c'est UC1 qui etend UC2, la fleche part donc de UC1 vers UC2.
-UC1 ..> UC2 : <<extend>>
+' Le cas de BASE est "Converser avec l'assistant" : le dialogue se suffit
+' a lui-meme (demander les horaires, verifier une dispo sans reserver).
+' "Creer une reservation" n'en est que l'aboutissement OPTIONNEL : c'est
+' donc UC2 qui etend UC1, et la fleche part de UC2 vers UC1.
+UC2 ..> UC1 : <<extend>>\n[dialogue abouti]
 
 ' Proposer des alternatives n'arrive QUE si aucun creneau n'est libre :
-' UC4 etend UC3.
-UC4 ..> UC3 : <<extend>>
+' UC4 est l'extension, UC3 le cas de base.
+UC4 ..> UC3 : <<extend>>\n[aucun creneau libre]
 
 ' ─────────────────────────────────────────────
 '  LEGENDE
@@ -133,9 +135,14 @@ legend bottom
   ----
   Relations
   ====
-  Trait simple = association acteur / cas d'utilisation
+  Trait simple, sans pointe = association acteur / cas d'utilisation
+  Fleche pointillee a pointe ouverte = dependance <<include>> ou <<extend>>
+  ----
   A ..> B <<include>> : A declenche TOUJOURS B
-  A ..> B <<extend>>  : A complete OPTIONNELLEMENT B (fleche vers le cas de base)
+     la fleche part du cas de BASE vers le cas INCLUS
+  A ..> B <<extend>>  : A complete OPTIONNELLEMENT B
+     la fleche part du cas d'EXTENSION vers le cas de BASE
+     (sens inverse de include)
   ----
   Perimetre : seules les fonctionnalites livrees dans le MVP sont representees.
   Notifications SMS, rappels 24h et statistiques avancees ont ete ecartes du perimetre.
