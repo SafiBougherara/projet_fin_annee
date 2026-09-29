@@ -6,6 +6,7 @@
   <style>
 /* ---------- Pagination : numérotation et en-tête courant ---------- */
 @page {
+  size: A4;
   margin: 2.2cm 2cm 2cm 3cm;
   @top-right {
     content: "CALENDRIA - Dossier de projet";
@@ -34,6 +35,8 @@
   @bottom-right { content: ""; }
 }
 body { font-family: Helvetica, Arial, sans-serif; font-size: 11pt; line-height: 1.5; color: #1a1a1a; }
+/* Sans cela, les en-têtes de tableaux bleus disparaissent à l'impression */
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 h1 { font-size: 18pt; color: #2E86C1; font-weight: bold; page-break-before: always; margin-top: 0; }
 h2 { font-size: 14pt; color: #1A5276; font-weight: bold; }
 h3 { font-size: 12pt; font-weight: bold; }
