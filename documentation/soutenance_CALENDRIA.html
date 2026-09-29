@@ -273,7 +273,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="body">
     <div class="cols c3">
       <div class="card"><span class="ico">🎯</span><h4>1. Le projet</h4><p>Présentation, contexte métier, problématique, cahier des charges et objectifs SMART.</p></div>
-      <div class="card"><span class="ico">🗂️</span><h4>2. Gestion de projet</h4><p>Méthodologie Scrum adaptée solo, Git Flow, planning des 6 jalons.</p></div>
+      <div class="card"><span class="ico">🗂️</span><h4>2. Gestion de projet</h4><p>Méthode agile adaptée au travail seul, trunk-based development, planning des 6 jalons.</p></div>
       <div class="card"><span class="ico">🎨</span><h4>3. Conception UI/UX</h4><p>Sitemap, wireframes, charte graphique, maquettes et accessibilité.</p></div>
       <div class="card"><span class="ico">🗄️</span><h4>4. Modélisation données</h4><p>Démarche MERISE : MCD, MLD, MPD et dictionnaire de données.</p></div>
       <div class="card"><span class="ico">🏛️</span><h4>5. Architecture &amp; UML</h4><p>Cas d'utilisation, séquences, classes, architecture N-tiers et 4 couches.</p></div>
@@ -317,7 +317,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
           <tr><td>Canaux de réservation</td><td>3 (web, Telegram, vocal)</td></tr>
         </table>
         <div class="pills" style="margin-top:12px">
-          <span class="pill">Symfony 6.4</span><span class="pill">PHP 8.4</span><span class="pill">React 18</span>
+          <span class="pill">Symfony 6.4</span><span class="pill">PHP 8.4</span><span class="pill">React 19</span>
           <span class="pill">TypeScript</span><span class="pill">PostgreSQL 15</span><span class="pill">Docker</span>
           <span class="pill">Gemini 2.5</span><span class="pill">Railway</span>
         </div>
@@ -504,13 +504,13 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
         <tr><td><b>PHP</b></td><td>8.4</td><td>Typage strict, property hooks</td></tr>
         <tr><td><b>Doctrine ORM</b></td><td>3.x</td><td>Requêtes préparées ⇒ anti-injection SQL</td></tr>
         <tr><td><b>LexikJWT</b></td><td>2.x</td><td>Authentification stateless RS256</td></tr>
-        <tr><td><b>PostgreSQL</b></td><td>15</td><td>Contraintes fortes, JSONB, performances</td></tr>
+        <tr><td><b>PostgreSQL</b></td><td>15</td><td>Contraintes fortes, type JSON natif, performances</td></tr>
       </table>
       <table class="t-sm">
         <tr><th>Front &amp; DevOps</th><th>Version</th><th>Justification</th></tr>
-        <tr><td><b>React</b></td><td>18</td><td>Framework imposé, écosystème riche</td></tr>
-        <tr><td><b>TypeScript</b></td><td>5.x</td><td>Typage statique = filet de sécurité</td></tr>
-        <tr><td><b>Vite</b></td><td>5.x</td><td>Build rapide, HMR</td></tr>
+        <tr><td><b>React</b></td><td>19</td><td>Framework imposé, écosystème riche</td></tr>
+        <tr><td><b>TypeScript</b></td><td>5.9</td><td>Typage statique = filet de sécurité</td></tr>
+        <tr><td><b>Vite</b></td><td>7</td><td>Build rapide, HMR</td></tr>
         <tr><td><b>Docker / Compose</b></td><td>24+ / 2.x</td><td>Environnement identique dev ↔ prod</td></tr>
         <tr><td><b>GitHub Actions</b></td><td>—</td><td>CI/CD intégrée au dépôt</td></tr>
         <tr><td><b>Railway</b></td><td>—</td><td>PaaS avec support Docker natif</td></tr>
@@ -854,7 +854,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="rule"></div>
   <div class="body"><div class="fig">
     <img src="Jalon4/diagramme_cas_utilisation.png" alt="Diagramme des cas d'utilisation">
-    <div class="cap">Figure 7.1 — <b>3 acteurs</b> : le Client, le Restaurateur, l'Assistant IA (acteur système) · associations en <b>traits simples</b> · <code>&lt;&lt;include&gt;&gt;</code> part du cas de base, <code>&lt;&lt;extend&gt;&gt;</code> part au contraire du cas d'extension · seules les fonctionnalités <b>réellement livrées</b> figurent au diagramme</div>
+    <div class="cap">Figure 7.1 — <b>3 acteurs</b> : le Client, le Restaurateur, l'Assistant IA (acteur système). Association acteur / cas = <b>trait simple sans pointe</b> ; <code>include</code> et <code>extend</code> sont bien des flèches, mais <b>en sens inverse</b> : <code>include</code> part du cas de base, <code>extend</code> part du cas d'extension. Seules les fonctionnalités <b>réellement livrées</b> figurent au diagramme.</div>
   </div></div>
   <div class="chrome"><span>VII — Conception de l'application (UML)</span><span class="pg"></span></div>
 </section>
@@ -938,7 +938,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
         <h3>Responsabilités</h3>
         <ul>
           <li><strong>Controller</strong> : désérialise le JSON, délègue, renvoie un code HTTP typé (201, 400, 401…). Aucune logique métier.</li>
-          <li><strong>Service</strong> : <code>DisponibiliteService</code>, <code>ChatbotService</code>, <code>NotificationService</code> — indépendants du contexte HTTP, donc testables unitairement.</li>
+          <li><strong>Service</strong> : <code>DisponibiliteService</code> et <code>ChatbotService</code> — indépendants du contexte HTTP, donc testables unitairement.</li>
           <li><strong>Repository</strong> : toutes les requêtes DQL complexes, jamais dans le contrôleur.</li>
           <li><strong>Entity</strong> : POPO Doctrine, propriétés et accesseurs.</li>
         </ul>
@@ -946,7 +946,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       <div>
         <h3>Principes SOLID appliqués</h3>
         <div class="card"><h4>SRP</h4><p>La séparation Controller / Service / Repository garantit qu'une classe n'a qu'une seule raison de changer.</p></div>
-        <div class="card" style="margin-top:8px"><h4>OCP</h4><p>Ajouter un canal (Telegram, agent vocal) n'a demandé <strong>aucune modification</strong> de <code>DisponibiliteService</code> ni de <code>ReservationService</code> : seul un nouveau contrôleur-adaptateur a été ajouté.</p></div>
+        <div class="card" style="margin-top:8px"><h4>OCP</h4><p>Ajouter un canal (Telegram, agent vocal) n'a demandé <strong>aucune modification</strong> de <code>DisponibiliteService</code> : seul un nouveau point d'entrée a été ajouté dans le contrôleur, qui réutilise le même service.</p></div>
         <div class="card" style="margin-top:8px"><h4>DIP</h4><p>Injection de dépendances Symfony : les contrôleurs reçoivent leurs services par constructeur, jamais d'instanciation en dur.</p></div>
       </div>
     </div>
@@ -1257,7 +1257,7 @@ nginx:alpine
     </div>
     <div class="cols c3">
       <div class="card"><h4>3 décisions majeures issues de la veille</h4><p>GPT-4o-mini → Gemini 2.5 Flash · Twilio → Telegram · Heroku → Railway (fin du tier gratuit Heroku en 2022).</p></div>
-      <div class="card"><h4>Tendances suivies</h4><p>PHP 8.4 (property hooks) · Symfony 7 vs LTS 6.4 · React 19 (Server Components) · API Platform State Providers · Vite 6.</p></div>
+      <div class="card"><h4>Tendances suivies</h4><p>PHP 8.4 (property hooks) · Symfony 7 vs LTS 6.4 · React 19 (adopté en cours de projet) · Vite 7 · enums PHP 8.1 pour les statuts métier.</p></div>
       <div class="card"><h4>Outils de veille</h4><p>Docs officielles hebdo · release notes GitHub via Dependabot · blogs Symfony/React/PHP.Watch · SymfonyWorld &amp; ReactConf.</p></div>
     </div>
   </div>
