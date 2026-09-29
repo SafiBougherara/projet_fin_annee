@@ -116,3 +116,51 @@ jobs:
         run: |
           cd frontend
           npm run build
+
+  security:
+    name: Security CI (dépendances & secrets)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        # fetch-depth 0 : Gitleaks doit voir tout l'historique, pas seulement le dernier commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer
+          coverage: none
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          cp .env.example .env
+          composer install --no-progress --prefer-dist --no-scripts
+
+      - name: Audit des dépendances PHP (composer audit)
+        run: |
+          cd backend
+          composer audit --locked --no-interaction
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Audit des dépendances JS (npm audit)
+        run: |
+          cd frontend
+          npm audit --audit-level=high
+
+      - name: Installer Gitleaks
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz \
+            | tar -xz -C /tmp gitleaks
+          sudo install /tmp/gitleaks /usr/local/bin/gitleaks
+
+      - name: Recherche de secrets commités (Gitleaks)
+        run: gitleaks detect --source . --config .gitleaks.toml --redact --no-banner --exit-code 1

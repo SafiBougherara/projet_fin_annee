@@ -4,8 +4,35 @@
   <meta charset="utf-8">
   <title>CALENDRIA - Rapport Final v2</title>
   <style>
-@page { margin: 2.5cm 2cm 2cm 3cm; }
-@page :first { margin: 0; }
+/* ---------- Pagination : numérotation et en-tête courant ---------- */
+@page {
+  margin: 2.2cm 2cm 2cm 3cm;
+  @top-right {
+    content: "CALENDRIA - Dossier de projet";
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 8.5pt;
+    color: #7F8C8D;
+  }
+  @bottom-center {
+    content: "Page " counter(page) " / " counter(pages);
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 9pt;
+    color: #555;
+  }
+  @bottom-right {
+    content: "BOUGHERARA Safi - CDA 2025-2026";
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 8pt;
+    color: #7F8C8D;
+  }
+}
+/* La page de garde ne porte ni numéro ni en-tête */
+@page :first {
+  margin: 0;
+  @top-right { content: ""; }
+  @bottom-center { content: ""; }
+  @bottom-right { content: ""; }
+}
 body { font-family: Helvetica, Arial, sans-serif; font-size: 11pt; line-height: 1.5; color: #1a1a1a; }
 h1 { font-size: 18pt; color: #2E86C1; font-weight: bold; page-break-before: always; margin-top: 0; }
 h2 { font-size: 14pt; color: #1A5276; font-weight: bold; }
@@ -33,6 +60,11 @@ hr.deco { width: 60%; border: 2px solid #2E86C1; margin: 2em auto; }
 .figure-placeholder { border: 2px dashed #2E86C1; padding: 40px; color: #777; background: #F8FBFF; font-style: italic; }
 .toc-page { page-break-after: always; }
 .toc-page h1 { page-break-before: avoid; }
+/* Planches de maquettes : deux visuels par ligne */
+.figure-row { display: flex; gap: 14px; justify-content: center; align-items: flex-start; margin: 1.2em 0; page-break-inside: avoid; }
+.figure-row .figure { flex: 1; margin: 0; }
+.figure-row .figure img { max-width: 100%; border: 1px solid #BDC3C7; }
+.figure img { border: 1px solid #BDC3C7; }
 </style>
 </head>
 <body>
@@ -122,13 +154,13 @@ hr.deco { width: 60%; border: 2px solid #2E86C1; margin: 2em auto; }
 <table>
 <thead><tr><th>Indicator</th><th>Value</th></tr></thead>
 <tbody>
-<tr><td>Functional coverage vs. initial specification</td><td>88% (15/17 features)</td></tr>
+<tr><td>Functional coverage vs. initial specification</td><td>82% (14/17 features)</td></tr>
 <tr><td>Automated tests (PHPUnit)</td><td>12 tests, 0 failures</td></tr>
-<tr><td>Backend code (PHP)</td><td>~4,500 lines</td></tr>
-<tr><td>Frontend code (TypeScript/TSX)</td><td>~7,200 lines</td></tr>
-<tr><td>API endpoints</td><td>28 routes</td></tr>
-<tr><td>Database tables</td><td>7 tables</td></tr>
-<tr><td>Production uptime (Railway)</td><td>99.9%</td></tr>
+<tr><td>Backend code (PHP)</td><td>~3,400 lines</td></tr>
+<tr><td>Frontend code (TypeScript/TSX)</td><td>~3,200 lines</td></tr>
+<tr><td>API endpoints</td><td>24 routes</td></tr>
+<tr><td>Persisted entities</td><td>6 tables</td></tr>
+<tr><td>Booking channels delivered</td><td>3 (web widget, Telegram, voice)</td></tr>
 </tbody>
 </table>
 
@@ -465,17 +497,25 @@ hr.deco { width: 60%; border: 2px solid #2E86C1; margin: 2em auto; }
 <hr />
 
 <h2>2. Gestion du Code Source (Git)</h2>
-<h3>2.1 Stratégie de Branches - Git Flow Simplifié</h3>
-<pre><code>main              ← Versions stables (releases jalons)
-│
-├── develop       ← Intégration continue des features
-│   │
-│   ├── feature/whatsapp-chatbot
-│   ├── feature/dashboard-react
-│   ├── feature/widget-web
-│   └── feature/table-algorithm
-│
-└── hotfix/*      ← Corrections urgentes sur main</code></pre>
+<h3>2.1 Stratégie de Branches - Trunk-Based Development</h3>
+<p>Le projet a été mené par un développeur unique. Git Flow existe pour <strong>synchroniser plusieurs développeurs</strong> et permettre la revue croisée ; ouvrir des branches <code>feature/*</code> que je serais le seul à créer, relire et fusionner n'aurait été qu'une cérémonie sans bénéfice. J'ai donc retenu le <strong>trunk-based development</strong> : des commits petits et fréquents sur <code>main</code>, la <strong>CI bloquante</strong> tenant le rôle du relecteur.</p>
+<pre><code>main   ← unique branche de travail et de livraison
+ │
+ │  79 commits · CI GitHub Actions déclenchée à chaque push
+ │
+ ├─ tag v0.9-beta   Jalon 5 : plan de salle, tests, mode sombre
+ │
+ └─ tag v1.0        Livraison finale</code></pre>
+<table>
+<thead><tr><th>Indicateur</th><th>Valeur</th></tr></thead>
+<tbody>
+<tr><td>Branches</td><td>1 (<code>main</code>)</td></tr>
+<tr><td>Commits</td><td>79</td></tr>
+<tr><td>Commits conformes à Conventional Commits</td><td>59 (75 %)</td></tr>
+<tr><td>Tags de release</td><td><code>v0.9-beta</code>, <code>v1.0</code></td></tr>
+</tbody>
+</table>
+<p><strong>Limite assumée</strong> : en équipe, cette stratégie ne tiendrait pas. Je passerais à des branches de fonctionnalité avec Pull Request obligatoire et revue par un pair avant fusion.</p>
 
 <h3>2.2 Convention de Commits</h3>
 <p>Les messages de commit suivent la convention <strong>Conventional Commits</strong> :</p>
@@ -494,19 +534,20 @@ Exemples :
 - fix(chatbot): Fix date parsing for French format
 - test(api): Add unit tests for table algorithm</code></pre>
 
-<h3>2.3 Historique du Projet (Sprint 1 établi)</h3>
+<h3>2.3 Historique du Projet</h3>
 <ul>
-<li>✅ Structure du projet (backend/frontend/docker/documentation)</li>
-<li>✅ Backend Symfony 6.4 avec entités Doctrine</li>
-<li>✅ API Platform configurée avec endpoints REST</li>
-<li>✅ Authentification JWT (LexikJWTAuthenticationBundle)</li>
-<li>✅ Frontend React 18 + TypeScript + Vite</li>
-<li>✅ Docker Compose (PostgreSQL, Backend, Frontend)</li>
+<li>Structure du projet (backend / frontend / docker / documentation)</li>
+<li>Backend Symfony 6.4 avec entités Doctrine et migrations versionnées</li>
+<li>API REST exposée par 24 routes réparties en 4 contrôleurs</li>
+<li>Authentification JWT (LexikJWTAuthenticationBundle)</li>
+<li>Frontend React 19 + TypeScript + Vite</li>
+<li>Docker Compose (PostgreSQL, backend, frontend)</li>
 </ul>
 <hr />
 
 <h2>3. CI/CD Planifié et Réalisé</h2>
 <h3>3.1 Pipeline CI (GitHub Actions)</h3>
+<p>Le fichier <code>.github/workflows/ci.yml</code> déclenche <strong>trois jobs parallèles</strong> à chaque <code>push</code> et à chaque Pull Request. Aucun merge sur <code>main</code> n'est accepté si l'un d'eux échoue.</p>
 <pre><code>Push / PR sur main
         │
         ▼
@@ -529,17 +570,51 @@ Exemples :
 │  1. Checkout Code                 │
 │  2. Setup Node.js 20              │
 │  3. npm install                   │
-│  4. npm run build (TypeScript ✓)  │
+│  4. npm run build (tsc -b + Vite) │
+└───────────────┬───────────────────┘
+                │ parallèle
+┌───────────────▼───────────────────┐
+│        JOB : Security CI          │
+│      (dépendances &amp; secrets)      │
+│                                   │
+│  1. Checkout (historique complet) │
+│  2. composer audit --locked       │
+│  3. npm audit --audit-level=high  │
+│  4. gitleaks detect --exit-code 1 │
 └───────────────────────────────────┘</code></pre>
 
-<h3>3.2 Outils de Suivi</h3>
+<h3>3.2 Job de sécurité : dépendances et secrets</h3>
+<p>Un pipeline qui ne vérifie que la compilation laisse passer deux familles d'incidents très courantes : l'introduction d'une <strong>dépendance vulnérable</strong> et le <strong>commit accidentel d'un secret</strong>. Un troisième job a donc été ajouté pour couvrir ces deux risques.</p>
+<table>
+<thead><tr><th>Contrôle</th><th>Outil</th><th>Risque couvert</th><th>Comportement</th></tr></thead>
+<tbody>
+<tr><td>Dépendances PHP</td><td><code>composer audit --locked</code></td><td>CVE connues dans les paquets Composer</td><td>Bloquant</td></tr>
+<tr><td>Dépendances JavaScript</td><td><code>npm audit --audit-level=high</code></td><td>CVE connues dans les paquets npm</td><td>Bloquant à partir du niveau « high »</td></tr>
+<tr><td>Secrets commités</td><td><code>gitleaks detect</code></td><td>Token, clé d'API ou identifiant poussé dans le dépôt</td><td>Bloquant</td></tr>
+</tbody>
+</table>
+<p>Gitleaks analyse <strong>l'intégralité de l'historique Git</strong>, et pas seulement le dernier commit : un secret supprimé dans un commit ultérieur reste récupérable et doit donc être détecté. La configuration <code>.gitleaks.toml</code> étend le jeu de règles par défaut avec les secrets propres au projet, et déclare en liste blanche les valeurs factices des fichiers d'exemple afin d'éviter les faux positifs.</p>
+<pre><code>[[rules]]
+id = "telegram-bot-token"
+description = "Token de bot Telegram"
+regex = '''[0-9]{8,12}:AA[A-Za-z0-9_-]{32,}'''
+
+[[rules]]
+id = "google-gemini-api-key"
+description = "Clé d'API Google (Gemini)"
+regex = '''AIza[0-9A-Za-z_\-]{35}'''</code></pre>
+<blockquote>
+<p><strong>Résultat immédiat</strong> : dès sa première exécution, le job a signalé <strong>4 vulnérabilités</strong> dans les dépendances du frontend, dont <strong>3 de sévérité haute</strong> sur <code>react-router</code> (redirection ouverte, XSS, déni de service par appariement de routes inefficace). Elles ont été corrigées par montée de version compatible, puis le build a été revalidé. Cet incident justifie à lui seul l'ajout du job : ces failles étaient présentes en production sans qu'aucun signal ne les révèle.</p>
+</blockquote>
+<p>Le nettoyage des variables d'environnement d'exemple a été mené dans le même mouvement : <code>TWILIO_ACCOUNT_SID</code>, <code>TWILIO_AUTH_TOKEN</code> et <code>OPENAI_API_KEY</code> subsistaient dans <code>.env.example</code> alors que ces services ne sont plus utilisés. Une variable morte est une invitation à y placer un jour une vraie valeur.</p>
+
+<h3>3.3 Outils de Suivi</h3>
 <table>
 <thead><tr><th>Activité</th><th>Fréquence</th><th>Support</th></tr></thead>
 <tbody>
-<tr><td>Journal de bord</td><td>Quotidien</td><td><code>JOURNAL.md</code> dans le dépôt</td></tr>
-<tr><td>Mise à jour Kanban</td><td>À chaque changement</td><td>GitHub Projects</td></tr>
+<tr><td>Suivi de l'avancement</td><td>Quotidien</td><td>Historique Git (messages de commit typés)</td></tr>
 <tr><td>Revue de sprint</td><td>Fin de mois</td><td>Présentation au référent</td></tr>
-<tr><td>Rétrospective</td><td>Fin de mois</td><td>Section dédiée dans <code>JOURNAL.md</code></td></tr>
+<tr><td>Rétrospective</td><td>Fin de mois</td><td>Bilan écrit intégré au livrable du jalon</td></tr>
 </tbody>
 </table>
 
@@ -574,46 +649,53 @@ Exemples :
         ├── Horaires &amp; Services
         └── RGPD / Confidentialité</code></pre>
 
-<p><img alt="Sitemap – Architecture des Écrans CALENDRIA" src="./CALENDRIA%20-%20Sitemap%20-%20Architecture%20des%20Ecrans.png" /></p>
+<div class="figure">
+  <img alt="Sitemap – Architecture des Écrans CALENDRIA" src="Jalon2/CALENDRIA%20-%20Sitemap%20-%20Architecture%20des%20Ecrans.png" />
+  <p class="caption">Figure 5.1 - Sitemap : architecture des écrans du dashboard</p>
+</div>
 <hr />
 
-<h2>2. Wireframes (Maquettes Fil de Fer)</h2>
-<h3>2.1 Page de Connexion</h3>
-<pre><code>┌──────────────────────────────────────────────────────────────┐
-│                     ┌────────────────┐                       │
-│                     │   🗓️ CALENDRIA │                       │
-│                     └────────────────┘                       │
-│                  ┌────────────────────────┐                  │
-│                  │   📧 Email             │                  │
-│                  │   ┌──────────────────┐ │                  │
-│                  │   └──────────────────┘ │                  │
-│                  │   🔒 Mot de passe      │                  │
-│                  │   ┌──────────────────┐ │                  │
-│                  │   └──────────────────┘ │                  │
-│                  │   ┌──────────────────┐ │                  │
-│                  │   │   SE CONNECTER   │ │                  │
-│                  │   └──────────────────┘ │                  │
-│                  └────────────────────────┘                  │
-└──────────────────────────────────────────────────────────────┘</code></pre>
+<h2>2. Zoning</h2>
+<p>Le <strong>zoning</strong> est la première étape de la conception d'interface. Il découpe chaque écran en <strong>zones fonctionnelles</strong> (en-tête, navigation, contenu principal, zone d'action) <strong>avant toute décision graphique</strong>. Son objectif est de valider la hiérarchie de l'information avec le commanditaire sans que celui-ci soit distrait par l'esthétique : ni couleur, ni typographie, ni contenu réel à ce stade.</p>
+<p>Trois écrans structurants ont été zonés : la page de connexion, le tableau de bord et l'écran de paramétrage du restaurant.</p>
 
-<h3>2.2 Dashboard (Tableau de Bord) – Desktop</h3>
-<pre><code>┌──────────────────────────────────────────────────────────────────────────┐
-│  🗓️ CALENDRIA               🔔 Notifications    👤 Safi B.    ⚙️       │
-├────────────┬─────────────────────────────────────────────────────────────┤
-│  SIDEBAR   │   TABLEAU DE BORD                          📅 26 Fév 2026 │
-│            │   ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────┐ │
-│  🏠 Accueil│   │ 📋 12      │ │ 👥 48      │ │ 📈 85%     │ │ ⚠️ 2  │ │
-│  📅 Calen. │   │ Réservation│ │ Couverts   │ │ Remplissage│ │ No-show│ │
-│  🗺️ Plan  │   └────────────┘ └────────────┘ └────────────┘ └────────┘ │
-│  📋 Réser. │   PROCHAINES ARRIVÉES                                       │
-│  👥 Clients│   ┌─────────────────────────────────────────────────────── │
-│  📊 Stats  │   │ Heure │ Client     │ Couverts │ Table │ Statut        │ │
-│  ⚙️ Param. │   │ 12:00 │ M. Dupont  │    4     │  T3   │ 🟢 Confirmée │ │
-│            │   │ 12:15 │ Mme Martin │    2     │  T1   │ 🟡 Imminente │ │
-│            │   └─────────────────────────────────────────────────────── │
-└──────────────────────────────────────────────────────────────────────────┘</code></pre>
+<div class="figure">
+  <img src="Jalon2/zoning%20-%20login.png" alt="Zoning de la page de connexion" />
+  <p class="caption">Figure 5.2 - Zoning : page de connexion</p>
+</div>
+<div class="figure">
+  <img src="Jalon2/zoning%20-%20dashboard.png" alt="Zoning du tableau de bord" />
+  <p class="caption">Figure 5.3 - Zoning : tableau de bord</p>
+</div>
+<div class="figure">
+  <img src="Jalon2/zoning%20-%20restaurant%20settings.png" alt="Zoning de l'écran de paramétrage du restaurant" />
+  <p class="caption">Figure 5.4 - Zoning : paramétrage du restaurant et des tables</p>
+</div>
+<hr />
 
-<h3>2.3 Plan de Salle – Vue en Direct</h3>
+<h2>3. Wireframes (Maquettes Fil de Fer)</h2>
+<p>Le <strong>wireframe</strong> précise le zoning : il place les composants réels (champs de formulaire, tableaux, boutons, indicateurs) et fixe la densité d'information, toujours en niveaux de gris pour rester centré sur la structure et non sur le style.</p>
+
+<h3>3.1 Page de Connexion</h3>
+<div class="figure">
+  <img src="Jalon2/wireframe%20-%20login.png" alt="Wireframe de la page de connexion" />
+  <p class="caption">Figure 5.5 - Wireframe : page de connexion (email, mot de passe, lien d'inscription)</p>
+</div>
+
+<h3>3.2 Tableau de Bord – Desktop</h3>
+<div class="figure">
+  <img src="Jalon2/wireframe%20-%20dashboard.png" alt="Wireframe du tableau de bord" />
+  <p class="caption">Figure 5.6 - Wireframe : tableau de bord (plan de salle, formulaire de réservation, liste des réservations)</p>
+</div>
+
+<h3>3.3 Paramétrage du Restaurant</h3>
+<div class="figure">
+  <img src="Jalon2/wireframe%20-%20restaurant%20settings.png" alt="Wireframe de l'écran de paramétrage du restaurant" />
+  <p class="caption">Figure 5.7 - Wireframe : gestion du restaurant, des tables et des services</p>
+</div>
+
+<h3>3.4 Plan de Salle – Vue en Direct</h3>
+<p>Le plan de salle combine une vue spatiale des tables et une timeline du service. Cette double lecture a été validée dès le wireframe car elle conditionne toute l'ergonomie du dashboard.</p>
 <pre><code>┌──────────────────────┐  TIMELINE DU SERVICE 12h→22h30
 │  ┌────┐ ┌────┐      │  ┌──────────────────────────────┐
 │  │ T1 │ │ T2 │      │  │ T1  ████░░░░░░░░░░░░░░░░░░  │
@@ -625,7 +707,7 @@ Exemples :
 │  └────┘ └────┘      │
 └──────────────────────┘</code></pre>
 
-<h3>2.4 Widget Web Chatbot (Côté Client)</h3>
+<h3>3.5 Widget Web Chatbot (Côté Client)</h3>
 <pre><code>                          ┌────────────────────────────┐
                           │  CALENDRIA 🗓️         ✕   │
                           ├────────────────────────────┤
@@ -647,11 +729,11 @@ Exemples :
                           └────────────────────────────┘</code></pre>
 <hr />
 
-<h2>3. Charte Graphique</h2>
-<h3>3.1 Identité Visuelle</h3>
+<h2>4. Charte Graphique</h2>
+<h3>4.1 Identité Visuelle</h3>
 <p><strong>Nom</strong> : CALENDRIA | <strong>Ton</strong> : <strong>Professionnel, moderne et chaleureux</strong></p>
 
-<h3>3.2 Palette de Couleurs</h3>
+<h3>4.2 Palette de Couleurs</h3>
 <h4>Couleurs Principales</h4>
 <table>
 <thead><tr><th>Rôle</th><th>Nom</th><th>Hex</th><th>Usage</th></tr></thead>
@@ -674,7 +756,7 @@ Exemples :
 </tbody>
 </table>
 
-<h3>3.3 Typographie</h3>
+<h3>4.3 Typographie</h3>
 <table>
 <thead><tr><th>Usage</th><th>Police</th><th>Famille</th></tr></thead>
 <tbody>
@@ -685,7 +767,7 @@ Exemples :
 </table>
 <hr />
 
-<h2>4. Maquettes Haute Fidélité</h2>
+<h2>5. Maquettes Haute Fidélité</h2>
 <p>Les maquettes haute fidélité ont été réalisées dans <strong>Figma</strong> en appliquant la charte graphique définie ci-dessus. Elles couvrent au minimum 2 écrans :</p>
 <ol>
 <li><strong>Dashboard (Tableau de bord)</strong> – Version Desktop (1440px)</li>
@@ -696,8 +778,8 @@ Exemples :
 </ol>
 <hr />
 
-<h2>5. Considérations UX</h2>
-<h3>5.1 Principes Appliqués</h3>
+<h2>6. Considérations UX</h2>
+<h3>6.1 Principes Appliqués</h3>
 <h4>A. Mobile First</h4>
 <p>L'application est conçue Mobile First : le dashboard est d'abord pensé pour être consultable rapidement sur smartphone (le restaurateur vérifie ses réservations pendant le service). Navigation mobile via <strong>bottom navigation bar</strong>, desktop via <strong>sidebar</strong> latérale.</p>
 <h4>B. Simplicité d'Utilisation</h4>
@@ -709,7 +791,7 @@ Exemples :
 <h4>C. Code Couleur des Statuts</h4>
 <p>Un système de couleurs cohérent est utilisé dans toute l'application. Les informations ne sont jamais transmises uniquement par la couleur (ajout d'icônes et texte) - conformité WCAG 2.1 niveau AA.</p>
 
-<h3>5.2 Accessibilité (WCAG 2.1 AA)</h3>
+<h3>6.2 Accessibilité (WCAG 2.1 AA)</h3>
 <table>
 <thead><tr><th>Critère</th><th>Implémentation</th></tr></thead>
 <tbody>
@@ -720,7 +802,7 @@ Exemples :
 </tbody>
 </table>
 
-<h3>5.3 Responsive Design</h3>
+<h3>6.3 Responsive Design</h3>
 <table>
 <thead><tr><th>Breakpoint</th><th>Largeur</th><th>Adaptation</th></tr></thead>
 <tbody>
@@ -737,6 +819,7 @@ Exemples :
 
 <h2>1. Introduction à la Démarche MERISE</h2>
 <p>La modélisation de la base de données de CALENDRIA suit la démarche <strong>MERISE</strong>, une méthodologie de conception par niveaux qui garantit la cohérence entre les besoins fonctionnels et l'implémentation technique (base PostgreSQL 15).</p>
+<p>Le respect strict de la séparation des niveaux est essentiel : on parle d'<strong>entités</strong>, de <strong>propriétés</strong> et d'<strong>associations</strong> au niveau conceptuel, et seulement de <strong>tables</strong>, de <strong>colonnes</strong> et de <strong>clés</strong> à partir du niveau logique. Les clés primaires et étrangères n'apparaissent donc jamais sur le MCD : elles sont le résultat de la transformation du MCD en MLD.</p>
 <pre>
  ┌─────────────────────────────────────────────────────┐
  │  NIVEAU CONCEPTUEL (MCD)                            │
@@ -758,19 +841,31 @@ Exemples :
  └─────────────────────────────────────────────────────┘
 </pre>
 
-<h2>2. Entités du Modèle (9 tables)</h2>
+<h3>1.1 Formalisme retenu pour le MCD</h3>
 <table>
-<thead><tr><th>#</th><th>Entité</th><th>Rôle</th></tr></thead>
+<thead><tr><th>Élément</th><th>Représentation</th><th>Remarque</th></tr></thead>
 <tbody>
-<tr><td>1</td><td>RESTAURANT</td><td>Établissement racine</td></tr>
-<tr><td>2</td><td>USER</td><td>Compte dashboard (authentification JWT)</td></tr>
-<tr><td>3</td><td>TABLE_RESTAURANT</td><td>Table physique du restaurant</td></tr>
-<tr><td>4</td><td>SERVICE</td><td>Période de service (midi/soir) + jours d'ouverture</td></tr>
-<tr><td>5</td><td>FERMETURE_EXCEPTIONNELLE</td><td>Dates de fermeture</td></tr>
-<tr><td>6</td><td>CLIENT</td><td>Personne qui réserve</td></tr>
-<tr><td>7</td><td>RESERVATION</td><td>Réservation de table (entité centrale)</td></tr>
-<tr><td>8</td><td>CONVERSATION_IA</td><td>Historique conversation chatbot multi-canal</td></tr>
-<tr><td>9</td><td>NOTIFICATION_SMS</td><td>Messages SMS (confirmation, rappel, annulation)</td></tr>
+<tr><td>Entité</td><td>Rectangle portant un nom au singulier</td><td>Contient ses propriétés ; l'identifiant est souligné</td></tr>
+<tr><td>Association</td><td><strong>Ovale</strong> portant un verbe à l'infinitif</td><td>Relie deux entités ou plus</td></tr>
+<tr><td>Cardinalité</td><td>Couple (min,max) porté par chaque patte</td><td>Se lit du côté de l'entité concernée</td></tr>
+<tr><td>Clé primaire / étrangère</td><td><strong>Absente du MCD</strong></td><td>Introduite au niveau logique (MLD) uniquement</td></tr>
+</tbody>
+</table>
+
+<h2>2. Entités du Modèle (9 entités)</h2>
+<p>Le modèle conceptuel décrit la <strong>cible fonctionnelle</strong> du produit. Le MVP livré en implémente <strong>6 entités sur 9</strong> : les trois dernières correspondent à des fonctionnalités volontairement écartées du périmètre (voir section XV).</p>
+<table>
+<thead><tr><th>#</th><th>Entité</th><th>Rôle</th><th>Implémentée dans le MVP</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>RESTAURANT</td><td>Établissement racine</td><td>Oui</td></tr>
+<tr><td>2</td><td>UTILISATEUR</td><td>Compte dashboard (authentification JWT)</td><td>Oui</td></tr>
+<tr><td>3</td><td>TABLE_RESTAURANT</td><td>Table physique du restaurant</td><td>Oui</td></tr>
+<tr><td>4</td><td>SERVICE</td><td>Période de service (midi/soir) + jours d'ouverture</td><td>Oui</td></tr>
+<tr><td>5</td><td>CLIENT</td><td>Personne qui réserve</td><td>Oui</td></tr>
+<tr><td>6</td><td>RESERVATION</td><td>Réservation de table (entité centrale)</td><td>Oui</td></tr>
+<tr><td>7</td><td>FERMETURE_EXCEPTIONNELLE</td><td>Dates de fermeture ponctuelle</td><td>Non — hors périmètre</td></tr>
+<tr><td>8</td><td>CONVERSATION_IA</td><td>Historique de conversation multi-canal</td><td>Non — sessions en cache Symfony</td></tr>
+<tr><td>9</td><td>NOTIFICATION</td><td>Message de confirmation ou de rappel</td><td>Non — hors périmètre</td></tr>
 </tbody>
 </table>
 <hr />
@@ -793,17 +888,17 @@ Exemples :
 </tbody>
 </table>
 
-<h3>3.2 USER</h3>
+<h3>3.2 UTILISATEUR</h3>
 <table>
 <thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
 <tbody>
 <tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
 <tr><td>email</td><td>Chaîne (180)</td><td>NOT NULL, UNIQUE</td><td>✅</td></tr>
-<tr><td>roles</td><td>JSONB (tableau)</td><td>NOT NULL</td><td>✅</td></tr>
-<tr><td>password</td><td>Chaîne (255)</td><td>NOT NULL (Argon2id)</td><td>✅</td></tr>
-<tr><td>restaurant_id</td><td>Référence → RESTAURANT</td><td>FK, nullable</td><td>❌</td></tr>
+<tr><td>roles</td><td>JSON (tableau)</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>password</td><td>Chaîne (255)</td><td>NOT NULL (hachage Argon2id)</td><td>✅</td></tr>
 </tbody>
 </table>
+<p><em>Le compte du dashboard n'est volontairement rattaché à aucun restaurant dans le MVP. Une clé étrangère obligatoire interdirait un gérant multi-établissements ainsi qu'un compte d'administration générale ; l'association sera ajoutée lors du passage en multi-restaurant.</em></p>
 
 <h3>3.3 TABLE_RESTAURANT</h3>
 <table>
@@ -833,7 +928,41 @@ Exemples :
 </tbody>
 </table>
 
-<h3>3.5 FERMETURE_EXCEPTIONNELLE</h3>
+<h3>3.5 CLIENT</h3>
+<table>
+<thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
+<tbody>
+<tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
+<tr><td>nom</td><td>Chaîne (255)</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>telephone</td><td>Chaîne (20)</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>email</td><td>Chaîne (255)</td><td>nullable</td><td>❌</td></tr>
+<tr><td>preferences</td><td>JSON</td><td>nullable</td><td>❌</td></tr>
+<tr><td>consentement_rgpd</td><td>BOOLEAN</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>taux_noshow</td><td>DECIMAL</td><td>nullable, ≥ 0, ≤ 1</td><td>❌</td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
+</tbody>
+</table>
+<p><em><code>taux_noshow</code> est un <strong>attribut dérivé</strong> : il se recalcule à partir des réservations du client. Il est stocké pour éviter un recalcul à chaque affichage, ce qui constitue une dénormalisation assumée.</em></p>
+
+<h3>3.6 RESERVATION</h3>
+<table>
+<thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
+<tbody>
+<tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
+<tr><td>client_id</td><td>Référence → CLIENT</td><td>FK, NOT NULL</td><td>✅</td></tr>
+<tr><td>restaurant_id</td><td>Référence → RESTAURANT</td><td>FK, NOT NULL</td><td>✅</td></tr>
+<tr><td>table_id</td><td>Référence → TABLE_RESTAURANT</td><td>FK, nullable</td><td>❌</td></tr>
+<tr><td>date_reservation</td><td>DATE</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>heure_reservation</td><td>TIME</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>nombre_personnes</td><td>Entier positif</td><td>NOT NULL, &gt; 0</td><td>✅</td></tr>
+<tr><td>statut</td><td>Chaîne (20)</td><td>NOT NULL : confirmee / arrivee / annulee / noshow</td><td>✅</td></tr>
+<tr><td>demandes_speciales</td><td>Texte</td><td>nullable</td><td>❌</td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
+</tbody>
+</table>
+<p><em><code>table_id</code> est nullable : une réservation peut exister avant qu'une table ne lui soit attribuée. Le champ <code>statut</code> est aujourd'hui une chaîne ; son passage en énumération PHP 8.1 est identifié comme amélioration.</em></p>
+
+<h3>3.7 FERMETURE_EXCEPTIONNELLE <span style="font-weight:normal;font-size:10pt;color:#7F8C8D">(modélisée, non implémentée dans le MVP)</span></h3>
 <table>
 <thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
 <tbody>
@@ -845,83 +974,53 @@ Exemples :
 </tbody>
 </table>
 
-<h3>3.6 CLIENT</h3>
+<h3>3.8 CONVERSATION_IA <span style="font-weight:normal;font-size:10pt;color:#7F8C8D">(modélisée, non implémentée dans le MVP)</span></h3>
 <table>
 <thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
 <tbody>
 <tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
-<tr><td>nom</td><td>Chaîne (255)</td><td>NOT NULL</td><td>✅</td></tr>
-<tr><td>telephone</td><td>Chaîne (20)</td><td>NOT NULL, UNIQUE</td><td>✅</td></tr>
-<tr><td>email</td><td>Chaîne (255)</td><td>nullable</td><td>❌</td></tr>
-<tr><td>preferences</td><td>JSON</td><td>nullable</td><td>❌</td></tr>
-<tr><td>consentement_rgpd</td><td>BOOLEAN</td><td>NOT NULL</td><td>✅</td></tr>
-<tr><td>date_consentement</td><td>TIMESTAMP</td><td>nullable</td><td>❌</td></tr>
-<tr><td>taux_noshow</td><td>DECIMAL</td><td>nullable, ≥ 0, ≤ 1</td><td>❌</td></tr>
-<tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
-</tbody>
-</table>
-
-<h3>3.7 RESERVATION</h3>
-<table>
-<thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
-<tbody>
-<tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
-<tr><td>client_id</td><td>Référence → CLIENT</td><td>FK, NOT NULL</td><td>✅</td></tr>
 <tr><td>restaurant_id</td><td>Référence → RESTAURANT</td><td>FK, NOT NULL</td><td>✅</td></tr>
-<tr><td>table_id</td><td>Référence → TABLE_RESTAURANT</td><td>FK, nullable</td><td>❌</td></tr>
-<tr><td>date_reservation</td><td>DATE</td><td>NOT NULL</td><td>✅</td></tr>
-<tr><td>heure_reservation</td><td>TIME</td><td>NOT NULL</td><td>✅</td></tr>
-<tr><td>nombre_personnes</td><td>Entier positif</td><td>NOT NULL, &gt; 0</td><td>✅</td></tr>
-<tr><td>statut</td><td>ENUM</td><td>NOT NULL, ENUM: confirmee/annulee/noshow/terminee</td><td>✅</td></tr>
-<tr><td>demandes_speciales</td><td>Texte</td><td>nullable</td><td>❌</td></tr>
-<tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
-<tr><td>updated_at</td><td>TIMESTAMP</td><td>nullable</td><td>❌</td></tr>
-</tbody>
-</table>
-
-<h3>3.8 CONVERSATION_IA</h3>
-<table>
-<thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
-<tbody>
-<tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
 <tr><td>client_id</td><td>Référence → CLIENT</td><td>FK, nullable</td><td>❌</td></tr>
 <tr><td>telephone_appelant</td><td>Chaîne (20)</td><td>NOT NULL</td><td>✅</td></tr>
-<tr><td>canal</td><td>ENUM</td><td>NOT NULL, ENUM: whatsapp/widget/sms/telegram</td><td>✅</td></tr>
+<tr><td>canal</td><td>ENUM</td><td>NOT NULL : widget / telegram / vocal</td><td>✅</td></tr>
 <tr><td>date_debut</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
 <tr><td>date_fin</td><td>TIMESTAMP</td><td>nullable</td><td>❌</td></tr>
 <tr><td>transcription</td><td>TEXT</td><td>nullable</td><td>❌</td></tr>
 <tr><td>donnees_collectees</td><td>JSON</td><td>nullable</td><td>❌</td></tr>
 <tr><td>reservation_id</td><td>Référence → RESERVATION</td><td>FK, nullable</td><td>❌</td></tr>
-<tr><td>statut</td><td>ENUM</td><td>NOT NULL, ENUM: complete/incomplete/erreur</td><td>✅</td></tr>
+<tr><td>statut</td><td>ENUM</td><td>NOT NULL : complete / incomplete / erreur</td><td>✅</td></tr>
 <tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
 </tbody>
 </table>
+<p><em><code>client_id</code> est nullable car la conversation démarre avant l'identification de l'appelant. <code>restaurant_id</code> est en revanche obligatoire : le webhook doit savoir pour quel établissement le chatbot répond. Dans le MVP, cet état de session est conservé dans le <strong>cache Symfony</strong> et n'est pas persisté.</em></p>
 
-<h3>3.9 NOTIFICATION_SMS</h3>
+<h3>3.9 NOTIFICATION <span style="font-weight:normal;font-size:10pt;color:#7F8C8D">(modélisée, non implémentée dans le MVP)</span></h3>
 <table>
 <thead><tr><th>Attribut</th><th>Type</th><th>Contraintes</th><th>Obligatoire</th></tr></thead>
 <tbody>
 <tr><td>id</td><td>Entier auto-incrémenté</td><td>PK</td><td>✅</td></tr>
 <tr><td>reservation_id</td><td>Référence → RESERVATION</td><td>FK, NOT NULL</td><td>✅</td></tr>
-<tr><td>telephone_destinataire</td><td>Chaîne (20)</td><td>NOT NULL</td><td>✅</td></tr>
+<tr><td>destinataire</td><td>Chaîne (20)</td><td>NOT NULL</td><td>✅</td></tr>
 <tr><td>message</td><td>TEXT</td><td>NOT NULL</td><td>✅</td></tr>
-<tr><td>type</td><td>ENUM</td><td>NOT NULL, ENUM: confirmation/rappel/annulation/proposition</td><td>✅</td></tr>
-<tr><td>statut_envoi</td><td>ENUM</td><td>NOT NULL, ENUM: en_attente/envoye/echec</td><td>✅</td></tr>
+<tr><td>type</td><td>ENUM</td><td>NOT NULL : confirmation / rappel / annulation</td><td>✅</td></tr>
+<tr><td>canal</td><td>ENUM</td><td>NOT NULL : sms / telegram / email</td><td>✅</td></tr>
+<tr><td>statut_envoi</td><td>ENUM</td><td>NOT NULL : en_attente / envoye / echec</td><td>✅</td></tr>
 <tr><td>date_envoi</td><td>TIMESTAMP</td><td>nullable</td><td>❌</td></tr>
-<tr><td>id_externe_twilio</td><td>Chaîne (50)</td><td>nullable, UNIQUE si non null</td><td>❌</td></tr>
+<tr><td>id_externe</td><td>Chaîne (50)</td><td>nullable, UNIQUE si non null</td><td>❌</td></tr>
 <tr><td>created_at</td><td>TIMESTAMP</td><td>NOT NULL</td><td>✅</td></tr>
 </tbody>
 </table>
+<p><em>L'entité a été renommée de NOTIFICATION_SMS en <strong>NOTIFICATION</strong> : le nom d'origine préjugeait du canal d'envoi alors qu'une confirmation peut aussi partir par Telegram ou par courriel. Le canal devient une propriété, et l'identifiant externe n'est plus lié à un prestataire particulier.</em></p>
 <hr />
 
 <h2>4. Diagrammes MERISE</h2>
 <div class="figure">
   <img src="Jalon3/MCD.png" alt="Modèle Conceptuel de Données" />
-  <p class="caption">Figure 6.1 - Modèle Conceptuel de Données (MCD)</p>
+  <p class="caption">Figure 6.1 - Modèle Conceptuel de Données (MCD) : entités en rectangles, associations en ovales, cardinalités (min,max) sur chaque patte. Aucune clé n'apparaît à ce niveau.</p>
 </div>
 <div class="figure">
   <img src="Jalon3/MLD.png" alt="Modèle Logique de Données" />
-  <p class="caption">Figure 6.2 - Modèle Logique de Données (MLD)</p>
+  <p class="caption">Figure 6.2 - Modèle Logique de Données (MLD) : les associations deviennent des tables et des clés étrangères</p>
 </div>
 <div class="figure">
   <img src="Jalon3/MPD.png" alt="Modèle Physique de Données" />
@@ -934,13 +1033,15 @@ Exemples :
 <h1>Section VII - Conception de l'Application (UML)</h1>
 
 <h2>Introduction</h2>
-<p>Ce dossier présente la conception technique de CALENDRIA. Il fait le lien entre les besoins fonctionnels (CDCF), les parcours utilisateurs (wireframes), et le modèle physique de données (MERISE). Les diagrammes PlantUML respectent une charte graphique cohérente (en-tête blanc sur fond bleu <code>#2E86C1</code>).</p>
+<p>Cette section présente la conception technique de CALENDRIA. Elle fait le lien entre les besoins fonctionnels (CDCF), les parcours utilisateurs (zoning et wireframes) et le modèle de données (MERISE). Les diagrammes sont écrits en PlantUML, versionnés avec le code dans <code>documentation/Jalon4/</code>, et rendus en niveaux de gris pour rester lisibles à l'impression.</p>
 
 <h2>1. Vue Fonctionnelle (Use Cases)</h2>
-<p>Ce diagramme offre une vision panoramique des interactions utilisateurs-système.</p>
+<p>Ce diagramme offre une vision panoramique des interactions entre les utilisateurs et le système. Il ne représente que les fonctionnalités <strong>effectivement livrées</strong> : les notifications SMS, les rappels à 24 h et les statistiques avancées, écartées du périmètre, n'y figurent pas.</p>
 <ul>
-<li>3 <strong>acteurs principaux</strong> : le Client, le Restaurateur, et le Système Automatique (IA + crons)</li>
-<li>Use Cases groupés par packages : "Dashboard", "IA Multi-Canal", "Traitement Automatique"</li>
+<li>3 <strong>acteurs</strong> : le Client, le Restaurateur et l'Assistant IA (acteur système)</li>
+<li>2 <strong>sous-systèmes</strong> : « Réservation multi-canal » et « Dashboard restaurateur »</li>
+<li>Les associations acteur / cas d'utilisation sont des <strong>traits simples</strong> : la flèche n'aurait de sens que pour indiquer une navigabilité, notion absente des cas d'utilisation</li>
+<li>Une relation <code>&lt;&lt;include&gt;&gt;</code> part du cas de <strong>base</strong> vers le cas inclus ; une relation <code>&lt;&lt;extend&gt;&gt;</code> part au contraire du cas d'<strong>extension</strong> vers le cas de base</li>
 </ul>
 <div class="figure">
   <img src="Jalon4/diagramme_cas_utilisation.png" alt="Diagramme des Cas d'Utilisation" />
@@ -949,7 +1050,12 @@ Exemples :
 
 <h2>2. Vue Dynamique (Séquences)</h2>
 <h3>2.1 Séquence : Réservation via Chatbot</h3>
-<p>Ce diagramme explicite le cœur d'innovation de CALENDRIA : la création automatique d'une réservation via IA. Il montre les itérations de collecte de données entre l'utilisateur, le contrôleur, et Gemini 2.5 Flash, ainsi que l'interaction entre <code>ChatbotService</code>, <code>DisponibiliteService</code>, et <code>ReservationService</code>.</p>
+<p>Ce diagramme explicite le cœur d'innovation de CALENDRIA : la création automatique d'une réservation via l'IA. Il montre les itérations de collecte de données entre l'utilisateur, le contrôleur et <strong>Gemini 2.5 Flash</strong>, puis la délégation de la vérification à <code>DisponibiliteService</code> avant la persistance via Doctrine.</p>
+<p>Deux points de lecture importants :</p>
+<ul>
+<li><strong>Chaque accès à PostgreSQL est représenté par un couple appel / réponse.</strong> Une écriture sans flèche de retour laisserait croire que l'application n'attend aucune confirmation de la base, ce qui serait faux : le <code>flush()</code> Doctrine est synchrone et transactionnel.</li>
+<li>L'état de la conversation est conservé dans le <strong>cache Symfony</strong> et non en base : une session de dialogue est éphémère et n'a pas vocation à être persistée dans le MVP.</li>
+</ul>
 <div class="figure">
   <img src="Jalon4/sequence_reservation_chatbot.png" alt="Séquence Réservation via Chatbot" />
   <p class="caption">Figure 7.2 - Séquence Réservation via Chatbot IA</p>
@@ -970,13 +1076,14 @@ Exemples :
 </div>
 
 <h2>3. Vue Statique (Classes)</h2>
-<p>Le diagramme de classes va au-delà du MLD. Il illustre l'intégration des concepts métiers dans le code PHP objet, séparé en 4 packages délimitant les couches MVC :</p>
+<p>Le diagramme de classes va au-delà du MLD : il montre comment les concepts métier sont traduits en objets PHP et comment les couches communiquent. Il décrit le <strong>code réellement livré</strong> : 6 entités Doctrine, 6 repositories, 2 services métier et 4 contrôleurs, répartis en quatre packages.</p>
 <ul>
-<li><strong>Entity</strong> - Modèles ORM Doctrine</li>
-<li><strong>Repository</strong> - Accès DQL orienté objet</li>
-<li><strong>Service</strong> - Logique métier complexe</li>
-<li><strong>Controller</strong> - Exposition API</li>
+<li><strong>Entity</strong> - modèles ORM Doctrine, sans logique d'infrastructure</li>
+<li><strong>Repository</strong> - accès aux données en DQL orienté objet</li>
+<li><strong>Service</strong> - logique métier complexe, testable hors contexte HTTP</li>
+<li><strong>Controller</strong> - exposition HTTP de l'API REST</li>
 </ul>
+<p>Les évolutions identifiées mais non implémentées dans le MVP sont portées sur le diagramme avec le stéréotype <code>&lt;&lt;amélioration identifiée&gt;&gt;</code> : énumérations PHP pour les statuts et les types, attributs dérivés <code>/tauxNoshow</code> et <code>/capaciteTotale</code>, et association <code>Restaurant - User</code> pour le passage en multi-établissement. Ces points sont détaillés en section XV.</p>
 <div class="figure">
   <img src="Jalon4/diagramme_classes.png" alt="Diagramme de Classes UML" />
   <p class="caption">Figure 7.5 - Diagramme de Classes UML</p>
@@ -1093,7 +1200,7 @@ Exemples :
 <thead><tr><th>Exigence RGPD</th><th>Implémentation dans CALENDRIA</th></tr></thead>
 <tbody>
 <tr><td><strong>Minimisation des données</strong></td><td>Collecte uniquement : Nom, Téléphone, Heure, Couverts. L'email est optionnel</td></tr>
-<tr><td><strong>Consentement Explicite</strong></td><td>Champ <code>consentement_rgpd</code> (BOOLEAN) + <code>date_consentement</code> (TIMESTAMP) dans l'entité Client</td></tr>
+<tr><td><strong>Consentement Explicite</strong></td><td>Champ <code>consentement_rgpd</code> (BOOLEAN) porté par l'entité Client, positionné à la création de la réservation quel que soit le canal</td></tr>
 <tr><td><strong>Sécurisation des flux</strong></td><td>HTTPS obligatoire en production (Let's Encrypt via Railway)</td></tr>
 <tr><td><strong>Droit à l'Oubli</strong></td><td>Suppression des fiches clients depuis le dashboard - cascade en base de données</td></tr>
 <tr><td><strong>Durée de conservation</strong></td><td>Données clients : 2 ans après dernière réservation - Logs : 1 an maximum</td></tr>
@@ -1596,7 +1703,7 @@ exec /usr/bin/supervisord -c /etc/supervisord.conf</code></pre>
 <tr><td>Statistiques avancées</td><td>🟡 Partiel</td><td>Visible via dashboard, pas de graphique dédié</td></tr>
 </tbody>
 </table>
-<p><strong>Taux de couverture fonctionnelle : 15/17 (88%) - 2 remplacements stratégiques validés</strong></p>
+<p><strong>Taux de couverture fonctionnelle : 14/17 (82%)</strong> — dont 2 remplacements stratégiques assumés et 3 fonctionnalités écartées du périmètre</p>
 
 <h3>1.2 Bilan Technique</h3>
 <table>
@@ -1629,7 +1736,7 @@ exec /usr/bin/supervisord -c /etc/supervisord.conf</code></pre>
 <hr />
 
 <h2>3. Conclusion</h2>
-<p>Le projet <strong>CALENDRIA</strong> est un projet complet, déployé en production et fonctionnel à 88% des fonctionnalités prévues. Les deux fonctionnalités remplacées (WhatsApp/SMS → Telegram) l'ont été par des solutions équivalentes ou supérieures, plus accessibles pour la démonstration.</p>
+<p>Le projet <strong>CALENDRIA</strong> est un projet complet, déployé en production et couvrant <strong>82%</strong> des fonctionnalités initialement prévues. Les deux fonctionnalités remplacées (WhatsApp et SMS Twilio vers Telegram) l'ont été par des solutions équivalentes, plus accessibles et sans coût ; les trois fonctionnalités non livrées relèvent d'arbitrages de périmètre documentés et non d'un échec technique.</p>
 <p>Ce projet a permis d'acquérir une expérience concrète sur des sujets professionnellement pertinents :</p>
 <ul>
 <li>Architecture d'API REST sécurisée avec Symfony</li>

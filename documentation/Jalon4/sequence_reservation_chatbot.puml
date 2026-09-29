@@ -1,107 +1,175 @@
 @startuml SEQ_Reservation_Chatbot
-title CALENDRIA - Diagramme de Sequence\nUC2 : Reservation via Chatbot IA
+' =====================================================================
+'  CALENDRIA - Diagramme de sequence
+'  UC2 : creer une reservation via l'assistant conversationnel
+'
+'  Corrections apportees :
+'   - CHAQUE appel a la base de donnees possede desormais sa fleche de
+'     RETOUR en pointilles (le diagramme precedent n'en avait aucune)
+'   - les participants correspondent au code reellement livre :
+'       Google Gemini 2.5 Flash (et non OpenAI)
+'       Cache Symfony pour l'etat de la conversation (et non une table)
+'       aucun NotificationService ni Twilio : hors perimetre du MVP
+' =====================================================================
 
-skinparam backgroundColor #FEFEFE
+title CALENDRIA - Diagramme de sequence\nUC2 : creer une reservation via l'assistant conversationnel
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
 skinparam defaultFontName Arial
 skinparam defaultFontSize 11
-skinparam roundCorner 6
-skinparam sequenceMessageFontSize 10
-skinparam sequenceParticipantFontSize 11
+skinparam sequenceMessageAlign left
+skinparam maxMessageSize 220
 
 skinparam participant {
-    BackgroundColor #FAFBFC
-    BorderColor #2E86C1
-    FontColor #2C3E50
+  BackgroundColor #FFFFFF
+  BorderColor #000000
 }
-
 skinparam sequence {
-    ArrowColor #2E86C1
-    LifeLineBorderColor #2E86C1
-    LifeLineBackgroundColor #EBF5FB
-    GroupBorderColor #E67E22
-    GroupHeaderFontColor #E67E22
+  ArrowColor #000000
+  LifeLineBorderColor #000000
+  LifeLineBackgroundColor #FFFFFF
+  GroupBorderColor #000000
 }
 
 ' ─────────────────────────────────────────────
-' PARTICIPANTS
+'  PARTICIPANTS
 ' ─────────────────────────────────────────────
 
-actor "Client" as client #D5F5E3
-participant "Channel (WhatsApp/Web)" as canal #FDEBD0
-participant "ChatbotController" as controller #D6EAF8
-participant "ChatbotService" as chatbot_svc #D6EAF8
-participant "OpenAI API" as openai #F2D7D5
-participant "DisponibiliteService" as dispo_svc #D6EAF8
-participant "ReservationService" as resa_svc #D6EAF8
-participant "NotificationService" as notif_svc #D6EAF8
-participant "Twilio / Meta" as provider #F2D7D5
-database "PostgreSQL" as db #D5F5E3
+actor "Client" as client
+participant "Widget web\nou bot Telegram" as canal
+participant "ChatbotController" as controller
+participant "ChatbotService" as chatbot
+participant "Cache Symfony" as cache
+participant "API Google\nGemini 2.5 Flash" as gemini
+participant "DisponibiliteService" as dispo
+participant "Doctrine ORM" as orm
+database "PostgreSQL" as db
 
-' ─────────────────────────────────────────────
-' FLUX
-' ─────────────────────────────────────────────
+' =====================================================================
+'  PHASE 1 : COLLECTE CONVERSATIONNELLE
+' =====================================================================
 
-== Phase 1 : Collecte Dynamique (NLP) ==
+== Phase 1 : collecte conversationnelle ==
 
-client -> canal : "Je veux une table pour 4 demain"
+client -> canal : "Je veux une table\npour 4 demain a 20h"
 activate canal
 
-canal -> controller : POST /api/chatbot/message
+canal -> controller : POST /api/chatbot/message\n{sessionId, restaurantId, message}
 activate controller
 
-controller -> chatbot_svc : traiterMessage(msg, tel)
-activate chatbot_svc
+controller -> chatbot : traiterMessage(sessionId,\nrestaurantId, message)
+activate chatbot
 
-chatbot_svc -> openai : analyzeIntention(message)
-activate openai
-openai --> chatbot_svc : { "intent": "reservation", "data": {...} }
-deactivate openai
+chatbot -> orm : find(restaurantId)
+activate orm
+orm -> db : SELECT * FROM restaurant\nWHERE id = :id
+activate db
+db --> orm : 1 enregistrement
+deactivate db
+orm --> chatbot : Restaurant
+deactivate orm
 
-chatbot_svc -> db : saveConversationState(data)
+chatbot -> cache : get(sessionId)
+activate cache
+cache --> chatbot : historique + donnees\ndeja collectees
+deactivate cache
 
-loop Tant que infos manquantes
-    chatbot_svc --> controller : askNextQuestion()
-    controller --> canal : "A quelle heure ?"
-    canal --> client : Question chatbot
-    client -> canal : "20h"
-    canal -> controller : ...
+chatbot -> gemini : POST generateContent\n(prompt + historique)
+activate gemini
+gemini --> chatbot : { intention, date, heure,\nnb_personnes, nom, telephone }
+deactivate gemini
+
+alt Informations incompletes
+  chatbot -> cache : set(sessionId, donnees partielles)
+  activate cache
+  cache --> chatbot : ok
+  deactivate cache
+  chatbot --> controller : question suivante\n("A quel nom ?")
+  controller --> canal : 200 OK { response }
+  canal --> client : affichage de la question
 end
 
-== Phase 2 : Verification & Persistence ==
+' =====================================================================
+'  PHASE 2 : VERIFICATION DE DISPONIBILITE
+' =====================================================================
 
-chatbot_svc -> dispo_svc : checkAvailability(restId, date, time, nb)
-activate dispo_svc
+== Phase 2 : verification de disponibilite ==
 
-dispo_svc -> db : queryCapacity(date, time)
-db --> dispo_svc : tables available
-deactivate dispo_svc
+chatbot -> dispo : verifierDisponibilite(restaurantId,\ndate, heure, nbPersonnes)
+activate dispo
 
-alt Dispo OK
-    chatbot_svc -> resa_svc : confirmReservation(clientData)
-    activate resa_svc
-    resa_svc -> db : INSERT Reservation (statut=confirmee)
-    resa_svc --> chatbot_svc : reservation_id
-    deactivate resa_svc
-    
-    chatbot_svc -> notif_svc : notifySuccess(reservation_id)
-    activate notif_svc
-    notif_svc -> provider : Send SMS Confirmation
-    notif_svc --> chatbot_svc : Sent
-    deactivate notif_svc
-    
-    chatbot_svc --> controller : Response Success
-    controller --> canal : "C'est reserve ! ✅"
-    canal --> client : Confirmation
-    
-else Complet
-    chatbot_svc -> dispo_svc : getSuggestions()
-    chatbot_svc --> controller : Proposer alternatives
-    controller --> canal : "Complet à 20h, dispos à 21h ?"
-    canal --> client : Alternatives
+dispo -> orm : findBy(restaurant, date)
+activate orm
+orm -> db : SELECT * FROM reservation\nWHERE restaurant_id = :r AND date = :d
+activate db
+db --> orm : reservations du jour
+deactivate db
+orm --> dispo : Collection<Reservation>
+deactivate orm
+
+dispo -> dispo : tri des tables par capacite\ncroissante puis test de\nchevauchement des creneaux
+
+dispo --> chatbot : { disponible, table, alternatives }
+deactivate dispo
+
+' =====================================================================
+'  PHASE 3 : PERSISTANCE OU REPLI
+' =====================================================================
+
+== Phase 3 : persistance ou repli ==
+
+alt Une table est disponible
+
+  chatbot -> orm : findOneBy(telephone)
+  activate orm
+  orm -> db : SELECT * FROM client\nWHERE telephone = :tel
+  activate db
+  db --> orm : 0 ou 1 enregistrement
+  deactivate db
+  orm --> chatbot : Client ou null
+  deactivate orm
+
+  chatbot -> orm : persist(Client si nouveau)\npersist(Reservation)\nflush()
+  activate orm
+  orm -> db : INSERT INTO client (...)\nINSERT INTO reservation (statut = 'confirmee')
+  activate db
+  db --> orm : identifiants generes\n(COMMIT)
+  deactivate db
+  orm --> chatbot : Reservation persistee
+  deactivate orm
+
+  chatbot -> cache : delete(sessionId)
+  activate cache
+  cache --> chatbot : session reinitialisee
+  deactivate cache
+
+  chatbot --> controller : { response : "Reservation confirmee",\nbooked : true }
+  controller --> canal : 200 OK
+  canal --> client : confirmation immediate
+
+else Aucune table disponible
+
+  chatbot --> controller : { response : "Complet a 20h,\nje peux vous proposer 20h30 ou 21h",\nbooked : false }
+  controller --> canal : 200 OK
+  canal --> client : creneaux alternatifs
+
 end
 
-deactivate chatbot_svc
+deactivate chatbot
 deactivate controller
 deactivate canal
+
+legend bottom
+  Lecture des fleches
+  ====
+  Trait plein : appel (message synchrone)
+  Trait pointille : reponse retournee a l'appelant
+  ----
+  Chaque acces a PostgreSQL est represente par un couple
+  appel / reponse : le diagramme precedent omettait les retours
+  de la base, ce qui laissait croire a des ecritures sans confirmation.
+endlegend
 
 @enduml
