@@ -183,6 +183,12 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
 .note{font-size:13px;color:var(--grey);font-style:italic}
 
 /* ============ ANNEXES : sommaire cliquable + retour ============ */
+/* diagramme + tableau de lecture côte à côte (MLD / MPD v2) */
+.figside{flex:1;min-height:0;grid-template-columns:1.7fr 1fr;align-items:center}
+.figside .fig{height:100%}
+.figside h3{margin-bottom:8px}
+.figside .cap{margin-top:10px}
+
 .ann-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .ann-grid h3{margin-bottom:10px}
 .ann-link{display:flex;gap:10px;align-items:center;padding:10px 13px;margin-bottom:9px;background:var(--bg-soft);
@@ -812,26 +818,44 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
 </section>
 
 <!-- ═══════════════ 24. MLD ═══════════════ -->
-<section class="slide" data-title="MLD">
-  <div class="kicker">Section VI — Niveau logique</div>
-  <h2>Modèle Logique de Données</h2>
+<section class="slide" data-title="MLD (v2)">
+  <div class="kicker">Section VI — Niveau logique · version corrigée</div>
+  <h2>Modèle Logique de Données — v2</h2>
   <div class="rule"></div>
-  <div class="body"><div class="fig">
-    <img src="Jalon3/MLD.png" alt="Modèle Logique de Données">
-    <div class="cap">Figure 6.2 — MLD : tables, clés primaires et clés étrangères</div>
+  <div class="body"><div class="cols figside">
+    <div class="fig"><img src="Jalon3/MLD_v2.png" alt="Modèle Logique de Données, version 2"></div>
+    <div>
+      <h3>Règles de transformation MCD → MLD</h3>
+      <table class="t-sm">
+        <tr><th style="width:92px">Cardinalités</th><th>Règle</th><th>Exemple</th></tr>
+        <tr><td><b>(1,N)–(1,1)</b></td><td>FK obligatoire côté (1,1)</td><td><code>id_restaurant</code> dans <code>table_restaurant</code></td></tr>
+        <tr><td><b>(0,N)–(0,1)</b></td><td>FK optionnelle (NULL) côté (0,1)</td><td><code>id_table</code> dans <code>reservation</code></td></tr>
+        <tr><td><b>(0,1)–(0,1)</b></td><td>FK optionnelle + UNIQUE, d'un seul côté</td><td><code>id_reservation</code> dans <code>conversation_ia</code></td></tr>
+        <tr><td><b>(N)–(N)</b></td><td>Table d'association, PK composée</td><td>aucune ici</td></tr>
+      </table>
+      <p class="note" style="margin-top:8px">Le MVP implémente 6 tables sur 9 ; <code>utilisateur.id_restaurant</code> (EMPLOYER) est prévu pour le multi-restaurant.</p>
+      <div class="cap">Figure 6.2 (v2) — Écart assumé : la v1 du dossier n'était pas cohérente avec le MCD (NOTIFICATION_SMS, lien conversation–restaurant absent, syntaxe MySQL) ; reprise après relecture. Version du dossier en annexe.</div>
+    </div>
   </div></div>
   <div class="chrome"><span>VI — Modélisation de la base de données</span><span class="pg"></span></div>
 </section>
 
 <!-- ═══════════════ 25. MPD ═══════════════ -->
-<section class="slide" data-title="MPD">
-  <div class="kicker">Section VI — Niveau physique</div>
-  <h2>Modèle Physique de Données — PostgreSQL 15</h2>
+<section class="slide" data-title="MPD réel (v2)">
+  <div class="kicker">Section VI — Niveau physique · version corrigée</div>
+  <h2>Modèle Physique de Données réel — PostgreSQL 15 (v2)</h2>
   <div class="rule"></div>
-  <div class="body"><div class="fig">
-    <img src="Jalon3/MPD.png" alt="Modèle Physique de Données">
-    <div class="cap">Figure 6.3 — MPD : la cible physique (types SQL, index, contraintes CHECK). Les migrations Doctrine du MVP en posent le socle — tables, clés, unicité de l'email ; les CHECK et index métier restent à porter.</div>
-  </div></div>
+  <div class="body">
+    <div class="fig"><img src="Jalon3/MPD_v2_reel.png" alt="Modèle Physique de Données réel, version 2"></div>
+    <div class="pills">
+      <span class="pill">PK : <code>INT … AS IDENTITY</code></span>
+      <span class="pill">5 FK, sans <code>ON DELETE</code> (NO ACTION)</span>
+      <span class="pill">1 index par FK + <code>UNIQUE(user.email)</code></span>
+      <span class="pill"><code>"user"</code> et <code>"table"</code> : mots réservés</span>
+      <span class="pill red">Non implémenté : CHECK, index métier, cascades, <code>UNIQUE(client.telephone)</code></span>
+    </div>
+    <div class="cap">Figure 6.3 (v2) — Le schéma réellement créé par les 3 migrations Doctrine (plus la table technique <code>messenger_messages</code>). Écart assumé : le dossier présentait la cible physique (CHECK, index métier, ON DELETE), non implémentée dans le MVP. Version du dossier en annexe.</div>
+  </div>
   <div class="chrome"><span>VI — Modélisation de la base de données</span><span class="pg"></span></div>
 </section>
 
@@ -1448,41 +1472,42 @@ nginx:alpine
 
 <!-- ═══════════════ ANNEXES : RÉPONSES PRÉPARÉES (slides de réserve, montrées seulement sur question) ═══════════════ -->
 <section class="slide" id="ann-index" data-title="Annexes — sommaire">
-  <div class="kicker">Annexes — à garder en réserve pendant les questions</div>
-  <h2>Réponses préparées</h2>
+  <div class="kicker">Annexes — FAQ</div>
+  <h2>FAQ</h2>
   <div class="rule"></div>
   <div class="body">
     <div class="ann-grid">
       <div>
         <h3>Architecture &amp; données</h3>
-        <div class="ann-link" data-go="ann-choix"><span class="num"></span>Choix techniques : PostgreSQL, API REST, API Platform</div>
-        <div class="ann-link" data-go="ann-concurrence"><span class="num"></span>Double réservation au même instant</div>
-        <div class="ann-link" data-go="ann-multi"><span class="num"></span>Passer en multi-restaurant</div>
-        <div class="ann-link" data-go="ann-algo"><span class="num"></span>Algorithme : complexité et cas limites</div>
+        <div class="ann-link" data-goto="ann-choix"><span class="num"></span>Choix techniques : PostgreSQL, API REST, API Platform</div>
+        <div class="ann-link" data-goto="ann-concurrence"><span class="num"></span>Double réservation au même instant</div>
+        <div class="ann-link" data-goto="ann-multi"><span class="num"></span>Passer en multi-restaurant</div>
+        <div class="ann-link" data-goto="ann-algo"><span class="num"></span>Algorithme : complexité et cas limites</div>
+        <div class="ann-link" data-goto="ann-v1"><span class="num"></span>MLD et MPD du dossier (v1)</div>
       </div>
       <div>
         <h3>Sécurité</h3>
-        <div class="ann-link" data-go="ann-jwt"><span class="num"></span>Jeton JWT : stockage, durée, déploiement</div>
-        <div class="ann-link" data-go="ann-hash"><span class="num"></span>Mots de passe : bcrypt ou Argon2id</div>
-        <div class="ann-link" data-go="ann-secrets"><span class="num"></span>Secrets et configuration</div>
-        <div class="ann-link" data-go="ann-rgpd"><span class="num"></span>Plan de mise en conformité RGPD</div>
+        <div class="ann-link" data-goto="ann-jwt"><span class="num"></span>Jeton JWT : stockage, durée, déploiement</div>
+        <div class="ann-link" data-goto="ann-hash"><span class="num"></span>Mots de passe : bcrypt ou Argon2id</div>
+        <div class="ann-link" data-goto="ann-secrets"><span class="num"></span>Secrets et configuration</div>
+        <div class="ann-link" data-goto="ann-rgpd"><span class="num"></span>Plan de mise en conformité RGPD</div>
       </div>
       <div>
         <h3>IA, qualité &amp; méthode</h3>
-        <div class="ann-link" data-go="ann-ia"><span class="num"></span>Fiabilité de l'IA</div>
-        <div class="ann-link" data-go="ann-canaux"><span class="num"></span>Agent vocal et Telegram</div>
-        <div class="ann-link" data-go="ann-tests"><span class="num"></span>Tests et couverture</div>
-        <div class="ann-link" data-go="ann-ecarts"><span class="num"></span>Écarts entre le dossier et le code</div>
+        <div class="ann-link" data-goto="ann-ia"><span class="num"></span>Fiabilité de l'IA</div>
+        <div class="ann-link" data-goto="ann-canaux"><span class="num"></span>Agent vocal et Telegram</div>
+        <div class="ann-link" data-goto="ann-tests"><span class="num"></span>Tests et couverture</div>
+        <div class="ann-link" data-goto="ann-ecarts"><span class="num"></span>Écarts entre le dossier et le code</div>
       </div>
     </div>
-    <p class="note">Ces slides ne sont présentées que si la question est posée. Un clic sur un thème ouvre la slide correspondante ; « ↩ Sommaire » ramène ici.</p>
+    <p class="note"> « ↩ Sommaire » ramène ici.</p>
   </div>
   <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
 </section>
 
 <!-- A1 — Choix techniques -->
 <section class="slide" id="ann-choix" data-title="Annexe — Choix techniques">
-  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
   <div class="kicker">Annexe A1 — Architecture</div>
   <h2>Pourquoi PostgreSQL, une API REST… et pas API Platform ?</h2>
   <div class="rule"></div>
@@ -1499,7 +1524,7 @@ nginx:alpine
 
 <!-- A2 — Double réservation -->
 <section class="slide" id="ann-concurrence" data-title="Annexe — Double réservation">
-  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
   <div class="kicker">Annexe A2 — Concurrence</div>
   <h2>Deux clients réservent la même table au même instant ?</h2>
   <div class="rule"></div>
@@ -1527,7 +1552,7 @@ nginx:alpine
 
 <!-- A3 — Multi-restaurant -->
 <section class="slide" id="ann-multi" data-title="Annexe — Multi-restaurant">
-  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
   <div class="kicker">Annexe A3 — Évolution</div>
   <h2>Comment passer en multi-restaurant ?</h2>
   <div class="rule"></div>
@@ -1552,7 +1577,7 @@ nginx:alpine
 
 <!-- A4 — Algorithme -->
 <section class="slide" id="ann-algo" data-title="Annexe — Algorithme">
-  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
   <div class="kicker">Annexe A4 — Cœur métier</div>
   <h2>L'algorithme : complexité, optimalité, cas limites</h2>
   <div class="rule"></div>
@@ -1575,9 +1600,33 @@ nginx:alpine
   <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
 </section>
 
+<!-- A4 bis — MLD et MPD du dossier (v1) -->
+<section class="slide" id="ann-v1" data-title="Annexe — MLD et MPD du dossier (v1)">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A4 bis — Modélisation</div>
+  <h2>Le MLD et le MPD du dossier (v1)</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="carousel" data-carousel>
+      <div class="ctabs">
+        <button class="ctab" data-go="0">MLD v1 (dossier)</button>
+        <button class="ctab" data-go="1">MPD v1 (dossier)</button>
+      </div>
+      <div class="cstage">
+        <button class="cnav prev">‹</button>
+        <img src="Jalon3/MLD.png" alt="MLD du dossier, version 1">
+        <img src="Jalon3/MPD.png" alt="MPD du dossier, version 1">
+        <button class="cnav next">›</button>
+      </div>
+    </div>
+    <p class="note">Ce que la v2 corrige. <b>MLD</b> : NOTIFICATION_SMS et identifiant Twilio → NOTIFICATION, comme au MCD ; <code>conversation_ia</code> reçoit sa clé vers le restaurant (CONCERNER) et une clé UNIQUE vers la réservation (ABOUTIR) ; plus de types SQL, et plus de syntaxe MySQL, au niveau logique. <b>MPD</b> : la v1 décrit la cible (CHECK, index métier, ON DELETE) ; la v2 montre le schéma réellement créé par les migrations.</p>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
 <!-- A5 — Jeton JWT -->
 <section class="slide" id="ann-jwt" data-title="Annexe — Jeton JWT">
-  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
   <div class="kicker">Annexe A5 — Sécurité</div>
   <h2>Le jeton JWT : stockage, durée de vie, déploiement</h2>
   <div class="rule"></div>
@@ -1598,7 +1647,7 @@ nginx:alpine
 
 <!-- A6 — bcrypt vs Argon2id -->
 <section class="slide" id="ann-hash" data-title="Annexe — bcrypt ou Argon2id">
-  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
   <div class="kicker">Annexe A6 — Sécurité</div>
   <h2>Mots de passe : bcrypt ou Argon2id ?</h2>
   <div class="rule"></div>
@@ -1630,7 +1679,7 @@ password_hashers:
 
 <!-- A7 — Secrets et configuration -->
 <section class="slide" id="ann-secrets" data-title="Annexe — Secrets">
-  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
   <div class="kicker">Annexe A7 — Sécurité</div>
   <h2>Où sont les secrets, et comment arrivent-ils dans le code ?</h2>
   <div class="rule"></div>
@@ -1657,7 +1706,7 @@ password_hashers:
 
 <!-- A8 — Plan RGPD -->
 <section class="slide" id="ann-rgpd" data-title="Annexe — Plan RGPD">
-  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
   <div class="kicker">Annexe A8 — Conformité</div>
   <h2>RGPD : état du MVP et plan avant une mise en service réelle</h2>
   <div class="rule"></div>
@@ -1678,7 +1727,7 @@ password_hashers:
 
 <!-- A9 — Fiabilité de l'IA -->
 <section class="slide" id="ann-ia" data-title="Annexe — Fiabilité de l'IA">
-  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
   <div class="kicker">Annexe A9 — Intelligence artificielle</div>
   <h2>Peut-on faire confiance à l'IA ?</h2>
   <div class="rule"></div>
@@ -1700,7 +1749,7 @@ password_hashers:
 
 <!-- A10 — Agent vocal et Telegram -->
 <section class="slide" id="ann-canaux" data-title="Annexe — Vocal et Telegram">
-  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
   <div class="kicker">Annexe A10 — Canaux</div>
   <h2>Comment fonctionnent l'agent vocal et Telegram ?</h2>
   <div class="rule"></div>
@@ -1724,7 +1773,7 @@ password_hashers:
 
 <!-- A11 — Tests et couverture -->
 <section class="slide" id="ann-tests" data-title="Annexe — Tests et couverture">
-  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
   <div class="kicker">Annexe A11 — Qualité</div>
   <h2>Qu'est-ce qui est testé, et quelle couverture ?</h2>
   <div class="rule"></div>
@@ -1746,7 +1795,7 @@ password_hashers:
 
 <!-- A12 — Écarts dossier ↔ code -->
 <section class="slide" id="ann-ecarts" data-title="Annexe — Écarts dossier / code">
-  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
   <div class="kicker">Annexe A12 — Méthode</div>
   <h2>Pourquoi le dossier et le code divergent-ils parfois ?</h2>
   <div class="rule"></div>
@@ -1898,15 +1947,15 @@ password_hashers:
 
   /* --- annexes : liens internes vers une slide par son id (sommaire, retour) --- */
   const slideIndexOf = id => slides.indexOf(document.getElementById(id));
-  document.querySelectorAll('[data-go] .num').forEach(el => {
-    const n = slideIndexOf(el.parentElement.dataset.go);
+  document.querySelectorAll('[data-goto] .num').forEach(el => {
+    const n = slideIndexOf(el.parentElement.dataset.goto);
     if (n >= 0) el.textContent = String(n + 1).padStart(2, '0');
   });
 
   deck.addEventListener('click', e => {
-    const link = e.target.closest('[data-go]');
+    const link = e.target.closest('[data-goto]');
     if (link) {               /* lien d'annexe : on saute à la slide visée au lieu d'avancer */
-      const n = slideIndexOf(link.dataset.go);
+      const n = slideIndexOf(link.dataset.goto);
       if (n >= 0) show(n);
       return;
     }

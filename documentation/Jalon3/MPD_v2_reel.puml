@@ -1,0 +1,118 @@
+@startuml MPD_CALENDRIA_v2_reel
+' =====================================================================
+'  CALENDRIA - Modele Physique de Donnees REEL (MVP livre) - version 2
+'
+'  Releve a partir des 3 migrations Doctrine (backend/migrations/) :
+'  c'est exactement le schema qui tourne en production.
+'  La v1 du dossier decrivait la cible physique (CHECK, index metier,
+'  ON DELETE CASCADE / SET NULL) : ces elements ne sont pas implementes.
+' =====================================================================
+title **CALENDRIA – Modèle Physique de Données réel (MVP) – v2**\nPostgreSQL 15 – schéma généré par les migrations Doctrine
+
+skinparam backgroundColor #FEFEFE
+skinparam defaultFontName "JetBrains Mono"
+skinparam defaultFontSize 13
+skinparam roundCorner 6
+skinparam dpi 180
+skinparam nodesep 55
+skinparam ranksep 50
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #1A5276
+hide circle
+hide methods
+
+skinparam class {
+    BackgroundColor #FAFBFC
+    BorderColor #2E86C1
+    HeaderBackgroundColor #2E86C1
+    HeaderFontColor White
+    FontColor #2C3E50
+    AttributeFontSize 12
+}
+
+class "restaurant" as restaurant {
+    <b>PK</b> id : INT IDENTITY
+    --
+    nom : VARCHAR(255) NOT NULL
+    adresse : TEXT NOT NULL
+    telephone : VARCHAR(20) NOT NULL
+    email : VARCHAR(255) NOT NULL
+    capacite_totale : INT NOT NULL
+    duree_repas : INT NOT NULL
+    buffer_nettoyage : INT NOT NULL
+    created_at : TIMESTAMP(0) NOT NULL
+}
+
+class "“user”" as user {
+    <b>PK</b> id : INT IDENTITY
+    --
+    email : VARCHAR(180) NOT NULL
+    roles : JSON NOT NULL
+    password : VARCHAR(255) NOT NULL
+    ..
+    <i>UNIQUE INDEX (email)</i>
+}
+
+class "“table”" as table_rest {
+    <b>PK</b> id : INT IDENTITY
+    --
+    <b>FK</b> restaurant_id : INT NOT NULL
+    numero_table : VARCHAR(10) NOT NULL
+    capacite : INT NOT NULL
+    type : VARCHAR(50) NOT NULL
+    statut : VARCHAR(20) NOT NULL
+    created_at : TIMESTAMP(0) NOT NULL
+    ..
+    <i>INDEX (restaurant_id)</i>
+}
+
+class "service" as service {
+    <b>PK</b> id : INT IDENTITY
+    --
+    <b>FK</b> restaurant_id : INT NOT NULL
+    type : VARCHAR(20) NOT NULL
+    heure_debut : TIME(0) NOT NULL
+    heure_fin : TIME(0) NOT NULL
+    jours_ouverture : JSON NOT NULL
+    created_at : TIMESTAMP(0) NOT NULL
+    ..
+    <i>INDEX (restaurant_id)</i>
+}
+
+class "client" as client {
+    <b>PK</b> id : INT IDENTITY
+    --
+    nom : VARCHAR(255) NOT NULL
+    telephone : VARCHAR(20) NOT NULL
+    email : VARCHAR(255) NULL
+    preferences : JSON NULL
+    consentement_rgpd : BOOLEAN NOT NULL
+    taux_noshow : DOUBLE PRECISION NULL
+    created_at : TIMESTAMP(0) NOT NULL
+}
+
+class "reservation" as reservation {
+    <b>PK</b> id : INT IDENTITY
+    --
+    <b>FK</b> client_id : INT NOT NULL
+    <b>FK</b> restaurant_id : INT NOT NULL
+    <b>FK</b> table_reservee_id : INT NULL
+    date_reservation : DATE NOT NULL
+    heure_reservation : TIME(0) NOT NULL
+    nombre_personnes : INT NOT NULL
+    statut : VARCHAR(20) NOT NULL
+    demandes_speciales : TEXT NULL
+    created_at : TIMESTAMP(0) NOT NULL
+    ..
+    <i>INDEX (client_id) · INDEX (restaurant_id)</i>
+    <i>INDEX (table_reservee_id)</i>
+}
+
+restaurant "1" -- "0..*" table_rest : restaurant_id
+restaurant "1" -- "0..*" service : restaurant_id
+restaurant "1" -- "0..*" reservation : restaurant_id
+client "1" -- "0..*" reservation : client_id
+table_rest "0..1" - "0..*" reservation : table_reservee_id
+
+' Legende : reprise dans la slide de soutenance, a cote du diagramme.
+@enduml

@@ -1,0 +1,154 @@
+@startuml MLD_CALENDRIA_v2
+' =====================================================================
+'  CALENDRIA - Modele Logique de Donnees (MLD) - version 2
+'
+'  Transformation stricte du MCD (Jalon 3), entite par entite.
+'  Corrections par rapport a la v1 remise dans le dossier :
+'   - NOTIFICATION (et non notification_sms / id_externe_twilio) : le MLD
+'     reprend exactement les proprietes du MCD
+'   - conversation_ia porte id_restaurant : traduction de CONCERNER (1,1)
+'   - id_reservation UNIQUE dans conversation_ia : ABOUTIR est un (0,1)-(0,1)
+'   - aucun type SQL a ce niveau : les types arrivent au MPD
+'
+'  Notation : PK = cle primaire, FK = cle etrangere,
+'  (NULL) = FK optionnelle issue d'une cardinalite minimale 0
+' =====================================================================
+title **CALENDRIA – Modèle Logique de Données (MLD) – v2**\nTransformation du MCD : tables, clés primaires et clés étrangères
+
+skinparam backgroundColor #FEFEFE
+skinparam defaultFontName "JetBrains Mono"
+skinparam defaultFontSize 13
+skinparam roundCorner 6
+skinparam dpi 180
+skinparam nodesep 55
+skinparam ranksep 50
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #1A5276
+hide circle
+hide methods
+
+skinparam class {
+    BackgroundColor #FAFBFC
+    BorderColor #2E86C1
+    HeaderBackgroundColor #2E86C1
+    HeaderFontColor White
+    FontColor #2C3E50
+    AttributeFontSize 12
+}
+
+class "restaurant" as restaurant {
+    <b>PK</b> id_restaurant
+    --
+    nom
+    adresse
+    telephone
+    email
+    capacite_totale
+    duree_repas
+    buffer_nettoyage
+    date_creation
+}
+
+class "utilisateur" as utilisateur {
+    <b>PK</b> id_utilisateur
+    --
+    email <<UNIQUE>>
+    mot_de_passe
+    roles
+    <b>FK</b> id_restaurant (NULL)
+}
+
+class "table_restaurant" as table_rest {
+    <b>PK</b> id_table
+    --
+    numero_table
+    capacite
+    type
+    statut
+    <b>FK</b> id_restaurant
+}
+
+class "service" as service {
+    <b>PK</b> id_service
+    --
+    type
+    heure_debut
+    heure_fin
+    jours_ouverture
+    <b>FK</b> id_restaurant
+}
+
+class "fermeture_exceptionnelle" as fermeture {
+    <b>PK</b> id_fermeture
+    --
+    date_fermeture
+    motif
+    <b>FK</b> id_restaurant
+}
+
+class "client" as client {
+    <b>PK</b> id_client
+    --
+    nom
+    telephone
+    email
+    preferences
+    consentement_rgpd
+    taux_noshow
+}
+
+class "reservation" as reservation {
+    <b>PK</b> id_reservation
+    --
+    date_reservation
+    heure_reservation
+    nombre_personnes
+    statut
+    demandes_speciales
+    <b>FK</b> id_client
+    <b>FK</b> id_restaurant
+    <b>FK</b> id_table (NULL)
+}
+
+class "conversation_ia" as conversation {
+    <b>PK</b> id_conversation
+    --
+    telephone_appelant
+    canal
+    date_debut
+    date_fin
+    transcription
+    donnees_collectees
+    statut
+    <b>FK</b> id_restaurant
+    <b>FK</b> id_client (NULL)
+    <b>FK</b> id_reservation (NULL) <<UNIQUE>>
+}
+
+class "notification" as notification {
+    <b>PK</b> id_notification
+    --
+    destinataire
+    message
+    type
+    canal
+    statut_envoi
+    date_envoi
+    <b>FK</b> id_reservation
+}
+
+' Une ligne = une cle etrangere ; le libelle rappelle l'association du MCD
+restaurant "1" -- "1..*" table_rest : POSSEDER
+restaurant "1" -- "1..*" service : DEFINIR
+restaurant "1" -- "0..*" fermeture : PLANIFIER
+restaurant "0..1" -- "0..*" utilisateur : EMPLOYER
+restaurant "1" -- "0..*" reservation : RECEVOIR
+client "1" -- "0..*" reservation : EFFECTUER
+table_rest "0..1" - "0..*" reservation : ATTRIBUER
+reservation "1" -- "0..*" notification : GENERER
+restaurant "1" -- "0..*" conversation : CONCERNER
+client "0..1" -- "0..*" conversation : PARTICIPER
+reservation "0..1" - "0..1" conversation : ABOUTIR
+
+' Legende : reprise dans la slide de soutenance, a cote du diagramme.
+@enduml
