@@ -182,6 +182,20 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
        font-size:14.5px;color:#7B3A31}
 .note{font-size:13px;color:var(--grey);font-style:italic}
 
+/* ============ ANNEXES : sommaire cliquable + retour ============ */
+.ann-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.ann-grid h3{margin-bottom:10px}
+.ann-link{display:flex;gap:10px;align-items:center;padding:10px 13px;margin-bottom:9px;background:var(--bg-soft);
+          border:1px solid var(--border);border-left:4px solid var(--primary-light);border-radius:8px;
+          cursor:pointer;color:var(--night);font-size:14px;line-height:1.3}
+.ann-link:hover{border-left-color:var(--secondary);background:#fff}
+.ann-link .num{font-family:'JetBrains Mono';font-size:12px;color:var(--grey);min-width:22px}
+.ann-back{position:absolute;top:28px;right:64px;font-family:'Outfit';font-size:12px;letter-spacing:.06em;
+          color:var(--primary-light);border:1px solid var(--border);border-radius:14px;padding:4px 12px;cursor:pointer}
+.ann-back:hover{color:var(--secondary);border-color:var(--secondary)}
+.slide .t-sm td.ok{color:#1e8449;font-weight:600}
+.slide .t-sm td.ko{color:#B03A2E;font-weight:600}
+
 /* ============ SLIDE FINALE : démo live embarquée + remerciements ============ */
 .slide.finale{background:linear-gradient(135deg,var(--night) 0%,var(--primary) 55%,var(--primary-light) 130%);
               color:#fff;padding:42px 56px 54px}
@@ -1107,7 +1121,7 @@ php bin/console doctrine:fixtures:load</pre>
         <div class="pills">
           <span class="pill ok">Restaurant inexistant</span><span class="pill ok">Aucun service ouvert</span>
           <span class="pill ok">Date invalide</span><span class="pill ok">Email dupliqué → 409</span>
-          <span class="pill ok">Mauvais credentials → 401</span><span class="pill ok">Webhook sans restaurantId → 400</span>
+          <span class="pill ok">Mauvais credentials → 401</span><span class="pill ok">Webhook vocal : champs manquants ou JSON invalide → 400</span>
         </div>
       </div>
       <div>
@@ -1122,7 +1136,7 @@ php bin/console doctrine:fixtures:load</pre>
 ............
 OK (12 tests, 24 assertions)
 Time: 00:02.841, Memory: 32.00 MB</span></pre>
-        <div class="quote" style="margin-top:10px">Choix assumé : <code>/api/chatbot/call</code> renvoie <strong>toujours 200</strong> — Retell AI interprète tout code non-200 comme une erreur fatale et raccroche. Les erreurs métier passent par le corps JSON (<code>booking_message</code>).</div>
+        <div class="quote" style="margin-top:10px">Choix assumé : sur <code>/api/chatbot/call</code>, un <strong>refus métier</strong> (créneau complet, restaurant fermé) renvoie <strong>200</strong> avec <code>success: false</code>, le message et les alternatives — sinon Retell AI raccrocherait au lieu de proposer un autre horaire. Écart avec le dossier, qui écrit « toujours 200 » : les erreurs techniques gardent leur code (400, 404, 500).</div>
       </div>
     </div>
   </div>
@@ -1432,23 +1446,329 @@ nginx:alpine
   <div class="chrome"><span>BOUGHERARA Safi — Formation CDA — Promotion 2025-2026</span><span class="pg"></span></div>
 </section>
 
-<!-- ═══════════════ ANNEXE : QUESTIONS ANTICIPÉES (slide de réserve) ═══════════════ -->
-<section class="slide" data-title="Annexe — Questions anticipées">
-  <div class="kicker">Annexe — à garder en réserve pendant les questions</div>
-  <h2>Questions anticipées</h2>
+<!-- ═══════════════ ANNEXES : RÉPONSES PRÉPARÉES (slides de réserve, montrées seulement sur question) ═══════════════ -->
+<section class="slide" id="ann-index" data-title="Annexes — sommaire">
+  <div class="kicker">Annexes — à garder en réserve pendant les questions</div>
+  <h2>Réponses préparées</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="ann-grid">
+      <div>
+        <h3>Architecture &amp; données</h3>
+        <div class="ann-link" data-go="ann-choix"><span class="num"></span>Choix techniques : PostgreSQL, API REST, API Platform</div>
+        <div class="ann-link" data-go="ann-concurrence"><span class="num"></span>Double réservation au même instant</div>
+        <div class="ann-link" data-go="ann-multi"><span class="num"></span>Passer en multi-restaurant</div>
+        <div class="ann-link" data-go="ann-algo"><span class="num"></span>Algorithme : complexité et cas limites</div>
+      </div>
+      <div>
+        <h3>Sécurité</h3>
+        <div class="ann-link" data-go="ann-jwt"><span class="num"></span>Jeton JWT : stockage, durée, déploiement</div>
+        <div class="ann-link" data-go="ann-hash"><span class="num"></span>Mots de passe : bcrypt ou Argon2id</div>
+        <div class="ann-link" data-go="ann-secrets"><span class="num"></span>Secrets et configuration</div>
+        <div class="ann-link" data-go="ann-rgpd"><span class="num"></span>Plan de mise en conformité RGPD</div>
+      </div>
+      <div>
+        <h3>IA, qualité &amp; méthode</h3>
+        <div class="ann-link" data-go="ann-ia"><span class="num"></span>Fiabilité de l'IA</div>
+        <div class="ann-link" data-go="ann-canaux"><span class="num"></span>Agent vocal et Telegram</div>
+        <div class="ann-link" data-go="ann-tests"><span class="num"></span>Tests et couverture</div>
+        <div class="ann-link" data-go="ann-ecarts"><span class="num"></span>Écarts entre le dossier et le code</div>
+      </div>
+    </div>
+    <p class="note">Ces slides ne sont présentées que si la question est posée. Un clic sur un thème ouvre la slide correspondante ; « ↩ Sommaire » ramène ici.</p>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A1 — Choix techniques -->
+<section class="slide" id="ann-choix" data-title="Annexe — Choix techniques">
+  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A1 — Architecture</div>
+  <h2>Pourquoi PostgreSQL, une API REST… et pas API Platform ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c3">
+      <div class="card"><h4>PostgreSQL 15</h4><p>Contraintes d'intégrité strictes, type <strong>JSON natif</strong> (<code>roles</code>, <code>jours_ouverture</code>), et des outils avancés pour l'évolution : verrous de ligne, contraintes d'exclusion sur des plages horaires.</p></div>
+      <div class="card"><h4>API REST + SPA plutôt que Twig</h4><p><strong>4 clients</strong> consomment les mêmes données : dashboard, widget, Telegram, agent vocal. Un template Twig ne servirait que le navigateur ; une API JSON sert tout le monde. Front et back se déploient séparément.</p></div>
+      <div class="card orange"><h4>API Platform : installé, non exploité</h4><p>Branché sur <code>/api</code>, mais <strong>aucune entité n'est exposée</strong> (pas d'<code>#[ApiResource]</code>). Les <strong>24 routes</strong> sont écrites à la main : règles métier conditionnelles, contrôle total des codes de retour. Perspective : la documentation OpenAPI.</p></div>
+    </div>
+    <p class="note">Dans le code : <code>config/routes/api_platform.yaml</code> · 4 contrôleurs, 24 attributs <code>#[Route]</code>.</p>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A2 — Double réservation -->
+<section class="slide" id="ann-concurrence" data-title="Annexe — Double réservation">
+  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A2 — Concurrence</div>
+  <h2>Deux clients réservent la même table au même instant ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div>
+        <h3>Ce qui se passe aujourd'hui</h3>
+        <ul>
+          <li>Séquence <strong>vérifier → écrire</strong> : <code>verifierDisponibilite()</code> puis <code>persist()</code> + <code>flush()</code>.</li>
+          <li>Aucun verrou entre les deux : une fenêtre de quelques millisecondes où une 2<sup>e</sup> requête peut passer la même vérification.</li>
+          <li>À l'échelle d'un restaurant (quelques dizaines de réservations par jour), le risque est faible — mais réel avec 3 canaux simultanés.</li>
+        </ul>
+        <div class="card orange" style="margin-top:12px"><h4>Limite assumée</h4><p>Le MVP a priorisé l'exactitude de l'algorithme ; la protection contre la concurrence est la prochaine étape.</p></div>
+      </div>
+      <div>
+        <h3>Les correctifs, du plus simple au plus robuste</h3>
+        <div class="card"><h4>1 · Verrou pessimiste</h4><p>Transaction + <code>LockMode::PESSIMISTIC_WRITE</code> (<code>SELECT … FOR UPDATE</code>) sur les réservations du créneau : la 2<sup>e</sup> requête attend la fin de la 1<sup>re</sup>.</p></div>
+        <div class="card" style="margin-top:8px"><h4>2 · Contrainte d'exclusion PostgreSQL</h4><p><code>EXCLUDE USING gist</code> sur (table, plage horaire), avec l'extension <code>btree_gist</code> : c'est la base qui refuse le chevauchement.</p></div>
+        <div class="card green" style="margin-top:8px"><h4>Côté utilisateur</h4><p>Le conflit remonte en <strong>409</strong> ; le canal propose alors une alternative.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A3 — Multi-restaurant -->
+<section class="slide" id="ann-multi" data-title="Annexe — Multi-restaurant">
+  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A3 — Évolution</div>
+  <h2>Comment passer en multi-restaurant ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div class="card green"><h4>✅ Déjà en place</h4><ul>
+        <li><code>Table</code>, <code>Service</code> et <code>Reservation</code> portent un <code>restaurant_id</code> obligatoire.</li>
+        <li>CRUD des restaurants dans <code>RestaurantAdminController</code>.</li>
+        <li>Sélecteur d'établissement dans le dashboard.</li>
+        <li>Widget, Telegram et vocal reçoivent un <code>restaurantId</code>.</li>
+      </ul></div>
+      <div class="card orange"><h4>Ce qu'il manque : l'appartenance</h4><ul>
+        <li>Association <strong>Utilisateur–Restaurant</strong> (aujourd'hui, tout compte voit tous les établissements) → une migration.</li>
+        <li>Filtrage des requêtes par établissement de l'utilisateur, et un <strong>Voter</strong> Symfony pour les droits.</li>
+        <li><code>Client</code> rattaché à un restaurant (classe d'association) pour porter le consentement et le taux de no-show par établissement.</li>
+      </ul></div>
+    </div>
+    <p class="note">L'association compte–établissement figure déjà au MCD (EMPLOYER) et au diagramme de classes, avec le stéréotype « amélioration identifiée ».</p>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A4 — Algorithme -->
+<section class="slide" id="ann-algo" data-title="Annexe — Algorithme">
+  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A4 — Cœur métier</div>
+  <h2>L'algorithme : complexité, optimalité, cas limites</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div>
+        <div class="card"><h4>Complexité</h4><p>Tri des tables <strong>O(T log T)</strong>, puis pour chaque table un parcours des réservations du jour : <strong>O(T × R)</strong>. Les alternatives relancent la recherche pour chaque créneau de 30 min du jour. Quelques dizaines de lignes : négligeable.</p></div>
+        <div class="card" style="margin-top:8px"><h4>Pourquoi un choix glouton</h4><p>Prendre la <strong>plus petite table suffisante</strong> n'est pas toujours optimal sur toute une soirée (problème de type <em>bin packing</em>), mais c'est déterministe, explicable au restaurateur et suffisant à cette échelle.</p></div>
+      </div>
+      <div>
+        <div class="card"><h4>Alternatives</h4><p>Créneaux par pas de 30 min dans les services ouverts <strong>du même jour</strong>, triés par proximité avec l'heure demandée, <strong>3 au maximum</strong>.</p></div>
+        <div class="card orange" style="margin-top:8px"><h4>Cas limites identifiés</h4><ul>
+          <li>Le filtre porte sur la capacité, <strong>pas sur le statut</strong> : une table « hors service » peut être attribuée → une condition à ajouter.</li>
+          <li>Pas de combinaison de tables pour les grands groupes : au-delà de la plus grande table, le chatbot oriente vers le téléphone.</li>
+          <li>En multi-restaurant, le filtrage de chevauchement passerait dans la requête SQL.</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A5 — Jeton JWT -->
+<section class="slide" id="ann-jwt" data-title="Annexe — Jeton JWT">
+  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A5 — Sécurité</div>
+  <h2>Le jeton JWT : stockage, durée de vie, déploiement</h2>
   <div class="rule"></div>
   <div class="body">
     <table class="t-sm">
-      <tr><th style="width:300px">Question probable</th><th>Ma réponse en une phrase</th></tr>
-      <tr><td><b>Pourquoi PostgreSQL et pas MySQL ?</b></td><td>Contraintes d'intégrité plus strictes, type JSON natif pour <code>jours_ouverture</code>, et meilleure gestion des accès concurrents — critique quand 3 canaux réservent en même temps.</td></tr>
-      <tr><td><b>Pourquoi pas de refresh token ?</b></td><td>Arbitrage de périmètre : le MVP vise un usage de bureau où le restaurateur se reconnecte. C'est la première évolution sécurité prévue.</td></tr>
-      <tr><td><b>Comment teste-t-on une IA non déterministe ?</b></td><td>On ne teste pas la réponse de Gemini : on teste les <strong>services métier</strong> qu'elle appelle, avec des mocks. La couche IA extrait des variables, la décision reste déterministe.</td></tr>
-      <tr><td><b>Pourquoi une seule branche Git ?</b></td><td>Trunk-based development : seul sur le projet, des branches de feature que j'ouvre et fusionne moi-même n'apportent rien. La CI bloquante joue le rôle du relecteur.</td></tr>
-      <tr><td><b>Que se passe-t-il si Gemini tombe ?</b></td><td>Le chatbot renvoie un message d'erreur maîtrisé ; le dashboard et la création manuelle de réservation restent pleinement fonctionnels. L'IA est un canal, pas le cœur.</td></tr>
-      <tr><td><b>Pourquoi <code>/api/chatbot/call</code> renvoie toujours 200 ?</b></td><td>L'agent vocal interprète tout code non-200 comme une erreur fatale et raccroche. Les erreurs métier passent donc par le corps JSON, pas par le code HTTP.</td></tr>
-      <tr><td><b>Comment passer en multi-restaurant ?</b></td><td>Tables, services et réservations portent déjà leur restaurant, et le dashboard a un sélecteur d'établissement. Il manque l'appartenance : une association Utilisateur–Restaurant (une migration) et le filtrage des requêtes par établissement.</td></tr>
-      <tr><td><b>Où sont stockés les secrets ?</b></td><td>Jamais dans Git : variables d'environnement Railway chiffrées au repos, clés JWT générées au build Docker, token Telegram révocable en une commande.</td></tr>
+      <tr><th style="width:190px">Option</th><th>Protégé contre</th><th>Exposé à</th></tr>
+      <tr><td><b><code>localStorage</code></b> (choix actuel)</td><td class="ok">CSRF : rien n'est envoyé automatiquement</td><td class="ko">XSS : lisible par tout script de la page</td></tr>
+      <tr><td><b>Cookie httpOnly</b> (cible)</td><td class="ok">XSS : invisible pour le JavaScript</td><td class="ko">CSRF : envoyé automatiquement → <code>SameSite</code> + jeton CSRF</td></tr>
     </table>
+    <div class="cols c3">
+      <div class="card orange"><h4>Écart assumé</h4><p>Le dossier indique un stockage « en mémoire » : le code utilise <code>localStorage</code> (<code>auth.service.ts</code>). Le risque XSS est atténué par l'échappement automatique de React.</p></div>
+      <div class="card"><h4>Durée et révocation</h4><p>Durée de vie <strong>1 h</strong> (défaut Lexik). Un JWT n'est pas révocable avant expiration : la réponse est un jeton court + un <strong>refresh token</strong>, première évolution sécurité prévue.</p></div>
+      <div class="card"><h4>Déconnexion au déploiement</h4><p>Les clés RSA sont générées au <code>docker build</code> : nouvelles clés, anciennes signatures invalides. Correctif : clés stockées en secrets Railway et montées au démarrage.</p></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A6 — bcrypt vs Argon2id -->
+<section class="slide" id="ann-hash" data-title="Annexe — bcrypt ou Argon2id">
+  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A6 — Sécurité</div>
+  <h2>Mots de passe : bcrypt ou Argon2id ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div>
+        <h3>Ce que fait réellement le code</h3>
+        <ul>
+          <li><code>security.yaml</code> : <code>algorithm: auto</code>.</li>
+          <li>Symfony 6.4 construit une chaîne dont le premier maillon est le hasher natif PHP, sans algorithme imposé → <strong>bcrypt, coût 13</strong>.</li>
+          <li>Le sel est inclus dans l'empreinte : d'où l'absence de colonne <code>salt</code>.</li>
+          <li>En test, coût abaissé à 4 pour accélérer PHPUnit.</li>
+        </ul>
+        <div class="card orange" style="margin-top:12px"><h4>Écart assumé</h4><p>Le dossier annonce Argon2id, l'algorithme visé ; <code>auto</code> a retenu bcrypt. Argon2id est le premier choix de l'OWASP, bcrypt reste accepté (coût ≥ 10).</p></div>
+      </div>
+      <div>
+        <h3>Passer à Argon2id sans casser les comptes</h3>
+<pre class="sm"><span class="c"># config/packages/security.yaml</span>
+password_hashers:
+  App\Entity\User:
+    algorithm: argon2id
+    migrate_from: [bcrypt]</pre>
+        <div class="card green" style="margin-top:10px"><h4>Re-hachage transparent</h4><p>Les anciens hash bcrypt restent vérifiables ; à la prochaine connexion réussie, <code>UserRepository::upgradePassword()</code> (<code>PasswordUpgraderInterface</code>, déjà implémentée) réécrit l'empreinte en Argon2id.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A7 — Secrets et configuration -->
+<section class="slide" id="ann-secrets" data-title="Annexe — Secrets">
+  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A7 — Sécurité</div>
+  <h2>Où sont les secrets, et comment arrivent-ils dans le code ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c3">
+      <div class="card green"><h4>Hors de Git</h4><ul>
+        <li><code>backend/.env</code> et <code>config/jwt/*.pem</code> ignorés.</li>
+        <li><code>.env.example</code> : valeurs factices uniquement.</li>
+        <li>Production : variables Railway (<code>DATABASE_URL</code>, <code>APP_SECRET</code>, <code>GEMINI_API_KEY</code>, <code>TELEGRAM_BOT_TOKEN</code>, <code>JWT_PASSPHRASE</code>, <code>CORS_ALLOW_ORIGIN</code>).</li>
+      </ul></div>
+      <div class="card"><h4>Injection dans les services</h4><ul>
+        <li><code>services.yaml</code> : <code>env(GEMINI_API_KEY): ''</code> dans <code>parameters</code>, puis <code>bind</code> vers le constructeur.</li>
+        <li>Le token Telegram reste côté serveur ; seul le <em>username</em> du bot est exposé (<code>/api/chatbot/config</code>).</li>
+        <li><strong>gitleaks</strong> en CI sur tout l'historique, avec des règles Telegram et Gemini.</li>
+      </ul></div>
+      <div class="card orange"><h4>Points à durcir</h4><ul>
+        <li>La clé Gemini passe en paramètre d'URL (<code>?key=</code>) → en-tête <code>x-goog-api-key</code>, pour qu'elle ne finisse pas dans des logs.</li>
+        <li><code>docker-compose.yml</code> contient <code>APP_SECRET</code>, le mot de passe PostgreSQL et <code>APP_ENV: dev</code> : fichier de <strong>développement local uniquement</strong>.</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A8 — Plan RGPD -->
+<section class="slide" id="ann-rgpd" data-title="Annexe — Plan RGPD">
+  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A8 — Conformité</div>
+  <h2>RGPD : état du MVP et plan avant une mise en service réelle</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <table class="t-sm">
+      <tr><th style="width:170px">Exigence</th><th>État du MVP</th><th>Avant mise en service</th></tr>
+      <tr><td><b>Minimisation</b></td><td class="ok">Nom, téléphone, heure, couverts ; email facultatif</td><td>—</td></tr>
+      <tr><td><b>Consentement</b></td><td class="ko">Champ présent, mais forcé à <code>true</code> à la création</td><td>Case à cocher dans le widget, question explicite dans le chatbot et l'appel, horodatage</td></tr>
+      <tr><td><b>Effacement</b></td><td class="ko">Aucune route de suppression de client</td><td>Endpoint de suppression ou d'anonymisation du client et de ses réservations</td></tr>
+      <tr><td><b>Conservation</b></td><td>Politique définie : clients 2 ans, logs 1 an</td><td>Commande Symfony de purge, planifiée</td></tr>
+      <tr><td><b>Sous-traitants</b></td><td>Messages transmis à Google (Gemini) et à Telegram</td><td>Mention d'information aux clients, registre des traitements</td></tr>
+      <tr><td><b>Sécurité</b></td><td class="ok">HTTPS, base sur réseau privé, mots de passe hachés</td><td>—</td></tr>
+    </table>
+    <p class="note">Le MVP ne tourne que sur des données fictives : ces points ont été reportés pour donner la priorité au cœur métier dans le temps imparti.</p>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A9 — Fiabilité de l'IA -->
+<section class="slide" id="ann-ia" data-title="Annexe — Fiabilité de l'IA">
+  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A9 — Intelligence artificielle</div>
+  <h2>Peut-on faire confiance à l'IA ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="quote">« L'IA dialogue et extrait ; elle ne décide jamais. » La disponibilité est calculée par du code PHP déterministe.</div>
+    <div class="cols c2">
+      <div>
+        <div class="card"><h4>Hallucination</h4><p>Gemini renvoie seulement un JSON (<code>responseMimeType: application/json</code>) : date, heure, couverts, nom, téléphone. Il ne peut pas inventer une table libre. Le PHP <strong>revérifie</strong> même la capacité maximale qu'on lui a indiquée dans le prompt.</p></div>
+        <div class="card" style="margin-top:8px"><h4>Gemini en panne</h4><p><code>try/catch</code> dans <code>traiterMessage()</code> : message d'excuse au client. Le dashboard et la saisie manuelle restent pleinement fonctionnels — l'IA est un canal, pas le cœur.</p></div>
+      </div>
+      <div>
+        <div class="card"><h4>Tester un système non déterministe</h4><p>On ne teste pas les réponses de Gemini : on teste la partie déterministe qu'il alimente, <code>DisponibiliteService</code>, avec 4 tests unitaires et des <strong>mocks</strong>.</p></div>
+        <div class="card" style="margin-top:8px"><h4>Injection de prompt</h4><p>Si un client écrit « ignore tes instructions… », le modèle n'a accès ni à la base ni à aucun outil, et chaque valeur extraite repasse par le PHP. Au pire, la conversation dérape ; aucune donnée n'est exposée.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A10 — Agent vocal et Telegram -->
+<section class="slide" id="ann-canaux" data-title="Annexe — Vocal et Telegram">
+  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A10 — Canaux</div>
+  <h2>Comment fonctionnent l'agent vocal et Telegram ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div class="card"><h4>📲 Telegram — webhook</h4><ul>
+        <li>Telegram appelle <code>POST /api/chatbot/telegram?restaurantId=X</code> à chaque message (pas de <em>polling</em>).</li>
+        <li>Session isolée par discussion : <code>telegram_&lt;chatId&gt;</code> ; commandes <code>/start</code> et <code>/reset</code>.</li>
+        <li>Même <code>ChatbotService</code> que le widget ; réponse renvoyée via l'API <code>sendMessage</code>.</li>
+      </ul></div>
+      <div class="card"><h4>📞 Agent vocal Retell — webhook</h4><ul>
+        <li><code>POST /api/chatbot/call</code> avec des données <strong>déjà structurées</strong> : pas de Gemini, appel direct à <code>DisponibiliteService</code>.</li>
+        <li>Noms de champs tolérants (<code>name</code> / <code>nom</code> / <code>clientName</code>…).</li>
+        <li>Créneau complet ou restaurant fermé → <strong>200</strong> avec <code>success: false</code>, un message à lire et les alternatives : l'agent continue la conversation. Réservation créée → 201 ; entrée invalide → 400.</li>
+      </ul></div>
+    </div>
+    <div class="card orange"><h4>Écart et point à durcir</h4><p>Le dossier écrit que <code>/call</code> renvoie « toujours 200 » : seuls les refus métier le font, les erreurs techniques gardent leur code HTTP. Les deux webhooks sont publics sans signature : correctif = <code>secret_token</code> de Telegram vérifié dans l'en-tête, et vérification de la signature fournie par Retell.</p></div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A11 — Tests et couverture -->
+<section class="slide" id="ann-tests" data-title="Annexe — Tests et couverture">
+  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A11 — Qualité</div>
+  <h2>Qu'est-ce qui est testé, et quelle couverture ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <table class="t-sm">
+      <tr><th style="width:250px">Fichier</th><th style="width:110px">Type</th><th>Cas couverts</th></tr>
+      <tr><td><code>DisponibiliteServiceTest</code></td><td>Unitaire · mocks</td><td>Restaurant inexistant · aucun service configuré · service ouvert avec table libre · date invalide</td></tr>
+      <tr><td><code>AuthControllerTest</code></td><td>Fonctionnel</td><td>Health 200 · inscription 201 · email manquant 400 · mot de passe manquant 400 · email dupliqué 409 · mauvais identifiants 401</td></tr>
+      <tr><td><code>ChatbotControllerTest</code></td><td>Fonctionnel</td><td>Webhook vocal : champs manquants 400 · JSON invalide 400</td></tr>
+    </table>
+    <div class="cols c3">
+      <div class="card green"><h4>Pourquoi ces cibles</h4><p>Le cœur métier partagé par les 4 canaux, et les points d'entrée publics. Côté front, <code>tsc -b</code> en mode strict bloque le build.</p></div>
+      <div class="card orange"><h4>Couverture : écart assumé</h4><p>Le dossier annonce plus de 80 % des classes métier : ce taux <strong>n'a pas été mesuré</strong>. Mesure : PCOV + <code>phpunit --coverage-html</code>.</p></div>
+      <div class="card"><h4>Prochains tests</h4><p>Chevauchement de créneaux, génération des alternatives, conflit 409 à la création d'une réservation.</p></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A12 — Écarts dossier ↔ code -->
+<section class="slide" id="ann-ecarts" data-title="Annexe — Écarts dossier / code">
+  <div class="ann-back" data-go="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A12 — Méthode</div>
+  <h2>Pourquoi le dossier et le code divergent-ils parfois ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c21">
+      <div>
+        <table class="t-sm">
+          <tr><th>Le dossier</th><th>Le code livré</th></tr>
+          <tr><td>Hachage Argon2id</td><td>bcrypt via <code>auto</code></td></tr>
+          <tr><td>JWT « en mémoire »</td><td><code>localStorage</code></td></tr>
+          <tr><td>Image back multi-stage</td><td>Une seule étape (front multi-stage)</td></tr>
+          <tr><td>Séquence « gestion d'une réservation » : API Platform, NotificationService, SMS</td><td><code>ReservationController::updateReservation()</code>, sans notification</td></tr>
+          <tr><td>MPD avec CHECK et index</td><td>Socle : tables, clés, unicité de l'email</td></tr>
+          <tr><td><code>/api/chatbot/call</code> « toujours 200 »</td><td>200 pour les refus métier ; 400, 404 ou 500 sinon</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="card"><h4>D'où viennent les écarts</h4><p>Un MVP mené seul en 6 mois : certaines sections décrivent la <strong>cible</strong> (MPD, RGPD, sitemap), d'autres un <strong>état antérieur</strong> (séquence du Jalon 4, avant le recentrage du périmètre).</p></div>
+        <div class="card green" style="margin-top:8px"><h4>Ma règle</h4><p>Le code fait foi. Chaque écart est identifié, expliqué, et il a son correctif.</p></div>
+        <div class="card" style="margin-top:8px"><h4>Trunk-based et CI</h4><p>Seul sur le projet : une branche <code>main</code>, la CI tient le rôle du relecteur. Une CI rouge se corrige avant tout nouveau commit.</p></div>
+      </div>
+    </div>
   </div>
   <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
 </section>
@@ -1576,7 +1896,22 @@ nginx:alpine
     }
   });
 
-  deck.addEventListener('click', e => { if (e.clientX > window.innerWidth / 2) next(); else prev(); });
+  /* --- annexes : liens internes vers une slide par son id (sommaire, retour) --- */
+  const slideIndexOf = id => slides.indexOf(document.getElementById(id));
+  document.querySelectorAll('[data-go] .num').forEach(el => {
+    const n = slideIndexOf(el.parentElement.dataset.go);
+    if (n >= 0) el.textContent = String(n + 1).padStart(2, '0');
+  });
+
+  deck.addEventListener('click', e => {
+    const link = e.target.closest('[data-go]');
+    if (link) {               /* lien d'annexe : on saute à la slide visée au lieu d'avancer */
+      const n = slideIndexOf(link.dataset.go);
+      if (n >= 0) show(n);
+      return;
+    }
+    if (e.clientX > window.innerWidth / 2) next(); else prev();
+  });
 
   const start = parseInt(location.hash.replace('#',''), 10);
   show(isNaN(start) ? 0 : start - 1);
