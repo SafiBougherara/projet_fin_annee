@@ -163,4 +163,6 @@ jobs:
           sudo install /tmp/gitleaks /usr/local/bin/gitleaks
 
       - name: Recherche de secrets commités (Gitleaks)
-        run: gitleaks detect --source . --config .gitleaks.toml --redact --no-banner --exit-code 1
+        # --verbose : en cas d'échec, le log indique fichier, commit et règle (la valeur reste masquée par --redact).
+        # Les faux positifs analysés sont déclarés par empreinte dans .gitleaksignore.
+        run: gitleaks detect --source . --config .gitleaks.toml --redact --verbose --no-banner --exit-code 1

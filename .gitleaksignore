@@ -1,0 +1,25 @@
+# Faux positifs Gitleaks, analysés un par un (20/10/2026).
+# Chaque ligne est l'empreinte exacte d'une détection : un nouveau secret, même dans ces fichiers, reste détecté.
+# Aucun de ces éléments n'est un secret de production (Railway utilise ses propres variables d'environnement).
+
+# CI : base PostgreSQL éphémère du job backend (identifiants de développement du docker-compose) et APP_SECRET de test.
+4752b79f689ebe5fe53fb618046ef94cd6bd0e12:.github/workflows/ci.yml:symfony-database-url:57
+4dee829c0db817334a2cf8b1fe6ef84b88afd50e:.github/workflows/ci.yml:symfony-database-url:57
+4dee829c0db817334a2cf8b1fe6ef84b88afd50e:.github/workflows/ci.yml:generic-api-key:59
+61645250a68a508235e02c2202d85e306dbf7cc3:.github/workflows/ci.yml:symfony-database-url:55
+61645250a68a508235e02c2202d85e306dbf7cc3:.github/workflows/ci.yml:generic-api-key:57
+
+# Ancien backend/.env de l'installation Symfony (retiré du suivi depuis) : mot de passe par défaut
+# « app:!ChangeMe! » et APP_SECRET de développement local, jamais utilisés en production.
+c57053e3bb1b4719eef8160bf7d0965e040339fa:backend/.env:generic-api-key:19
+c57053e3bb1b4719eef8160bf7d0965e040339fa:backend/.env:symfony-database-url:27
+c57053e3bb1b4719eef8160bf7d0965e040339fa:backend/.env:symfony-database-url:28
+c57053e3bb1b4719eef8160bf7d0965e040339fa:backend/.env:symfony-database-url:29
+
+# Documentation et scripts d'installation locale : identifiants de développement du docker-compose.
+c57053e3bb1b4719eef8160bf7d0965e040339fa:INSTALLATION.md:symfony-database-url:102
+e45b8c7ff68532f78535318890f217d48f3ab71c:scripts/setup.ps1:symfony-database-url:61
+e45b8c7ff68532f78535318890f217d48f3ab71c:scripts/setup.sh:symfony-database-url:48
+9851f1d5ae3672d3731823e4be504d7f765942ac:scripts/setup.ps1:symfony-database-url:61
+9851f1d5ae3672d3731823e4be504d7f765942ac:scripts/setup.sh:symfony-database-url:48
+a48efc27ed5d43a7b9b671155d393502e787fa7e:Plan.md:symfony-database-url:354
