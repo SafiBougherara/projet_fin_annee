@@ -282,7 +282,6 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       <div class="card green"><span class="ico">✅</span><h4>8. Bilan</h4><p>Difficultés rencontrées, taux de couverture fonctionnelle, perspectives.</p></div>
       <div class="card red"><span class="ico">🚀</span><h4>9. Démonstration</h4><p>Application en production : dashboard, plan de salle, chatbot IA, widget en iframe et Telegram.</p></div>
     </div>
-    <p class="note">Minutage visé — projet et gestion de projet <b>8 min</b> · conception UI/UX et données <b>8 min</b> · architecture et code <b>10 min</b> · sécurité, tests et déploiement <b>8 min</b> · veille et bilan <b>5 min</b> · démonstration live <b>6 min</b>.</p>
   </div>
   <div class="chrome"><span>CALENDRIA — Soutenance CDA</span><span class="pg"></span></div>
 </section>
@@ -298,7 +297,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
         <h3>À propos de moi</h3>
         <ul>
           <li>Je m'appelle <strong>Safi Bougherara</strong>, candidat au titre professionnel <strong>Concepteur Développeur d'Applications</strong> (RNCP niveau 6).</li>
-          <li>Mes centres d'intérêt se situent à la croisée de l'<strong>architecture back-end</strong>, de l'<strong>expérience front-end</strong> et de l'<strong>automatisation par l'IA</strong>.</li>
+          <li>Mes centres d'intérêt se situent dans le développement web, l'architecture logicielle et l'automatisations des processus.</li>
           <li>Ce projet est l'aboutissement de six mois de développement full-stack.</li>
         </ul>
         <h3 style="margin-top:16px">Le projet en une phrase</h3>
@@ -309,10 +308,6 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
         <table class="t-sm">
           <tr><th>Indicateur</th><th>Valeur</th></tr>
           <tr><td>Couverture fonctionnelle</td><td><b>82%</b> (14/17)</td></tr>
-          <tr><td>Tests automatisés</td><td>12 tests — 0 échec</td></tr>
-          <tr><td>Back-end (PHP)</td><td>~3 400 lignes</td></tr>
-          <tr><td>Front-end (TS/TSX)</td><td>~3 200 lignes</td></tr>
-          <tr><td>Endpoints d'API</td><td>24 routes</td></tr>
           <tr><td>Entités persistées</td><td>6 tables</td></tr>
           <tr><td>Canaux de réservation</td><td>3 (web, Telegram, vocal)</td></tr>
         </table>
@@ -356,7 +351,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       </div>
       <div>
         <h3>Secteur visé</h3>
-        <p>Restauration / CHR — restaurants indépendants, brasseries, bistrots et établissements gastronomiques.</p>
+        <p>Restauration — restaurants indépendants, brasseries, bistrots et établissements gastronomiques.</p>
         <div class="kpis" style="grid-template-columns:1fr 1fr;margin-top:14px">
           <div class="kpi accent"><div class="v">2h</div><div class="l">par jour passées au téléphone</div></div>
           <div class="kpi accent"><div class="v">40</div><div class="l">couverts à optimiser chaque service</div></div>
@@ -467,7 +462,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
           <li>Calcul de disponibilité temps réel + alternatives à 30 min</li>
           <li>Dashboard React : CRUD réservations, plan de salle interactif</li>
           <li>Gestion des tables et des services (horaires d'ouverture)</li>
-          <li>Fiche client avec historique · mode sombre persistant</li>
+          <li>Mode sombre persistant · fiche client avec historique <span class="note">(reportée : non livrée dans le MVP)</span></li>
           <li>Authentification JWT RS256 · rate limiting</li>
           <li>Containerisation Docker + CI/CD + déploiement cloud</li>
         </ul>
@@ -479,7 +474,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
           <li>Commande de plats et gestion de menu</li>
           <li>Application mobile native</li>
           <li>Multi-langues (français uniquement)</li>
-          <li>Multi-restaurants dans le MVP <span class="note">(architecture prévue : FK nullable)</span></li>
+          <li>Multi-restaurants dans le MVP <span class="note">(données déjà rattachées à un restaurant ; reste à lier les comptes aux établissements)</span></li>
           <li>Fermetures exceptionnelles <span class="note">(modélisées au MCD, reportées au-delà du MVP)</span></li>
           <li>Intégration avec les logiciels de caisse</li>
           <li>Système de fidélité ou d'avis clients</li>
@@ -549,14 +544,12 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
           <tr><td><b>Revue de sprint</b></td><td>Présentation au référent à la fin de chaque jalon</td></tr>
           <tr><td><b>Rétrospective</b></td><td>Bilan écrit en fin de jalon — c'est ce qui a déclenché le passage de WhatsApp à Telegram</td></tr>
         </table>
-        <p class="note" style="margin-top:10px">Ce que j'ai <strong>volontairement abandonné</strong> : les rôles (Product Owner, Scrum Master) et la mêlée quotidienne. Ce sont des rituels de <strong>coordination d'équipe</strong> : seul, ils n'ont aucun destinataire.</p>
       </div>
       <div>
         <h3>Pourquoi l'agilité plutôt que le cycle en V ?</h3>
         <ul>
-          <li><strong>Le périmètre a dû bouger</strong> : WhatsApp Business exigeait 4 à 6 semaines de vérification. En cycle en V, ce blocage aurait fait tomber tout le planning ; en agile, j'ai basculé sur Telegram au sprint suivant.</li>
+          <li><strong>Le périmètre a dû bouger</strong> : WhatsApp Business exigeait 4 à 6 semaines de vérification. En étant agile, j'ai basculé sur Telegram au sprint suivant.</li>
           <li><strong>Les jalons imposés sont déjà des sprints</strong> : un livrable démontrable chaque mois.</li>
-          <li><strong>Les risques sortent tôt</strong> : un incrément qui tourne révèle les problèmes bien avant un document de spécification.</li>
         </ul>
         <div class="card orange" style="margin-top:12px">
           <h4>Le backlog MoSCoW</h4>
@@ -640,18 +633,6 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       <div class="card orange"><h4>⚠️ Risque</h4><p>Bugs en production → CI bloquante + recette manuelle par jalon.</p></div>
     </div>
   </div>
-  <div class="chrome"><span>IV — Méthodologie et organisation</span><span class="pg"></span></div>
-</section>
-
-<!-- ═══════════════ 16. DIAGRAMME DE GANTT ═══════════════ -->
-<section class="slide" data-title="Planning de Gantt">
-  <div class="kicker">Section IV — Planification détaillée</div>
-  <h2>Le planning de Gantt du projet</h2>
-  <div class="rule"></div>
-  <div class="body"><div class="fig">
-    <img src="Jalon2/CALENDRIA - Planning Global du Projet (Janvier - Juin 2026).png" alt="Diagramme de Gantt du projet CALENDRIA">
-    <div class="cap">Janvier → juin 2026 — tâches et jalons découpés par sprint mensuel, avec les dépendances entre lots (modélisation avant API, API avant chatbot, chatbot avant déploiement)</div>
-  </div></div>
   <div class="chrome"><span>IV — Méthodologie et organisation</span><span class="pg"></span></div>
 </section>
 
@@ -835,7 +816,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="rule"></div>
   <div class="body"><div class="fig">
     <img src="Jalon3/MPD.png" alt="Modèle Physique de Données">
-    <div class="cap">Figure 6.3 — MPD : types SQL, index et contraintes CHECK, implémenté via les migrations Doctrine</div>
+    <div class="cap">Figure 6.3 — MPD : la cible physique (types SQL, index, contraintes CHECK). Les migrations Doctrine du MVP en posent le socle — tables, clés, unicité de l'email ; les CHECK et index métier restent à porter.</div>
   </div></div>
   <div class="chrome"><span>VI — Modélisation de la base de données</span><span class="pg"></span></div>
 </section>
@@ -883,7 +864,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
         <h3>Le flux en 4 temps</h3>
         <ul>
           <li>Le frontend React envoie <code>POST /api/login</code> (email + mot de passe).</li>
-          <li>Symfony vérifie le hash <strong>Argon2id</strong> et le rate limiter d'IP.</li>
+          <li>Symfony vérifie le hash <strong>bcrypt</strong> (algorithme <code>auto</code>) et le rate limiter d'IP.</li>
           <li>LexikJWT signe un token <strong>RS256</strong> avec la clé privée RSA 4096.</li>
           <li>Chaque requête suivante porte <code>Authorization: Bearer &lt;token&gt;</code> — l'API reste <strong>stateless</strong>.</li>
         </ul>
@@ -947,7 +928,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
         <h3>Principes SOLID appliqués</h3>
         <div class="card"><h4>SRP</h4><p>La séparation Controller / Service / Repository garantit qu'une classe n'a qu'une seule raison de changer.</p></div>
         <div class="card" style="margin-top:8px"><h4>OCP</h4><p>Ajouter un canal (Telegram, agent vocal) n'a demandé <strong>aucune modification</strong> de <code>DisponibiliteService</code> : seul un nouveau point d'entrée a été ajouté dans le contrôleur, qui réutilise le même service.</p></div>
-        <div class="card" style="margin-top:8px"><h4>DIP</h4><p>Injection de dépendances Symfony : les contrôleurs reçoivent leurs services par constructeur, jamais d'instanciation en dur.</p></div>
+        <div class="card" style="margin-top:8px"><h4>DIP</h4><p>Injection de dépendances Symfony : le conteneur fournit les services, par constructeur (services métier, <code>AuthController</code>, <code>ChatbotController</code>) ou en paramètre d'action (<code>ReservationController</code>, <code>RestaurantAdminController</code>) — jamais d'instanciation en dur.</p></div>
       </div>
     </div>
   </div>
@@ -1048,7 +1029,7 @@ $proposedEnd = $proposedStart + $dureeTotale;
       <div>
         <table class="t-sm">
           <tr><th>Donnée</th><th>Contenu du jeu d'essai</th><th>Pourquoi</th></tr>
-          <tr><td><b>1 compte admin</b></td><td><code>admin@calendria.com</code> / mot de passe haché Argon2id</td><td>Tester l'authentification JWT</td></tr>
+          <tr><td><b>1 compte admin</b></td><td><code>admin@calendria.com</code> / mot de passe haché (bcrypt)</td><td>Tester l'authentification JWT</td></tr>
           <tr><td><b>1 restaurant</b></td><td>50 couverts · repas 90 min · buffer 15 min</td><td>Paramètres réalistes du turnover</td></tr>
           <tr><td><b>10 tables</b></td><td>4 tables de 2 · 3 de 4 · 3 de 6 · intérieur et terrasse</td><td><b>Forcer l'algorithme à arbitrer</b> entre plusieurs capacités</td></tr>
           <tr><td><b>2 services</b></td><td>Midi et soir, avec jours d'ouverture</td><td>Tester le cas « restaurant fermé »</td></tr>
@@ -1058,10 +1039,8 @@ $proposedEnd = $proposedStart + $dureeTotale;
       <div>
 <pre class="sm"><span class="c"># Rejouer le jeu d'essai à l'identique</span>
 php bin/console doctrine:migrations:migrate
-php bin/console doctrine:fixtures:load
-
-<span class="c"># Même commande en CI, avant PHPUnit</span></pre>
-        <div class="card" style="margin-top:12px"><h4>Pourquoi des fixtures et non un dump SQL</h4><p>Le jeu d'essai est du <strong>code versionné</strong> : il évolue avec le schéma, se rejoue en une commande et donne le <strong>même état initial</strong> en local, en CI et en démo.</p></div>
+php bin/console doctrine:fixtures:load</pre>
+        <div class="card" style="margin-top:12px"><h4>Pourquoi des fixtures et non un dump SQL</h4><p>Le jeu d'essai est du <strong>code versionné</strong> : il évolue avec le schéma, se rejoue en une commande et donne le <strong>même état initial</strong> en local et en démo.</p></div>
         <div class="card green" style="margin-top:8px"><h4>Le choix des 10 tables n'est pas décoratif</h4><p>Les capacités 2 / 4 / 6 sont choisies pour qu'une demande de 3 personnes n'ait <strong>aucune table exacte</strong> : c'est le cas qui prouve que l'algorithme prend bien la capacité immédiatement supérieure.</p></div>
         <div class="pills" style="margin-top:10px"><span class="pill ok">Données 100% fictives</span><span class="pill ok">Conforme RGPD</span></div>
       </div>
@@ -1082,11 +1061,11 @@ php bin/console doctrine:fixtures:load
       <tr><td><b>A03 — XSS</b></td><td>Échappement automatique du JSX React et des templates Twig.</td></tr>
       <tr><td><b>A01 — CSRF</b></td><td>API stateless : aucun cookie de session, token JWT porté par l'en-tête <code>Authorization</code>.</td></tr>
       <tr><td><b>A07 — Brute force</b></td><td><code>LoginRateLimiterSubscriber</code> : 5 tentatives / 15 min par IP, blocage via le cache Symfony.</td></tr>
-      <tr><td><b>A02 — Mots de passe</b></td><td>Hachage <b>Argon2id</b> (défaut Symfony 6.4) — aucun mot de passe stocké en clair.</td></tr>
-      <tr><td><b>A01 — Contrôle d'accès</b></td><td>2 firewalls : <code>/api</code> exige un JWT valide (401 sinon) · <code>/api/chatbot</code> public mais strictement limité aux actions conversationnelles.</td></tr>
+      <tr><td><b>A02 — Mots de passe</b></td><td>Hachage <b>bcrypt</b> via l'algorithme <code>auto</code> de Symfony (coût 13) — aucun mot de passe stocké en clair. <span class="note">Écart assumé : le dossier annonce Argon2id, la configuration <code>auto</code> retient bcrypt. Les deux sont recommandés par l'OWASP ; passer à Argon2id tient en une ligne, avec re-hachage transparent à la connexion (<code>PasswordUpgraderInterface</code>).</span></td></tr>
+      <tr><td><b>A01 — Contrôle d'accès</b></td><td>2 zones, réparties sur 7 firewalls : <code>/api</code> exige un JWT valide (401 sinon) · <code>/api/chatbot</code> public mais strictement limité aux actions conversationnelles.</td></tr>
       <tr><td><b>A02 — Transport</b></td><td>HTTPS obligatoire en production (Let's Encrypt via Railway), CORS filtré par regex d'origine.</td></tr>
     </table>
-    <p class="note">Deux incidents traités en cours de projet : exposition potentielle des clés JWT (⇒ génération au build Docker + <code>.gitignore</code>) et fuite du header <code>X-Powered-By</code> (⇒ <code>fastcgi_hide_header</code> + <code>expose_php = Off</code>).</p>
+    <p class="note">Incident traité : exposition potentielle des clés JWT (⇒ génération au build Docker + <code>.gitignore</code>). Écart assumé : la fuite du header <code>X-Powered-By</code> est identifiée et son correctif décrit dans le dossier (<code>fastcgi_hide_header</code> + <code>expose_php = Off</code>), mais il n'est pas encore appliqué dans l'image — dette de fin de projet, deux lignes de configuration.</p>
   </div>
   <div class="chrome"><span>IX — Sécurité et conformité</span><span class="pg"></span></div>
 </section>
@@ -1099,9 +1078,9 @@ php bin/console doctrine:fixtures:load
   <div class="body">
     <div class="cols c2">
       <div class="card green"><h4>Minimisation des données</h4><p>Collecte réduite à l'essentiel : <strong>nom, téléphone, heure, couverts</strong>. L'email reste optionnel. Aucune donnée sensible au sens de l'article 9.</p></div>
-      <div class="card green"><h4>Consentement explicite</h4><p>Champ <code>consentement_rgpd</code> (BOOLEAN) porté par l'entité CLIENT, positionné à la création de la réservation quel que soit le canal.</p></div>
-      <div class="card green"><h4>Droit à l'oubli</h4><p>Suppression d'une fiche client depuis le dashboard, avec cascade maîtrisée en base de données.</p></div>
-      <div class="card green"><h4>Durée de conservation</h4><p>Données clients : <strong>2 ans</strong> après la dernière réservation. Logs applicatifs : <strong>1 an</strong> maximum.</p></div>
+      <div class="card orange"><h4>Consentement — écart assumé</h4><p>Le champ <code>consentement_rgpd</code> (BOOLEAN) existe sur CLIENT, mais le MVP le positionne à <code>true</code> à la création, quel que soit le canal : le consentement n'est pas encore recueilli. Correctif : case à cocher dans le widget, question explicite dans le chatbot, horodatage.</p></div>
+      <div class="card orange"><h4>Droit à l'oubli — non outillé</h4><p>Prévu au dossier, mais la suppression d'une fiche client depuis le dashboard n'est pas livrée : le temps a été donné au cœur métier. Correctif : endpoint de suppression ou d'anonymisation du client et de ses réservations.</p></div>
+      <div class="card orange"><h4>Durée de conservation — définie</h4><p>Politique fixée : clients <strong>2 ans</strong> après la dernière réservation, logs <strong>1 an</strong>. La purge automatique n'est pas encore implémentée (tâche planifiée à prévoir).</p></div>
       <div class="card green"><h4>Sécurisation des flux</h4><p>HTTPS bout en bout, base de données non exposée publiquement (réseau privé Railway).</p></div>
       <div class="card green"><h4>Données de démonstration</h4><p>L'intégralité du développement et de la démonstration repose sur des <strong>données fictives</strong>.</p></div>
     </div>
@@ -1181,7 +1160,7 @@ Time: 00:02.841, Memory: 32.00 MB</span></pre>
       <div>
         <div class="card red"><h4>🔐 Le 3<sup>e</sup> job : sécurité</h4><p>Un pipeline qui ne vérifie que la compilation laisse passer deux incidents très courants : la <strong>dépendance vulnérable</strong> et le <strong>secret commité</strong>. Gitleaks analyse <strong>tout l'historique Git</strong>, pas seulement le dernier commit.</p></div>
         <div class="quote" style="margin-top:10px">Dès sa première exécution, le job a détecté <strong>4 vulnérabilités</strong> dont <strong>3 « high » sur react-router</strong> (open redirect, XSS, déni de service). Corrigées, build revalidé. Elles étaient en production sans aucun signal.</div>
-        <div class="card green" style="margin-top:10px"><h4>Règle de merge</h4><p>Aucun merge sur <code>main</code> si un job échoue. Railway déploie automatiquement après une CI verte.</p></div>
+        <div class="card green" style="margin-top:10px"><h4>Règle de la CI</h4><p>En trunk-based, il n'y a pas de merge à bloquer : une CI rouge sur <code>main</code> se corrige immédiatement, avant tout nouveau commit. La CI joue le rôle du relecteur ; Railway redéploie depuis <code>main</code>.</p></div>
       </div>
     </div>
   </div>
@@ -1195,13 +1174,14 @@ Time: 00:02.841, Memory: 32.00 MB</span></pre>
   <div class="rule"></div>
   <div class="body">
     <div class="cols c2">
-<pre class="sm"><span class="k">BACKEND — build multi-stage</span>
+<pre class="sm"><span class="k">BACKEND — image en une étape</span>
+<span class="c"># le dossier la dit multi-stage : seul le front l'est</span>
 php:8.4-fpm-alpine
- ↓ extensions PHP (pdo_pgsql, opcache, intl)
+ ↓ extensions PHP (pdo_pgsql, zip, gd, opcache)
  ↓ nginx + supervisord
  ↓ composer install --no-dev
  ↓ openssl genrsa 4096   <span class="c">(clés JWT)</span>
- ↓ cache:warmup (prod)     → EXPOSE 8080
+                           → EXPOSE 8080
 
 <span class="k">entrypoint.sh (runtime)</span>
  ↓ lecture de $PORT (fallback 8080)
@@ -1215,7 +1195,7 @@ node:20-alpine
  → /app/dist
 
 nginx:alpine
- ↓ COPY --from=build /app/dist
+ ↓ COPY --from=builder /app/dist
  ↓ SPA fallback try_files $uri /index.html
  → EXPOSE 3000
 
@@ -1289,8 +1269,8 @@ nginx:alpine
           <tr><th>Menace</th><th>Contre-mesure</th></tr>
           <tr><td>Fuite de clé API</td><td>Variables Railway + <code>.gitignore</code> sur <code>.env</code></td></tr>
           <tr><td>Webhook spoofing</td><td>Firewall public restreint aux actions conversationnelles</td></tr>
-          <tr><td>DoS via le chatbot</td><td>Rate limiting Symfony + quotas Gemini</td></tr>
-          <tr><td>Vol de token JWT</td><td>Stockage en mémoire React, expiration courte</td></tr>
+          <tr><td>DoS via le chatbot</td><td>Quotas Gemini côté Google ; le rate limiting ne couvre aujourd'hui que le login — l'étendre au chatbot est la prochaine étape</td></tr>
+          <tr><td>Vol de token JWT</td><td>Expiration 1 h. Écart assumé : stocké en <code>localStorage</code> et non « en mémoire » comme l'indique le dossier — exposé à la XSS (atténuée par l'échappement React), immunisé contre le CSRF ; cible : cookie httpOnly + refresh token</td></tr>
           <tr><td>Exfiltration en base</td><td>PostgreSQL sur réseau privé, jamais exposée</td></tr>
         </table>
         <p class="note" style="margin-top:8px">Pistes suivantes : Content Security Policy, audit OWASP ZAP, centralisation des logs (SIEM), refresh token.</p>
@@ -1310,7 +1290,7 @@ nginx:alpine
       <tr><th style="width:180px">Problème</th><th>Cause identifiée</th><th>Solution retenue</th></tr>
       <tr><td><b>1. CORS en production</b></td><td>URL Railway auto-générée, non connue au build ; sous-domaine modifiable.</td><td>Variable <code>CORS_ALLOW_ORIGIN</code> en <b>regex</b>, lue à l'exécution par NelmioCors — configuration sans rebuild.</td></tr>
       <tr><td><b>2. Déconnexions à chaque déploiement</b></td><td>Clés JWT RSA régénérées au build Docker ⇒ tokens existants invalidés.</td><td>Comportement documenté et accepté pour le MVP ; solution cible : clés en secret Railway montées au démarrage.</td></tr>
-      <tr><td><b>3. Container qui plante au boot</b></td><td><code>services.yaml</code> injectait <code>TELEGRAM_BOT_TOKEN</code> / <code>GEMINI_API_KEY</code> dans tous les services via <code>bind</code>.</td><td>Valeurs par défaut vides : <code>%env(default::TELEGRAM_BOT_TOKEN)%</code>.</td></tr>
+      <tr><td><b>3. Container qui plante au boot</b></td><td><code>services.yaml</code> injectait <code>TELEGRAM_BOT_TOKEN</code> / <code>GEMINI_API_KEY</code> dans tous les services via <code>bind</code>.</td><td>Valeurs par défaut vides dans <code>parameters</code> : <code>env(TELEGRAM_BOT_TOKEN): ''</code>.</td></tr>
       <tr><td><b>4. CI cassée : base <code>calendria_test_test</code></b></td><td>Symfony ajoute <code>_test</code> quand <code>APP_ENV=test</code>, en plus du suffixe déjà présent dans l'URL.</td><td><code>DATABASE_URL</code> pointe vers <code>calendria</code> sans suffixe — Symfony complète tout seul.</td></tr>
       <tr><td><b>5. 502 Bad Gateway sur Railway</b></td><td>nginx écoutait un port codé en dur, Railway impose <code>$PORT</code> dynamique.</td><td><code>entrypoint.sh</code> réécrit la conf nginx via <code>sed</code> avant de lancer supervisord.</td></tr>
     </table>
@@ -1333,7 +1313,7 @@ nginx:alpine
     </div>
     <div class="cols c3">
       <div class="card green"><h4>✅ Livré — métier</h4><ul class="check"><li>Dashboard CRUD complet</li><li>Plan de salle interactif</li><li>Algorithme d'attribution des tables</li><li>Disponibilité + alternatives à 30 min</li><li>Chatbot IA Gemini (widget web)</li><li>Widget embarquable en iframe</li><li>Bot Telegram</li></ul></div>
-      <div class="card green"><h4>✅ Livré — technique</h4><ul class="check"><li>JWT RS256 + Argon2id</li><li>Rate limiting login</li><li>Gestion tables &amp; services</li><li>Docker multi-stage</li><li>CI/CD GitHub Actions</li><li>Déploiement Railway</li><li>Mode sombre persistant</li></ul></div>
+      <div class="card green"><h4>✅ Livré — technique</h4><ul class="check"><li>JWT RS256 + bcrypt</li><li>Rate limiting login</li><li>Gestion tables &amp; services</li><li>Docker (front multi-stage)</li><li>CI/CD GitHub Actions</li><li>Déploiement Railway</li><li>Mode sombre persistant</li></ul></div>
       <div class="card orange"><h4>❌ Non livré (3)</h4><ul class="cross"><li><b>Fermetures exceptionnelles</b> — modélisées au MCD, non implémentées</li><li><b>Notifications SMS</b> — remplaçables par Telegram, coût Twilio non soutenable</li><li><b>Statistiques avancées</b> — indicateurs présents, pas de module graphique</li></ul>
         <p class="note" style="margin-top:8px">Aucune de ces 3 absences n'est un échec technique : ce sont des arbitrages de périmètre assumés.</p></div>
     </div>
@@ -1351,9 +1331,9 @@ nginx:alpine
       <tr><th style="width:250px">Compétence</th><th>Preuve dans CALENDRIA</th></tr>
       <tr><td><b>Architecture logicielle</b></td><td>API REST Symfony 6.4 + SPA React — séparation stricte back / front, 4 couches, SOLID</td></tr>
       <tr><td><b>Base de données relationnelle</b></td><td>PostgreSQL 15 + Doctrine ORM + démarche MERISE complète (MCD → MLD → MPD), 3NF</td></tr>
-      <tr><td><b>Sécurité applicative</b></td><td>JWT RS256, Argon2id, rate limiting, CORS, conformité OWASP Top 10 et RGPD</td></tr>
+      <tr><td><b>Sécurité applicative</b></td><td>JWT RS256, bcrypt, rate limiting, CORS, conformité OWASP Top 10 et RGPD</td></tr>
       <tr><td><b>Intégration d'API externes</b></td><td>Google Gemini 2.5 Flash, Telegram Bot API, webhook générique pour agent vocal (entrants et sortants)</td></tr>
-      <tr><td><b>Containerisation</b></td><td>Docker multi-stage (nginx + PHP-FPM + supervisord), Docker Compose en développement</td></tr>
+      <tr><td><b>Containerisation</b></td><td>Docker (nginx + PHP-FPM + supervisord côté back, build multi-stage côté front), Docker Compose en développement</td></tr>
       <tr><td><b>CI/CD &amp; déploiement continu</b></td><td>GitHub Actions (PHPUnit + build TypeScript), déploiement automatique sur Railway</td></tr>
       <tr><td><b>Tests automatisés</b></td><td>PHPUnit unitaires et fonctionnels, TypeScript en mode strict</td></tr>
       <tr><td><b>Gestion de version</b></td><td>Trunk-based development sur <code>main</code>, Conventional Commits, tags de release <code>v0.9-beta</code> et <code>v1.0</code></td></tr>
@@ -1371,7 +1351,7 @@ nginx:alpine
     <div class="cols c3">
       <div class="card red"><h4>1 · Notifications SMS</h4><p>Rappel automatique J-1 — le levier le plus direct sur la réduction des no-show.</p></div>
       <div class="card red"><h4>2 · Statistiques avancées</h4><p>Graphiques de remplissage, analyse des no-show par période, recettes estimées.</p></div>
-      <div class="card red"><h4>3 · Multi-restaurant</h4><p>Un restaurateur lié à plusieurs établissements — <strong>architecture déjà prévue</strong> (FK nullable dès le MVP).</p></div>
+      <div class="card red"><h4>3 · Multi-restaurant</h4><p>Un restaurateur lié à plusieurs établissements — les données portent <strong>déjà leur restaurant</strong> ; reste l'association compte–établissement (une migration).</p></div>
       <div class="card"><h4>4 · Application React Native</h4><p>Réutilisation de l'API REST et d'une partie des composants existants.</p></div>
       <div class="card"><h4>5 · WebSockets temps réel</h4><p>Synchronisation instantanée du plan de salle entre plusieurs postes en salle.</p></div>
       <div class="card"><h4>6 · Refresh token JWT</h4><p>Éviter l'invalidation des sessions à chaque redéploiement.</p></div>
@@ -1466,7 +1446,7 @@ nginx:alpine
       <tr><td><b>Pourquoi une seule branche Git ?</b></td><td>Trunk-based development : seul sur le projet, des branches de feature que j'ouvre et fusionne moi-même n'apportent rien. La CI bloquante joue le rôle du relecteur.</td></tr>
       <tr><td><b>Que se passe-t-il si Gemini tombe ?</b></td><td>Le chatbot renvoie un message d'erreur maîtrisé ; le dashboard et la création manuelle de réservation restent pleinement fonctionnels. L'IA est un canal, pas le cœur.</td></tr>
       <tr><td><b>Pourquoi <code>/api/chatbot/call</code> renvoie toujours 200 ?</b></td><td>L'agent vocal interprète tout code non-200 comme une erreur fatale et raccroche. Les erreurs métier passent donc par le corps JSON, pas par le code HTTP.</td></tr>
-      <tr><td><b>Comment passer en multi-restaurant ?</b></td><td>Les clés étrangères sont déjà en place ; il faut ajouter le filtrage par restaurant dans les requêtes et un sélecteur côté dashboard. Aucune migration structurelle.</td></tr>
+      <tr><td><b>Comment passer en multi-restaurant ?</b></td><td>Tables, services et réservations portent déjà leur restaurant, et le dashboard a un sélecteur d'établissement. Il manque l'appartenance : une association Utilisateur–Restaurant (une migration) et le filtrage des requêtes par établissement.</td></tr>
       <tr><td><b>Où sont stockés les secrets ?</b></td><td>Jamais dans Git : variables d'environnement Railway chiffrées au repos, clés JWT générées au build Docker, token Telegram révocable en une commande.</td></tr>
     </table>
   </div>

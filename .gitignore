@@ -34,3 +34,8 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Supports personnels de soutenance (hors livrable)
+/documentation/revision/
+/documentation/PLAN_REVISION_SOUTENANCE.md
+/documentation/GUIDE_SOUTENANCE_CODE.md
