@@ -13,7 +13,7 @@
 '  Notation : PK = cle primaire, FK = cle etrangere,
 '  (NULL) = FK optionnelle issue d'une cardinalite minimale 0
 ' =====================================================================
-title **CALENDRIA – Modèle Logique de Données (MLD) – v2**\nTransformation du MCD : tables, clés primaires et clés étrangères
+title **CALENDRIA – Modèle Logique de Données (MLD)**\nTransformation du MCD : tables, clés primaires et clés étrangères
 
 skinparam backgroundColor #FEFEFE
 skinparam defaultFontName "JetBrains Mono"

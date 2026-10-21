@@ -1,0 +1,70 @@
+@startuml SITEMAP_CALENDRIA_v2
+' =====================================================================
+'  CALENDRIA - Sitemap / Architecture des ecrans - version 2 (MVP livre)
+'
+'  Releve dans frontend/src/App.tsx (5 routes) et dans les pages React.
+'  La v1 (Jalon 2) decrivait la cible : /calendar, /clients, /stats,
+'  /settings, canaux WhatsApp et SMS. Dans le MVP, plan de salle et
+'  reservations sont regroupes sur un seul ecran ; calendrier, fiches
+'  clients et statistiques sont reportes.
+' =====================================================================
+title **CALENDRIA – Sitemap / Architecture des écrans (MVP livré)**
+
+skinparam backgroundColor #FEFEFE
+skinparam defaultFontName Inter
+skinparam defaultFontSize 15
+skinparam dpi 160
+skinparam packageStyle rectangle
+skinparam ArrowColor #1A5276
+skinparam ArrowFontColor #1A5276
+skinparam ArrowFontSize 13
+skinparam RectangleBorderColor #2C3E50
+skinparam RectangleFontColor #2C3E50
+skinparam nodesep 30
+skinparam ranksep 14
+skinparam roundCorner 8
+
+rectangle "Accès public" as public #FEF9E7 {
+  rectangle "Connexion\n/login" as login #FCF3CF
+  rectangle "Inscription\n/register" as register #FCF3CF
+  rectangle "Widget chatbot IA\n/widget?restaurantId=X\n(intégrable en iframe)" as widget #D6EAF8
+}
+
+rectangle "Espace restaurateur (JWT requis)\nbarre de navigation : Réservations · Restaurants & Tables · mode sombre · Déconnexion" as prive #F4F6F7 {
+  rectangle "Tableau de bord des réservations\n/" as dashboard #D5F5E3 {
+    rectangle "Plan de salle interactif\nrestaurant · date · curseur horaire\nlibre · réservée · imminente · occupée" as plan
+    rectangle "Nouvelle réservation\nformulaire, table optionnelle" as form
+    rectangle "Réservation par bot Telegram\nQR code" as qr
+    rectangle "Liste des réservations\nmodifier · supprimer" as liste
+  }
+  rectangle "Gestion des restaurants et tables\n/admin" as admin #F5EEF8 {
+    rectangle "Restaurants\ncréer · modifier · supprimer" as restos
+    rectangle "Horaires d'ouverture\nservices midi / soir" as horaires
+    rectangle "Plan des tables\ncréer · modifier · supprimer" as tables
+  }
+}
+
+rectangle "Canaux sans écran (API)" as canaux #FDEDEC {
+  rectangle "Bot Telegram\nwebhook /api/chatbot/telegram" as telegram
+  rectangle "Agent vocal Retell AI\nwebhook /api/chatbot/call" as vocal
+}
+
+' Empilement vertical des elements de chaque ecran (liens invisibles)
+login -[hidden]down-> register
+register -[hidden]down-> widget
+plan -[hidden]down-> form
+form -[hidden]down-> qr
+qr -[hidden]down-> liste
+restos -[hidden]down-> horaires
+horaires -[hidden]down-> tables
+telegram -[hidden]down-> vocal
+
+login -[norank]-> dashboard : après connexion
+login <..> register : lien
+dashboard <-[norank]-> admin : navigation
+
+legend bottom
+  5 routes React (App.tsx) : 3 publiques, 2 privées protégées par PrivateRoute + JWT côté API.
+  Règle des 3 clics : plan de salle, création et liste des réservations sont sur l'écran « / », affiché dès la connexion.
+endlegend
+@enduml

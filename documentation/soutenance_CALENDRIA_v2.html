@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CALENDRIA — Soutenance CDA 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ============ VARIABLES / CHARTE GRAPHIQUE (identique au rapport) ============ */
+:root{
+  --primary:#1A5276;
+  --primary-light:#2E86C1;
+  --secondary:#E74C3C;
+  --night:#0E2F44;
+  --ok:#27AE60;
+  --warn:#F39C12;
+  --info:#3498DB;
+  --grey:#7F8C8D;
+  --bg:#FFFFFF;
+  --bg-soft:#EBF5FB;
+  --ink:#1a1a1a;
+  --ink-soft:#4a5a66;
+  --border:#D5E3EC;
+  --W:1280px; --H:720px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#0b1c28;font-family:'Inter',Helvetica,Arial,sans-serif;color:var(--ink)}
+
+/* ============ SCÈNE : slide 1280x720 mise à l'échelle ============ */
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#deck{width:var(--W);height:var(--H);position:relative;transform-origin:center center;
+      box-shadow:0 30px 80px rgba(0,0,0,.55);border-radius:6px;overflow:hidden;background:var(--bg)}
+.slide{position:absolute;inset:0;padding:52px 64px 64px;display:none;flex-direction:column;
+       background:var(--bg);animation:in .32s ease both}
+.slide.active{display:flex}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ============ TYPO ============ */
+h1,h2,h3,h4{font-family:'Outfit',sans-serif;line-height:1.15}
+.slide h2{font-size:34px;color:var(--primary);font-weight:700;margin-bottom:4px}
+.slide h3{font-size:20px;color:var(--primary-light);font-weight:600;margin-bottom:10px}
+.slide h4{font-size:16px;color:var(--night);font-weight:600;margin-bottom:6px}
+p,li{font-size:16px;line-height:1.55;color:var(--ink-soft)}
+strong{color:var(--ink);font-weight:600}
+.kicker{font-family:'Outfit';font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;
+        color:var(--secondary);font-weight:700;margin-bottom:6px}
+.rule{width:64px;height:4px;background:var(--secondary);border-radius:4px;margin:10px 0 22px}
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:16px;min-height:0}
+ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+ul li{position:relative;padding-left:22px}
+ul li::before{content:"";position:absolute;left:0;top:9px;width:8px;height:8px;border-radius:2px;background:var(--primary-light)}
+ul.check li::before{content:"\2713";background:none;color:var(--ok);font-weight:700;top:0;font-size:15px}
+ul.cross li::before{content:"\2715";background:none;color:var(--secondary);font-weight:700;top:0;font-size:14px}
+code{font-family:'JetBrains Mono',monospace;font-size:13.5px;background:#EEF4F8;color:var(--primary);
+     padding:1px 5px;border-radius:4px}
+
+/* ============ SLIDE DE TITRE / SECTION ============ */
+.cover,.section{background:linear-gradient(135deg,var(--night) 0%,var(--primary) 55%,var(--primary-light) 130%);color:#fff}
+.cover{align-items:flex-start;justify-content:center;padding:70px 80px}
+.cover h1{font-size:82px;font-weight:800;letter-spacing:-.02em}
+.cover .tag{font-size:23px;font-weight:400;color:#BFE0F2;margin-top:6px;max-width:760px}
+.cover .rule{background:var(--secondary);width:110px;margin:26px 0}
+.cover .meta{display:flex;gap:44px;margin-top:10px;flex-wrap:wrap}
+.cover .meta div{font-size:14.5px;color:#D6EAF8}
+.cover .meta b{display:block;font-family:'Outfit';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#7FB7D8;font-weight:700;margin-bottom:3px}
+.cover .url{margin-top:26px;font-family:'JetBrains Mono';font-size:13.5px;color:#9FD3EE}
+.section{justify-content:center}
+.section .num{font-family:'Outfit';font-size:120px;font-weight:800;color:rgba(255,255,255,.14);line-height:.8}
+.section h2{font-size:48px;color:#fff;margin-top:-12px}
+.section p{font-size:18px;color:#CFE6F5;max-width:760px;margin-top:10px}
+
+/* ============ GRILLES / CARTES ============ */
+.cols{display:grid;gap:22px}
+.c2{grid-template-columns:1fr 1fr}
+.c3{grid-template-columns:repeat(3,1fr)}
+.c4{grid-template-columns:repeat(4,1fr)}
+.c21{grid-template-columns:1.25fr 1fr}
+.card{background:var(--bg-soft);border:1px solid var(--border);border-left:4px solid var(--primary-light);
+      border-radius:8px;padding:14px 16px}
+.card.red{border-left-color:var(--secondary)}
+.card.green{border-left-color:var(--ok)}
+.card.orange{border-left-color:var(--warn)}
+.card h4{margin-bottom:4px}
+.card p,.card li{font-size:14px;line-height:1.45}
+.card ul{gap:5px}
+.card ul li{padding-left:16px}
+.card ul li::before{width:6px;height:6px;top:8px}
+.ico{font-size:22px;display:block;margin-bottom:6px}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.kpi{text-align:center;background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 10px;
+     box-shadow:0 2px 10px rgba(26,82,118,.06)}
+.kpi .v{font-family:'Outfit';font-size:42px;font-weight:800;color:var(--primary);line-height:1}
+.kpi .l{font-size:12.5px;color:var(--ink-soft);margin-top:7px;line-height:1.3}
+.kpi.accent .v{color:var(--secondary)}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse}
+th{background:var(--primary);color:#fff;font-family:'Outfit';font-size:13px;font-weight:600;
+   text-align:left;padding:8px 12px}
+td{padding:7px 12px;border:1px solid var(--border);font-size:13.5px;color:var(--ink-soft);vertical-align:top}
+tr:nth-child(even) td{background:#F6FAFD}
+td b{color:var(--ink)}
+.t-sm td,.t-sm th{font-size:12.5px;padding:5.5px 10px}
+
+/* CODE BLOCK */
+pre{background:var(--night);color:#D8E9F3;border-radius:8px;padding:14px 18px;overflow:hidden;
+    font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6}
+pre.sm{font-size:11.5px;line-height:1.5;padding:12px 14px}
+pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
+
+/* IMAGES */
+.fig{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;gap:8px}
+.fig img{max-width:100%;max-height:100%;object-fit:contain;border:1px solid var(--border);
+         border-radius:8px;background:#fff;padding:6px}
+.cap{font-size:12px;color:var(--grey);font-style:italic}
+
+/* CARROUSEL D'IMAGES (1 visuel plein cadre + onglets) */
+.carousel{flex:1;display:flex;flex-direction:column;min-height:0;gap:10px}
+.ctabs{display:flex;gap:8px;justify-content:center}
+.ctab{font-family:'Outfit';font-size:12.5px;font-weight:600;padding:5px 14px;border-radius:20px;
+      background:var(--bg-soft);color:var(--primary);border:1px solid var(--border);cursor:pointer}
+.ctab.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.cstage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;min-height:0}
+.cstage img{display:none;max-width:100%;max-height:100%;object-fit:contain;cursor:pointer;
+            border:1px solid var(--border);border-radius:8px;background:#fff;padding:6px}
+.cstage img.on{display:block}
+.cnav{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;
+      border:1px solid var(--border);background:#fff;color:var(--primary);font-family:'Outfit';
+      font-size:18px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(26,82,118,.18);z-index:3}
+.cnav.prev{left:0}.cnav.next{right:0}
+
+/* AGRANDISSEMENT D'IMAGE (bouton ⤢ en haut à droite + lightbox) */
+.fig{position:relative}
+.zoombtn{position:absolute;top:4px;right:4px;z-index:4;width:30px;height:30px;border-radius:7px;
+         border:1px solid var(--border);background:rgba(255,255,255,.93);color:var(--primary);
+         font-family:'Outfit';font-size:15px;line-height:1;cursor:pointer;
+         box-shadow:0 2px 8px rgba(26,82,118,.2)}
+.zoombtn:hover{background:#fff;color:var(--secondary)}
+#lb{position:fixed;inset:0;z-index:60;background:rgba(6,20,30,.95);display:none;
+    align-items:center;justify-content:center;padding:26px;cursor:zoom-out}
+#lb.on{display:flex}
+#lb img{max-width:100%;max-height:100%;object-fit:contain;background:#fff;border-radius:8px;padding:8px;cursor:zoom-in}
+/* zoom dans la visionneuse : l'image dépasse l'écran, on se déplace par défilement ou glisser */
+#lb.zoomed{display:block;overflow:auto;cursor:default}
+#lb.zoomed img{max-width:none;max-height:none;display:block;margin:30px auto;cursor:grab}
+#lb.zoomed img:active{cursor:grabbing}
+#lb .lbhint{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);font-family:'Outfit';font-size:12px;
+            letter-spacing:.05em;color:#CFE6F5;background:rgba(6,20,30,.8);padding:5px 12px;border-radius:14px;pointer-events:none}
+#lb .close{position:fixed;top:18px;right:22px;width:42px;height:42px;border-radius:9px;
+           border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.14);color:#fff;
+           font-family:'Outfit';font-size:19px;line-height:1;cursor:pointer}
+#lb .close:hover{background:var(--secondary);border-color:var(--secondary)}
+
+/* BADGES / PILLS */
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{font-size:12.5px;font-family:'Outfit';font-weight:600;padding:5px 12px;border-radius:20px;
+      background:var(--bg-soft);color:var(--primary);border:1px solid var(--border)}
+.pill.ok{background:#E8F8EF;color:#1e8449;border-color:#BFE9D0}
+.pill.red{background:#FDEDEC;color:#B03A2E;border-color:#F5C6C2}
+.pill.warn{background:#FEF5E7;color:#B9770E;border-color:#F8DEB3}
+
+/* TIMELINE JALONS */
+.tl{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:stretch}
+.tl .j{background:var(--bg-soft);border-top:5px solid var(--primary-light);border-radius:8px;padding:12px 11px}
+.tl .j:nth-child(6){border-top-color:var(--secondary)}
+.tl .j .m{font-family:'Outfit';font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--secondary);font-weight:700}
+.tl .j .t{font-family:'Outfit';font-size:15px;font-weight:700;color:var(--primary);margin:3px 0 5px}
+.tl .j p{font-size:12px;line-height:1.4}
+
+/* FLOW ASCII-like */
+.flow{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap}
+.flow .box{background:#fff;border:2px solid var(--primary-light);border-radius:8px;padding:10px 14px;
+           font-family:'Outfit';font-weight:600;font-size:13.5px;color:var(--primary);text-align:center;min-width:120px}
+.flow .box small{display:block;font-family:'Inter';font-weight:400;font-size:11px;color:var(--grey);margin-top:3px}
+.flow .arw{color:var(--secondary);font-size:22px;font-weight:700}
+
+/* PALETTE */
+.swatches{display:flex;gap:12px;flex-wrap:wrap}
+.sw{width:112px;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.sw .col{height:56px}
+.sw .n{font-size:11px;padding:6px 7px;font-family:'JetBrains Mono';color:var(--ink-soft);background:#fff}
+
+.quote{border-left:4px solid var(--secondary);background:#FDF3F2;padding:12px 16px;border-radius:0 8px 8px 0;
+       font-size:14.5px;color:#7B3A31}
+.note{font-size:13px;color:var(--grey);font-style:italic}
+
+/* slides allégées : texte agrandi pour être lu de loin */
+.slide.airy .body{gap:24px}
+.slide.airy .body li,.slide.airy .body p{font-size:21px;line-height:1.45}
+.slide.airy .quote{font-size:22px;padding:18px 22px}
+.slide.airy .note,.slide.airy .body p.note{font-size:16px;line-height:1.5}
+.slide.airy table td,.slide.airy table th{font-size:19px;padding:11px 16px}
+.slide.airy .card h4{font-size:21px;margin-bottom:8px}
+.slide.airy .card p{font-size:18px;line-height:1.6}
+.slide.airy .card{padding:18px 20px}
+.slide.airy .kpi .l{font-size:15px}
+.slide.airy .flow .box{font-size:18px;padding:16px 20px}
+.slide.airy .flow .box small{font-size:14px}
+.slide.airy .flow .arw{font-size:26px}
+.slide.airy .ann-inline{font-size:inherit}
+.slide.airy .body code{font-size:16px}
+.slide.airy .pill{font-size:16px;padding:8px 15px}
+.slide.airy .pill code{font-size:15px}
+
+/* ============ ANNEXES : sommaire cliquable + retour ============ */
+/* diagramme + tableau de lecture côte à côte (MLD / MPD) */
+.figside{flex:1;min-height:0;grid-template-columns:1.7fr 1fr;align-items:center}
+.figside .fig{height:100%}
+.figside h3{margin-bottom:8px}
+.figside .cap{margin-top:10px}
+
+.ann-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.ann-grid .ann-link{font-size:13px;padding:8px 11px;margin-bottom:7px}
+/* lien vers une annexe depuis une slide de la présentation */
+.ann-inline{color:var(--primary-light);text-decoration:underline;cursor:pointer;font-style:normal;white-space:nowrap}
+.ann-inline:hover{color:var(--secondary)}
+.ann-grid h3{margin-bottom:10px}
+.ann-link{display:flex;gap:10px;align-items:center;padding:10px 13px;margin-bottom:9px;background:var(--bg-soft);
+          border:1px solid var(--border);border-left:4px solid var(--primary-light);border-radius:8px;
+          cursor:pointer;color:var(--night);font-size:14px;line-height:1.3}
+.ann-link:hover{border-left-color:var(--secondary);background:#fff}
+.ann-link .num{font-family:'JetBrains Mono';font-size:12px;color:var(--grey);min-width:22px}
+.ann-back{position:absolute;top:28px;right:64px;font-family:'Outfit';font-size:12px;letter-spacing:.06em;
+          color:var(--primary-light);border:1px solid var(--border);border-radius:14px;padding:4px 12px;cursor:pointer}
+.ann-back:hover{color:var(--secondary);border-color:var(--secondary)}
+.slide .t-sm td.ok{color:#1e8449;font-weight:600}
+.slide .t-sm td.ko{color:#B03A2E;font-weight:600}
+
+/* ============ SLIDE FINALE : démo live embarquée + remerciements ============ */
+.slide.finale{background:linear-gradient(135deg,var(--night) 0%,var(--primary) 55%,var(--primary-light) 130%);
+              color:#fff;padding:42px 56px 54px}
+.finale h1{font-family:'Outfit';font-size:44px;font-weight:800;letter-spacing:-.02em;color:#fff}
+.finale .rule{background:var(--secondary);width:80px;margin:12px 0 16px}
+.finale .grid{flex:1;display:grid;grid-template-columns:1fr 392px;gap:32px;min-height:0}
+.finale .left{display:flex;flex-direction:column;min-height:0}
+.finale .steps{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.finale .steps li{padding:8px 11px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);
+                  border-left:3px solid var(--secondary);border-radius:7px;font-size:12.5px;
+                  line-height:1.4;color:#CFE6F5}
+.finale .steps li::before{display:none}
+.finale .steps li b{display:block;font-family:'Outfit';font-size:13.5px;color:#fff;margin-bottom:2px}
+.finale .thanks{font-size:15px;color:#BFE0F2;margin-top:16px}
+.finale .bottom{display:flex;gap:24px;align-items:flex-end;margin-top:auto;padding-top:16px}
+.finale .qr{flex:0 0 auto;text-align:center}
+.finale .qr img{display:block;width:104px;height:104px;background:#fff;padding:6px;border-radius:8px}
+.finale .qr span{display:block;font-family:'Outfit';font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+                 color:#8FD0F0;font-weight:700;margin-top:6px}
+.finale .meta{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:9px 26px;font-size:12px;color:#D6EAF8}
+.finale .meta b{display:block;font-family:'Outfit';font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+                color:#7FB7D8;font-weight:700;margin-bottom:2px}
+.finale .live{display:flex;flex-direction:column;min-height:0;gap:9px}
+.finale .live .tag{font-family:'Outfit';font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+                   color:#8FD0F0;font-weight:700;text-align:center}
+.finale iframe{flex:1;width:100%;border:0;border-radius:12px;background:#fff;
+               box-shadow:0 16px 44px rgba(0,0,0,.4)}
+
+/* ============ CHROME (barre, numéro, progression) ============ */
+.chrome{position:absolute;left:64px;right:64px;bottom:20px;display:flex;justify-content:space-between;
+        align-items:center;font-size:11.5px;color:#9BB0BE;font-family:'Outfit';letter-spacing:.06em}
+.slide.cover .chrome,.slide.section .chrome,.slide.finale .chrome{color:rgba(255,255,255,.55)}#bar{position:absolute;left:0;bottom:0;height:4px;background:var(--secondary);width:0;transition:width .3s;z-index:5}
+#hint{position:fixed;bottom:12px;right:16px;color:#5d7f95;font-size:11.5px;font-family:'Outfit';
+      letter-spacing:.05em;z-index:20}
+#timer{position:fixed;top:12px;right:16px;font-family:'JetBrains Mono';font-size:13px;color:#8FB4C9;
+       background:rgba(0,0,0,.35);padding:5px 10px;border-radius:6px;z-index:20;display:none}
+#timer.on{display:block}
+
+/* ============ VUE D'ENSEMBLE ============ */
+#overview{position:fixed;inset:0;background:#0b1c28;overflow:auto;padding:24px;z-index:30;display:none;
+          grid-template-columns:repeat(5,1fr);gap:14px;align-content:start}
+#overview.on{display:grid}
+.thumb{background:#fff;border-radius:6px;padding:10px;height:104px;overflow:hidden;cursor:pointer;
+       border:2px solid transparent;transition:.15s}
+.thumb:hover{border-color:var(--secondary);transform:translateY(-2px)}
+.thumb .tn{font-family:'JetBrains Mono';font-size:10px;color:var(--grey)}
+.thumb .tt{font-family:'Outfit';font-size:13px;font-weight:700;color:var(--primary);margin-top:4px;line-height:1.25}
+
+/* ============ IMPRESSION PDF ============ */
+@media print{
+  @page{size:1280px 720px;margin:0}
+  html,body{overflow:visible;background:#fff}
+  #stage{position:static;display:block}
+  #deck{width:1280px;height:auto;box-shadow:none;transform:none!important}
+  .slide{display:flex!important;position:relative;width:1280px;height:720px;page-break-after:always;animation:none}
+  #hint,#timer,#overview,#bar{display:none!important}
+  .cnav,.zoombtn,#lb{display:none!important}
+  .cstage{flex-direction:row;gap:8px}
+  .cstage img{display:block!important;max-width:32%}
+}
+</style>
+</head>
+<body>
+
+<div id="stage">
+<div id="deck">
+
+<!-- ═══════════════ 1. COUVERTURE ═══════════════ -->
+<section class="slide cover" data-title="Couverture">
+  <div class="kicker" style="color:#8FD0F0">Soutenance — Titre professionnel CDA · Niveau 6</div>
+  <h1>CALENDRIA</h1>
+  <div class="tag">Assistant de réservation intelligent multi-canal avec IA<br>pour la restauration indépendante</div>
+  <div class="rule"></div>
+  <div class="meta">
+    <div><b>Candidat</b>BOUGHERARA Safi</div>
+    <div><b>Formation</b>Concepteur Développeur d'Applications</div>
+    <div><b>Promotion</b>2025 — 2026</div>
+    <div><b>Commanditaire</b>« Le Gourmet Parisien »</div>
+    <div><b>Version</b>v1.0 — Tag Git</div>
+  </div>
+  <div class="url">▸ https://frontend-production-8a43.up.railway.app</div>
+</section>
+
+<!-- ═══════════════ 2. SOMMAIRE ═══════════════ -->
+<section class="slide airy" data-title="Sommaire">
+  <div class="kicker">Déroulé de la présentation</div>
+  <h2>Sommaire</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c3">
+      <div class="card"><span class="ico">🎯</span><h4>1. Le projet</h4></div>
+      <div class="card"><span class="ico">🗂️</span><h4>2. Gestion de projet</h4></div>
+      <div class="card"><span class="ico">🎨</span><h4>3. Conception UI/UX</h4></div>
+      <div class="card"><span class="ico">🗄️</span><h4>4. Modélisation des données</h4></div>
+      <div class="card"><span class="ico">🏛️</span><h4>5. Architecture &amp; UML</h4></div>
+      <div class="card"><span class="ico">🔐</span><h4>6. Sécurité, tests, déploiement</h4></div>
+      <div class="card"><span class="ico">🔭</span><h4>7. Veille</h4></div>
+      <div class="card green"><span class="ico">✅</span><h4>8. Bilan</h4></div>
+      <div class="card red"><span class="ico">🚀</span><h4>9. Démonstration live</h4></div>
+    </div>
+  </div>
+  <div class="chrome"><span>CALENDRIA — Soutenance CDA</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 3. PRÉSENTATION PERSONNELLE ═══════════════ -->
+<section class="slide airy" data-title="Présentation personnelle">
+  <div class="kicker">Section I — Présentation personnelle</div>
+  <h2>Qui je suis, ce que j'ai construit</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c21">
+      <div>
+        <ul>
+          <li><strong>Safi Bougherara</strong>, candidat au titre <strong>Concepteur Développeur d'Applications</strong> (RNCP 6).</li>
+          <li>Intérêts : développement web, architecture logicielle, automatisation.</li>
+        </ul>
+        <div class="quote" style="margin-top:16px"><strong>CALENDRIA</strong> : un assistant IA qui prend les réservations d'un restaurant <strong>24h/24</strong>, par widget web, Telegram ou téléphone.</div>
+      </div>
+      <div class="kpis" style="grid-template-columns:1fr 1fr">
+        <div class="kpi accent"><div class="v">6 mois</div><div class="l">en solo</div></div>
+        <div class="kpi"><div class="v">3</div><div class="l">canaux de réservation</div></div>
+        <div class="kpi"><div class="v">14/17</div><div class="l">fonctionnalités livrées</div></div>
+        <div class="kpi"><div class="v">v1.0</div><div class="l">en production</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>I — Présentation personnelle</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 4. SECTION : LE PROJET ═══════════════ -->
+<section class="slide section" data-title="Partie 1 — Le projet">
+  <div class="num">01</div>
+  <h2>Le projet CALENDRIA</h2>
+  <p>Contexte métier, problématique du restaurateur, solution proposée et cahier des charges fonctionnel.</p>
+</section>
+
+<!-- ═══════════════ 5. CONTEXTE / COMMANDITAIRE ═══════════════ -->
+<section class="slide airy" data-title="Contexte & commanditaire">
+  <div class="kicker">Section II — Contexte métier</div>
+  <h2>Un restaurateur qui passe 2 h par jour au téléphone</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c21">
+      <div>
+        <div class="quote">« Je passe <strong>2 heures par jour</strong> à gérer les appels de réservation, dont une partie arrive hors service. Je veux automatiser sans perdre la main sur mon planning. »</div>
+        <p class="note" style="margin-top:10px">M. Gilles Morel, « Le Gourmet Parisien » — commanditaire fictif, profil-type du client visé.</p>
+      </div>
+      <div class="kpis" style="grid-template-columns:1fr">
+        <div class="kpi accent"><div class="v">2 h / jour</div><div class="l">au téléphone</div></div>
+        <div class="kpi"><div class="v">24/7</div><div class="l">objectif : réserver à toute heure</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>II — Présentation du projet</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 7. SOLUTION / PARCOURS ═══════════════ -->
+<section class="slide airy" data-title="La solution en 5 étapes">
+  <div class="kicker">Section II — Fonctionnement global</div>
+  <h2>Le parcours d'une réservation</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="flow">
+      <div class="box">1 · Canal<small>Widget · Telegram · Vocal</small></div><span class="arw">→</span>
+      <div class="box">2 · Conversation IA<small>Gemini 2.5 Flash</small></div><span class="arw">→</span>
+      <div class="box">3 · Disponibilité<small>Temps réel</small></div><span class="arw">→</span>
+      <div class="box">4 · Validation<small>Auto ou alternatives</small></div><span class="arw">→</span>
+      <div class="box">5 · Dashboard<small>Restaurateur</small></div>
+    </div>
+    <div class="quote" style="margin-top:18px">3 canaux, <strong>une seule API</strong> et <strong>un seul algorithme</strong> de disponibilité : aucun code métier dupliqué.</div>
+  </div>
+  <div class="chrome"><span>II — Présentation du projet</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 9. OBJECTIFS SMART ═══════════════ -->
+<section class="slide airy" data-title="Objectifs SMART">
+  <div class="kicker">Section III — Cahier des charges</div>
+  <h2>Des objectifs SMART fixés au Jalon 1</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <table>
+      <tr><th style="width:150px">Critère</th><th>Engagement</th></tr>
+      <tr><td><b>S</b>pécifique</td><td>Un assistant multi-canal qui automatise les réservations</td></tr>
+      <tr><td><b>M</b>esurable</td><td>−70 % de temps de gestion · complétion chatbot &gt; 95 %</td></tr>
+      <tr><td><b>A</b>tteignable</td><td>Technologies éprouvées, périmètre tenable seul</td></tr>
+      <tr><td><b>R</b>éaliste</td><td>Un MVP pour un restaurant</td></tr>
+      <tr><td><b>T</b>emporel</td><td>6 jalons mensuels, livraison au 30 juin 2026</td></tr>
+    </table>
+  </div>
+  <div class="chrome"><span>III — Cahier des charges</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 11. STACK TECHNIQUE ═══════════════ -->
+<section class="slide airy" data-title="Stack technique">
+  <div class="kicker">Section III — Exigences techniques</div>
+  <h2>Une stack imposée, des choix justifiés</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c3">
+      <div class="card"><h4>Back-end</h4><p><b>Symfony 6.4 LTS</b> — support sécurité jusqu'en 2027<br><b>Doctrine</b> — requêtes préparées<br><b>PostgreSQL 15</b> — contraintes, JSON natif</p></div>
+      <div class="card"><h4>Front-end</h4><p><b>React 19 + TypeScript</b> — typage statique<br><b>Vite 7</b> — build rapide<br><b>MUI</b> — composants accessibles</p></div>
+      <div class="card"><h4>Services &amp; DevOps</h4><p><b>Gemini 2.5 Flash</b> — compréhension du langage<br><b>Telegram · Retell AI</b> — canaux<br><b>Docker · GitHub Actions · Railway</b></p></div>
+    </div>
+  </div>
+  <div class="chrome"><span>III — Cahier des charges</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 12. SECTION : GESTION DE PROJET ═══════════════ -->
+<section class="slide section" data-title="Partie 2 — Gestion de projet">
+  <div class="num">02</div>
+  <h2>Méthodologie &amp; organisation</h2>
+  <p>Scrum adapté au développement solo, gestion du code source et planning des six jalons.</p>
+</section>
+
+<!-- ═══════════════ 13. SCRUM SOLO ═══════════════ -->
+<section class="slide airy" data-title="Méthodologie agile">
+  <div class="kicker">Section IV — Méthodologie</div>
+  <h2>Scrum, adapté au travail seul</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div class="card green"><h4>Gardé</h4><p><b>1 jalon = 1 sprint</b> d'un mois · backlog <b>MoSCoW</b> · revue avec le référent · rétrospective écrite</p></div>
+      <div class="card orange"><h4>Abandonné</h4><p>Rôles Product Owner et Scrum Master, mêlée quotidienne : des rituels d'équipe, sans destinataire en solo</p></div>
+    </div>
+    <div class="quote">L'agilité en pratique : WhatsApp Business exigeait 4 à 6 semaines de vérification → <strong>bascule sur Telegram au sprint suivant</strong>.</div>
+  </div>
+  <div class="chrome"><span>IV — Méthodologie et organisation</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 14. GIT ═══════════════ -->
+<section class="slide airy" data-title="Gestion du code source">
+  <div class="kicker">Section IV — Gestion de version</div>
+  <h2>Une seule branche : le trunk-based development</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div class="card"><h4>Pourquoi pas Git Flow ?</h4><p>Ses branches servent à synchroniser une équipe. Seul, ce serait une cérémonie : je commite petit et souvent sur <code>main</code>, et la <b>CI bloquante</b> joue le relecteur.</p></div>
+      <div class="card"><h4>Convention de commits</h4><p><code>feat:</code> · <code>fix:</code> · <code>docs:</code> · <code>test:</code> · <code>chore:</code><br>Tags de release : <code>v0.9-beta</code> (Jalon 5) et <code>v1.0</code></p></div>
+    </div>
+    <div class="quote">Limite assumée : en équipe, je passerais à des branches de fonctionnalité et des Pull Requests relues.</div>
+  </div>
+  <div class="chrome"><span>IV — Méthodologie et organisation</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 17. SECTION : UI/UX ═══════════════ -->
+<section class="slide section" data-title="Partie 3 — Conception UI/UX">
+  <div class="num">03</div>
+  <h2>Conception UI / UX</h2>
+  <p>Sitemap, wireframes, charte graphique, maquettes haute fidélité et accessibilité WCAG 2.1 AA.</p>
+</section>
+
+<!-- ═══════════════ 17. SITEMAP ═══════════════ -->
+<section class="slide airy" data-title="Sitemap">
+  <div class="kicker">Section V — Architecture des écrans</div>
+  <h2>5 routes, 2 écrans pour le restaurateur</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols figside">
+      <div class="fig"><img src="Jalon2/sitemap_v2.png" alt="Sitemap CALENDRIA"></div>
+      <div>
+        <div class="card"><h4>Règle des 3 clics</h4><p>Plan de salle, création et liste des réservations : tout est sur l'écran « / », affiché dès la connexion.</p></div>
+        <p class="note" style="margin-top:14px">Calendrier, fiches clients et statistiques : prévus pour une version suivante.</p>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>V — Conception UI/UX</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 20. WIREFRAMES ═══════════════ -->
+<section class="slide airy" data-title="Wireframes">
+  <div class="kicker">Section V — Étape 2 : wireframes</div>
+  <h2>Wireframes — du zoning à l'écran détaillé</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="carousel" data-carousel>
+      <div class="ctabs">
+        <button class="ctab" data-go="0">Login</button>
+        <button class="ctab" data-go="1">Dashboard</button>
+        <button class="ctab" data-go="2">Paramètres restaurant</button>
+      </div>
+      <div class="cstage">
+        <button class="cnav prev">‹</button>
+        <img src="Jalon2/wireframe - login.png" alt="Wireframe — écran de connexion">
+        <img src="Jalon2/wireframe - dashboard.png" alt="Wireframe — dashboard">
+        <img src="Jalon2/wireframe - restaurant settings.png" alt="Wireframe — paramètres du restaurant">
+        <button class="cnav next">›</button>
+      </div>
+    </div>
+    <p class="note">Démarche : <b>zoning</b> (zones, sans style) → <b>wireframe</b> (composants réels, en gris) → interface React. <span class="ann-inline" data-goto="ann-res-zoning">Zoning ↗</span></p>
+  </div>
+  <div class="chrome"><span>V — Conception UI/UX</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 21. SECTION : DONNÉES ═══════════════ -->
+<section class="slide section" data-title="Partie 4 — Modélisation des données">
+  <div class="num">04</div>
+  <h2>Modélisation de la base de données</h2>
+  <p>Démarche MERISE en trois niveaux : conceptuel, logique et physique — 9 entités, PostgreSQL 15.</p>
+</section>
+
+<!-- ═══════════════ 22. DÉMARCHE MERISE ═══════════════ -->
+<section class="slide airy" data-title="Démarche MERISE">
+  <div class="kicker">Section VI — Méthode</div>
+  <h2>MERISE : du besoin à la base, en 3 niveaux</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="flow">
+      <div class="box">MCD · conceptuel<small>le besoin métier — sans clé</small></div><span class="arw">→</span>
+      <div class="box">MLD · logique<small>les tables et leurs clés</small></div><span class="arw">→</span>
+      <div class="box">MPD · physique<small>le SQL de PostgreSQL 15</small></div>
+    </div>
+    <div class="quote"><strong>9 entités modélisées, 6 implémentées</strong> dans le MVP : fermetures, conversations IA et notifications restent la cible.</div>
+  </div>
+  <div class="chrome"><span>VI — Modélisation de la base de données</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 23. MCD ═══════════════ -->
+<section class="slide airy" data-title="MCD">
+  <div class="kicker">Section VI — Niveau conceptuel</div>
+  <h2>Modèle Conceptuel de Données</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="fig">
+      <img src="Jalon3/MCD.png" alt="Modèle Conceptuel de Données">
+      <div class="cap">Entités, associations (ovales) et cardinalités — aucune clé à ce niveau.</div>
+    </div>
+  </div>
+  <div class="chrome"><span>VI — Modélisation de la base de données</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 24. MLD ═══════════════ -->
+<section class="slide airy" data-title="MLD">
+  <div class="kicker">Section VI — Niveau logique</div>
+  <h2>MLD — les tables et leurs clés</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols figside">
+      <div class="fig"><img src="Jalon3/MLD_v2.png" alt="Modèle Logique de Données"></div>
+      <div>
+        <ul>
+          <li>La clé étrangère va du côté <b>« plusieurs »</b> (*)</li>
+          <li>Minimum à 0 → clé <b>optionnelle</b> : <code>id_table (NULL)</code></li>
+          <li>Lien 1 pour 1 → clé <b>UNIQUE</b></li>
+        </ul>
+        <p class="note" style="margin-top:14px">6 tables implémentées sur 9 modélisées.</p>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>VI — Modélisation de la base de données</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 25. MPD ═══════════════ -->
+<section class="slide airy" data-title="MPD">
+  <div class="kicker">Section VI — Niveau physique</div>
+  <h2>MPD — la base qui tourne en production</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="fig"><img src="Jalon3/MPD_v2_reel.png" alt="Modèle Physique de Données"></div>
+    <div class="pills">
+      <span class="pill">6 tables · 5 clés étrangères</span>
+      <span class="pill"><code>"user"</code> et <code>"table"</code> : mots réservés</span>
+      <span class="pill red">Pas de CHECK ni de cascade : validation côté application</span>
+    </div>
+    <p class="note">Le schéma créé par les 3 migrations Doctrine.</p>
+  </div>
+  <div class="chrome"><span>VI — Modélisation de la base de données</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 26. SECTION : ARCHITECTURE ═══════════════ -->
+<section class="slide section" data-title="Partie 5 — Architecture & UML">
+  <div class="num">05</div>
+  <h2>Conception applicative &amp; architecture</h2>
+  <p>Diagrammes UML, architecture N-tiers, découpage en couches et cœur algorithmique.</p>
+</section>
+
+<!-- ═══════════════ 27. CAS D'UTILISATION ═══════════════ -->
+<section class="slide airy" data-title="Cas d'utilisation">
+  <div class="kicker">Section VII — Vue fonctionnelle</div>
+  <h2>Qui fait quoi : 3 acteurs, 2 sous-systèmes</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="fig">
+      <img src="Jalon4/diagramme_cas_utilisation.png" alt="Diagramme des cas d'utilisation">
+      <div class="cap">Seules les fonctionnalités livrées. <code>include</code> : toujours exécuté · <code>extend</code> : seulement si la condition est remplie.</div>
+    </div>
+  </div>
+  <div class="chrome"><span>VII — Conception de l'application (UML)</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 28. SÉQUENCE CHATBOT ═══════════════ -->
+<section class="slide airy" data-title="Séquence — Réservation chatbot">
+  <div class="kicker">Section VII — Vue dynamique</div>
+  <h2>Réserver via le chatbot : collecter, vérifier, enregistrer</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="fig">
+      <img src="Jalon4/sequence_reservation_chatbot.png" alt="Séquence réservation via chatbot">
+      <div class="cap">L'IA dialogue et extrait ; <code>DisponibiliteService</code> décide.</div>
+    </div>
+  </div>
+  <div class="chrome"><span>VII — Conception de l'application (UML)</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 29. SÉQUENCE JWT ═══════════════ -->
+<section class="slide airy" data-title="Séquence — Authentification JWT">
+  <div class="kicker">Section VII — Vue dynamique</div>
+  <h2>S'authentifier : un jeton signé, puis aucune session</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols figside">
+      <div class="fig"><img src="Jalon4/sequence_authentification.png" alt="Séquence authentification JWT"></div>
+      <div>
+        <ul>
+          <li>Mot de passe vérifié (<b>bcrypt</b>)</li>
+          <li>Jeton <b>RS256</b> signé, valable 1 h</li>
+          <li>Chaque requête porte <code>Bearer &lt;token&gt;</code></li>
+        </ul>
+        <div class="quote" style="margin-top:14px">API sans état → <strong>pas de CSRF</strong>.</div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>VII — Conception de l'application (UML)</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 30. DIAGRAMME DE CLASSES ═══════════════ -->
+<section class="slide airy" data-title="Diagramme de classes">
+  <div class="kicker">Section VII — Vue statique</div>
+  <h2>Le code livré, en 4 packages</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="fig">
+      <img src="Jalon4/diagramme_classes.png" alt="Diagramme de classes UML">
+      <div class="cap">Entity · Repository · Service · Controller. Les évolutions prévues portent le stéréotype « amélioration identifiée ».</div>
+    </div>
+  </div>
+  <div class="chrome"><span>VII — Conception de l'application (UML)</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 31. ARCHITECTURE N-TIERS ═══════════════ -->
+<section class="slide airy" data-title="Architecture N-tiers">
+  <div class="kicker">Section VIII — Déploiement physique</div>
+  <h2>3 tiers déployés séparément</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="fig">
+      <img src="Jalon4/Architecture_N_Tiers.png" alt="Architecture N-Tiers">
+      <div class="cap">Navigateur (React) · API Symfony · PostgreSQL, joignable uniquement par l'API.</div>
+    </div>
+    <div class="quote">3 <strong>tiers</strong> physiques, et 4 <strong>couches</strong> logiques dans le back-end.</div>
+  </div>
+  <div class="chrome"><span>VIII — Architecture multi-couches</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 32. 4 COUCHES + SOLID ═══════════════ -->
+<section class="slide airy" data-title="Architecture logique & SOLID">
+  <div class="kicker">Section VIII — Architecture logique</div>
+  <h2>4 couches, une seule responsabilité chacune</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="flow">
+      <div class="box">Controller<small>HTTP</small></div><span class="arw">→</span>
+      <div class="box">Service<small>Métier</small></div><span class="arw">→</span>
+      <div class="box">Repository<small>Requêtes</small></div><span class="arw">→</span>
+      <div class="box">Entity<small>Données</small></div>
+    </div>
+    <div class="cols c3">
+      <div class="card"><h4>S — responsabilité unique</h4><p>Une couche, une raison de changer</p></div>
+      <div class="card"><h4>O — ouvert / fermé</h4><p>Telegram et le vocal ajoutés sans toucher au service</p></div>
+      <div class="card"><h4>D — inversion des dépendances</h4><p>Symfony injecte les services</p></div>
+    </div>
+  </div>
+  <div class="chrome"><span>VIII — Architecture multi-couches</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 33. ALGORITHME ═══════════════ -->
+<section class="slide airy" data-title="Algorithme d'attribution des tables">
+  <div class="kicker">Section VIII — Cœur métier</div>
+  <h2>L'algorithme : la plus petite table libre qui suffit</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="flow">
+      <div class="box">Service ouvert ?<small>sinon « fermé »</small></div><span class="arw">→</span>
+      <div class="box">Tables assez grandes<small>triées par capacité</small></div><span class="arw">→</span>
+      <div class="box">Créneau libre ?<small>repas + nettoyage</small></div><span class="arw">→</span>
+      <div class="box">Sinon<small>3 alternatives, pas de 30 min</small></div>
+    </div>
+    <div class="quote">Deux personnes sur une table de huit, c'est six couverts perdus pour tout le service. <span class="ann-inline" data-goto="ann-res-code">Le code ↗</span></div>
+  </div>
+  <div class="chrome"><span>VIII — Architecture multi-couches</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 34. SECTION : SÉCURITÉ & TESTS ═══════════════ -->
+<section class="slide section" data-title="Partie 6 — Sécurité, tests, déploiement">
+  <div class="num">06</div>
+  <h2>Sécurité, qualité &amp; déploiement</h2>
+  <p>OWASP Top 10, conformité RGPD, politique de tests, containerisation et mise en production.</p>
+</section>
+
+<!-- ═══════════════ 35. OWASP ═══════════════ -->
+<section class="slide airy" data-title="Sécurité OWASP">
+  <div class="kicker">Section IX — Sécurité applicative</div>
+  <h2>OWASP Top 10 : une parade par attaque</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <table>
+      <tr><th style="width:230px">Attaque</th><th>Parade dans CALENDRIA</th></tr>
+      <tr><td><b>Injection SQL</b></td><td>Requêtes préparées Doctrine, <code>setParameter()</code></td></tr>
+      <tr><td><b>XSS</b></td><td>Échappement automatique du JSX React</td></tr>
+      <tr><td><b>CSRF</b></td><td>API sans cookie : jeton dans l'en-tête</td></tr>
+      <tr><td><b>Force brute</b></td><td>5 échecs / 15 min par IP → 429</td></tr>
+      <tr><td><b>Mots de passe</b></td><td>Hachés en bcrypt <span class="ann-inline" data-goto="ann-hash">bcrypt ou Argon2id ↗</span></td></tr>
+    </table>
+      </div>
+  <div class="chrome"><span>IX — Sécurité et conformité</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 36. RGPD ═══════════════ -->
+<section class="slide airy" data-title="Conformité RGPD">
+  <div class="kicker">Section IX — Conformité</div>
+  <h2>RGPD : le socle est posé, deux points restent à livrer</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c3">
+      <div class="card green"><h4>Minimisation</h4><p>Nom, téléphone, heure, couverts ; email facultatif</p></div>
+      <div class="card green"><h4>Sécurité des flux</h4><p>HTTPS, base sur réseau privé, données de démo fictives</p></div>
+      <div class="card orange"><h4>À livrer</h4><p>Consentement explicite, suppression d'un client</p></div>
+    </div>
+    <p class="note"><span class="ann-inline" data-goto="ann-rgpd">Plan de mise en conformité ↗</span></p>
+  </div>
+  <div class="chrome"><span>IX — Sécurité et conformité</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 37. TESTS ═══════════════ -->
+<section class="slide airy" data-title="Politique de tests">
+  <div class="kicker">Section X — Qualité logicielle</div>
+  <h2>12 tests automatisés sur le cœur métier</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c3">
+      <div class="card"><h4>Unitaires · 4</h4><p><code>DisponibiliteService</code>, isolé par des mocks</p></div>
+      <div class="card"><h4>Fonctionnels · 8</h4><p>Authentification et webhook vocal, en requêtes HTTP simulées</p></div>
+      <div class="card"><h4>Typage</h4><p>TypeScript strict : le build échoue sur une erreur</p></div>
+    </div>
+    <div class="quote">Couverture non mesurée en lignes : les tests ciblent le code partagé par les 4 canaux. <span class="ann-inline" data-goto="ann-tests">Détail ↗</span></div>
+  </div>
+  <div class="chrome"><span>X — Politique de tests</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 38. CI/CD ═══════════════ -->
+<section class="slide airy" data-title="Pipeline CI/CD">
+  <div class="kicker">Section XI — Intégration continue</div>
+  <h2>3 jobs en parallèle à chaque push</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c3">
+      <div class="card"><h4>Backend</h4><p>PostgreSQL éphémère, migrations, PHPUnit</p></div>
+      <div class="card"><h4>Frontend</h4><p>Vérification TypeScript, build Vite</p></div>
+      <div class="card red"><h4>Sécurité</h4><p><code>composer audit</code> · <code>npm audit</code> · gitleaks sur tout l'historique</p></div>
+    </div>
+    <div class="quote">Dès sa première exécution, le job sécurité a trouvé <strong>3 failles « high »</strong> dans react-router, en production sans aucun signal.</div>
+  </div>
+  <div class="chrome"><span>XI — Déploiement et mise en production</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 39. DOCKER / PRODUCTION ═══════════════ -->
+<section class="slide airy" data-title="Docker & production Railway">
+  <div class="kicker">Section XI — Mise en production</div>
+  <h2>Conteneurisé en local, déployé sur Railway</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c3">
+      <div class="card"><h4>Local</h4><p><code>docker compose up</code> : base, API, front, Adminer</p></div>
+      <div class="card"><h4>Images</h4><p>Front <b>multi-stage</b> (Node → nginx) · back nginx + PHP-FPM, en une étape</p></div>
+      <div class="card"><h4>Production</h4><p>3 services Railway, base sur réseau privé, secrets en variables</p></div>
+    </div>
+  </div>
+  <div class="chrome"><span>XI — Déploiement et mise en production</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 40. VEILLE TECHNO ═══════════════ -->
+<section class="slide airy" data-title="Veille technologique">
+  <div class="kicker">Section XII — Veille technologique</div>
+  <h2>Une veille qui a changé 3 décisions</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c3">
+      <div class="card"><h4>IA</h4><p>GPT-4o-mini → <b>Gemini 2.5 Flash</b><br>coût et tier gratuit</p></div>
+      <div class="card"><h4>Messagerie</h4><p>WhatsApp / Twilio → <b>Telegram</b><br>pas de validation, gratuit</p></div>
+      <div class="card"><h4>Hébergement</h4><p>Heroku → <b>Railway</b><br>fin du tier gratuit Heroku</p></div>
+    </div>
+    <p class="note"><b>Sécurité</b> : OWASP · Symfony Security Advisories · Dependabot · audits en CI. <span class="ann-inline" data-goto="ann-res-veillesec">Détail ↗</span></p>
+  </div>
+  <div class="chrome"><span>XII — Veille technologique</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 43. DIFFICULTÉS ═══════════════ -->
+<section class="slide airy" data-title="Difficultés rencontrées">
+  <div class="kicker">Section XIV — Retour d'expérience</div>
+  <h2>Des difficultés, chacune résolue et documentée</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <table>
+      <tr><th style="width:250px">Problème</th><th>Solution</th></tr>
+      <tr><td><b>CORS en production</b></td><td>Origine autorisée en regex, lue à l'exécution</td></tr>
+      <tr><td><b>502 sur Railway</b></td><td><code>entrypoint.sh</code> réécrit le port de nginx</td></tr>
+      <tr><td><b>Déconnexions au déploiement</b></td><td>Clés JWT régénérées au build : accepté pour le MVP, clés en secret à terme</td></tr>
+    </table>
+    <p class="note"><span class="ann-inline" data-goto="ann-res-difficultes">Les 5 difficultés ↗</span></p>
+  </div>
+  <div class="chrome"><span>XIV — Difficultés rencontrées</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 44. BILAN ═══════════════ -->
+<section class="slide airy" data-title="Bilan fonctionnel">
+  <div class="kicker">Section XV — Bilan</div>
+  <h2>Bilan : 14 fonctionnalités livrées sur 17</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="kpis">
+      <div class="kpi accent"><div class="v">82%</div><div class="l">du périmètre livré</div></div>
+      <div class="kpi"><div class="v">3</div><div class="l">canaux de réservation</div></div>
+      <div class="kpi"><div class="v">12</div><div class="l">tests automatisés</div></div>
+      <div class="kpi"><div class="v">v1.0</div><div class="l">en production</div></div>
+    </div>
+    <div class="card orange"><h4>Non livré, par choix de périmètre</h4><p>Fermetures exceptionnelles · notifications SMS · statistiques avancées. <span class="ann-inline" data-goto="ann-res-perimetre">Périmètre ↗</span></p></div>
+  </div>
+  <div class="chrome"><span>XV — Conclusion</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 47. CONCLUSION ═══════════════ -->
+<section class="slide airy" data-title="Conclusion">
+  <div class="kicker">Section XV — Conclusion</div>
+  <h2>Ce que ce projet m'a apporté</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c3">
+      <div class="card"><h4>Concevoir</h4><p>Une API REST sécurisée de bout en bout</p></div>
+      <div class="card"><h4>Intégrer l'IA</h4><p>Dans un vrai produit, avec ses limites</p></div>
+      <div class="card"><h4>Industrialiser</h4><p>Docker, CI bloquante, déploiement continu</p></div>
+    </div>
+    <div class="quote">Rendre au restaurateur les <strong>2 heures</strong> qu'il passe chaque jour au téléphone. <span class="ann-inline" data-goto="ann-res-perspectives">Et ensuite ↗</span></div>
+  </div>
+  <div class="chrome"><span>XV — Conclusion et perspectives</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ 47. DÉMONSTRATION LIVE + REMERCIEMENTS ═══════════════ -->
+<section class="slide finale" data-title="Démonstration live &amp; Merci">
+  <div class="grid">
+    <div class="left">
+      <div class="kicker" style="color:#8FD0F0">Fin de la présentation — Démonstration &amp; questions</div>
+      <h1>Démonstration live</h1>
+      <div class="rule"></div>
+      <ul class="steps">
+        <li><b>1 · Connexion</b>Login JWT, puis dashboard du jour : couverts, taux de remplissage, prochaines arrivées.</li>
+        <li><b>2 · Plan de salle</b>Statuts temps réel, slider temporel et configuration du turnover.</li>
+        <li><b>3 · Chatbot IA</b>Réservation complète en langage naturel + proposition d'alternatives.</li>
+        <li><b>4 · Widget en iframe</b>Le chatbot ci-contre tourne <strong style="color:#fff">dans cette slide</strong>, hors du dashboard et sans authentification.</li>
+        <li><b>5 · Telegram</b>Même réservation depuis le bot — la donnée apparaît instantanément côté dashboard.</li>
+        <li style="border-left-color:#8FD0F0"><b>Le code remis au restaurateur</b><code style="background:rgba(0,0,0,.3);color:#9BE7A8;font-size:11px">&lt;iframe src="…/widget?restaurantId=4"&gt;</code></li>
+      </ul>
+      <p class="thanks"><strong style="color:#fff">Merci de votre attention</strong> — je suis à votre disposition pour vos questions.</p>
+      <div class="bottom">
+        <div class="qr">
+          <img src="qr-telegram.png"
+               onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&amp;data=https://t.me/CalendriaResaBot'"
+               alt="QR code du bot Telegram @CalendriaResaBot">
+          <span>Scannez → @CalendriaResaBot</span>
+        </div>
+        <div class="meta">
+          <div><b>Production</b>frontend-production-8a43.up.railway.app</div>
+          <div><b>API</b>backend-production-dd10b.up.railway.app</div>
+          <div><b>Dépôt</b>github.com/SafiBougherara/projet_fin_annee</div>
+          <div><b>Compte de démo</b>admin@calendria.com</div>
+        </div>
+      </div>
+    </div>
+    <div class="live">
+      <div class="tag">▸ Widget réellement embarqué dans cette slide</div>
+      <iframe src="https://frontend-production-8a43.up.railway.app/widget?restaurantId=4"
+              title="Assistant de réservation CALENDRIA — démonstration embarquée"></iframe>
+    </div>
+  </div>
+  <div class="chrome"><span>BOUGHERARA Safi — Formation CDA — Promotion 2025-2026</span><span class="pg"></span></div>
+</section>
+
+<!-- ═══════════════ ANNEXES : RÉPONSES PRÉPARÉES (slides de réserve, montrées seulement sur question) ═══════════════ -->
+<section class="slide" id="ann-index" data-title="Annexes — sommaire">
+  <div class="kicker">Annexes — FAQ</div>
+  <h2>FAQ</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="ann-grid">
+      <div>
+        <h3>Architecture &amp; données</h3>
+        <div class="ann-link" data-goto="ann-choix"><span class="num"></span>Choix techniques : PostgreSQL, API REST, API Platform</div>
+        <div class="ann-link" data-goto="ann-concurrence"><span class="num"></span>Double réservation au même instant</div>
+        <div class="ann-link" data-goto="ann-multi"><span class="num"></span>Passer en multi-restaurant</div>
+        <div class="ann-link" data-goto="ann-algo"><span class="num"></span>Algorithme : complexité et cas limites</div>
+        <div class="ann-link" data-goto="ann-v1"><span class="num"></span>MLD et MPD du dossier (v1)</div>
+        <div class="ann-link" data-goto="ann-sitemap-v1"><span class="num"></span>Sitemap du dossier (v1)</div>
+      </div>
+      <div>
+        <h3>Sécurité</h3>
+        <div class="ann-link" data-goto="ann-jwt"><span class="num"></span>Jeton JWT : stockage, durée, déploiement</div>
+        <div class="ann-link" data-goto="ann-hash"><span class="num"></span>Mots de passe : bcrypt ou Argon2id</div>
+        <div class="ann-link" data-goto="ann-secrets"><span class="num"></span>Secrets et configuration</div>
+        <div class="ann-link" data-goto="ann-rgpd"><span class="num"></span>Plan de mise en conformité RGPD</div>
+      </div>
+      <div>
+        <h3>IA, qualité &amp; méthode</h3>
+        <div class="ann-link" data-goto="ann-ia"><span class="num"></span>Fiabilité de l'IA</div>
+        <div class="ann-link" data-goto="ann-canaux"><span class="num"></span>Agent vocal et Telegram</div>
+        <div class="ann-link" data-goto="ann-tests"><span class="num"></span>Tests et couverture</div>
+        <div class="ann-link" data-goto="ann-ecarts"><span class="num"></span>Écarts entre le dossier et le code</div>
+      </div>
+      <div>
+        <h3>Réserve — projet &amp; conception</h3>
+        <div class="ann-link" data-goto="ann-res-probleme"><span class="num"></span>Problématique : 7 points de douleur</div>
+        <div class="ann-link" data-goto="ann-res-valeur"><span class="num"></span>Valeur ajoutée mesurable</div>
+        <div class="ann-link" data-goto="ann-res-perimetre"><span class="num"></span>Périmètre IN / OUT</div>
+        <div class="ann-link" data-goto="ann-res-planning"><span class="num"></span>Planning des 6 jalons</div>
+        <div class="ann-link" data-goto="ann-res-zoning"><span class="num"></span>Zoning</div>
+        <div class="ann-link" data-goto="ann-res-charte"><span class="num"></span>Charte graphique</div>
+      </div>
+      <div>
+        <h3>Réserve — technique &amp; bilan</h3>
+        <div class="ann-link" data-goto="ann-res-code"><span class="num"></span>Extrait de code commenté</div>
+        <div class="ann-link" data-goto="ann-res-essai"><span class="num"></span>Jeu d'essai</div>
+        <div class="ann-link" data-goto="ann-res-veillesec"><span class="num"></span>Veille sécurité</div>
+        <div class="ann-link" data-goto="ann-res-difficultes"><span class="num"></span>Les 5 difficultés</div>
+        <div class="ann-link" data-goto="ann-res-perspectives"><span class="num"></span>Perspectives d'évolution</div>
+        <div class="ann-link" data-goto="ann-res-competences"><span class="num"></span>Compétences CDA</div>
+      </div>
+    </div>
+    <p class="note"> « ↩ Sommaire » ramène ici.</p>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A1 — Choix techniques -->
+<section class="slide" id="ann-choix" data-title="Annexe — Choix techniques">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A1 — Architecture</div>
+  <h2>Pourquoi PostgreSQL, une API REST… et pas API Platform ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c3">
+      <div class="card"><h4>PostgreSQL 15</h4><p>Contraintes d'intégrité strictes, type <strong>JSON natif</strong> (<code>roles</code>, <code>jours_ouverture</code>), et des outils avancés pour l'évolution : verrous de ligne, contraintes d'exclusion sur des plages horaires.</p></div>
+      <div class="card"><h4>API REST + SPA plutôt que Twig</h4><p><strong>4 clients</strong> consomment les mêmes données : dashboard, widget, Telegram, agent vocal. Un template Twig ne servirait que le navigateur ; une API JSON sert tout le monde. Front et back se déploient séparément.</p></div>
+      <div class="card orange"><h4>API Platform : installé, non exploité</h4><p>Branché sur <code>/api</code>, mais <strong>aucune entité n'est exposée</strong> (pas d'<code>#[ApiResource]</code>). Les <strong>24 routes</strong> sont écrites à la main : règles métier conditionnelles, contrôle total des codes de retour. Perspective : la documentation OpenAPI.</p></div>
+    </div>
+    <p class="note">Dans le code : <code>config/routes/api_platform.yaml</code> · 4 contrôleurs, 24 attributs <code>#[Route]</code>.</p>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A2 — Double réservation -->
+<section class="slide" id="ann-concurrence" data-title="Annexe — Double réservation">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A2 — Concurrence</div>
+  <h2>Deux clients réservent la même table au même instant ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div>
+        <h3>Ce qui se passe aujourd'hui</h3>
+        <ul>
+          <li>Séquence <strong>vérifier → écrire</strong> : <code>verifierDisponibilite()</code> puis <code>persist()</code> + <code>flush()</code>.</li>
+          <li>Aucun verrou entre les deux : une fenêtre de quelques millisecondes où une 2<sup>e</sup> requête peut passer la même vérification.</li>
+          <li>À l'échelle d'un restaurant (quelques dizaines de réservations par jour), le risque est faible — mais réel avec 3 canaux simultanés.</li>
+        </ul>
+        <div class="card orange" style="margin-top:12px"><h4>Limite assumée</h4><p>Le MVP a priorisé l'exactitude de l'algorithme ; la protection contre la concurrence est la prochaine étape.</p></div>
+      </div>
+      <div>
+        <h3>Les correctifs, du plus simple au plus robuste</h3>
+        <div class="card"><h4>1 · Verrou pessimiste</h4><p>Transaction + <code>LockMode::PESSIMISTIC_WRITE</code> (<code>SELECT … FOR UPDATE</code>) sur les réservations du créneau : la 2<sup>e</sup> requête attend la fin de la 1<sup>re</sup>.</p></div>
+        <div class="card" style="margin-top:8px"><h4>2 · Contrainte d'exclusion PostgreSQL</h4><p><code>EXCLUDE USING gist</code> sur (table, plage horaire), avec l'extension <code>btree_gist</code> : c'est la base qui refuse le chevauchement.</p></div>
+        <div class="card green" style="margin-top:8px"><h4>Côté utilisateur</h4><p>Le conflit remonte en <strong>409</strong> ; le canal propose alors une alternative.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A3 — Multi-restaurant -->
+<section class="slide" id="ann-multi" data-title="Annexe — Multi-restaurant">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A3 — Évolution</div>
+  <h2>Comment passer en multi-restaurant ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div class="card green"><h4>✅ Déjà en place</h4><ul>
+        <li><code>Table</code>, <code>Service</code> et <code>Reservation</code> portent un <code>restaurant_id</code> obligatoire.</li>
+        <li>CRUD des restaurants dans <code>RestaurantAdminController</code>.</li>
+        <li>Sélecteur d'établissement dans le dashboard.</li>
+        <li>Widget, Telegram et vocal reçoivent un <code>restaurantId</code>.</li>
+      </ul></div>
+      <div class="card orange"><h4>Ce qu'il manque : l'appartenance</h4><ul>
+        <li>Association <strong>Utilisateur–Restaurant</strong> (aujourd'hui, tout compte voit tous les établissements) → une migration.</li>
+        <li>Filtrage des requêtes par établissement de l'utilisateur, et un <strong>Voter</strong> Symfony pour les droits.</li>
+        <li><code>Client</code> rattaché à un restaurant (classe d'association) pour porter le consentement et le taux de no-show par établissement.</li>
+      </ul></div>
+    </div>
+    <p class="note">L'association compte–établissement figure déjà au MCD (EMPLOYER) et au diagramme de classes, avec le stéréotype « amélioration identifiée ».</p>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A4 — Algorithme -->
+<section class="slide" id="ann-algo" data-title="Annexe — Algorithme">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A4 — Cœur métier</div>
+  <h2>L'algorithme : complexité, optimalité, cas limites</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div>
+        <div class="card"><h4>Complexité</h4><p>Tri des tables <strong>O(T log T)</strong>, puis pour chaque table un parcours des réservations du jour : <strong>O(T × R)</strong>. Les alternatives relancent la recherche pour chaque créneau de 30 min du jour. Quelques dizaines de lignes : négligeable.</p></div>
+        <div class="card" style="margin-top:8px"><h4>Pourquoi un choix glouton</h4><p>Prendre la <strong>plus petite table suffisante</strong> n'est pas toujours optimal sur toute une soirée (problème de type <em>bin packing</em>), mais c'est déterministe, explicable au restaurateur et suffisant à cette échelle.</p></div>
+      </div>
+      <div>
+        <div class="card"><h4>Alternatives</h4><p>Créneaux par pas de 30 min dans les services ouverts <strong>du même jour</strong>, triés par proximité avec l'heure demandée, <strong>3 au maximum</strong>.</p></div>
+        <div class="card orange" style="margin-top:8px"><h4>Cas limites identifiés</h4><ul>
+          <li>Le filtre porte sur la capacité, <strong>pas sur le statut</strong> : une table « hors service » peut être attribuée → une condition à ajouter.</li>
+          <li>Pas de combinaison de tables pour les grands groupes : au-delà de la plus grande table, le chatbot oriente vers le téléphone.</li>
+          <li>En multi-restaurant, le filtrage de chevauchement passerait dans la requête SQL.</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A4 bis — MLD et MPD du dossier (v1) -->
+<section class="slide" id="ann-v1" data-title="Annexe — MLD et MPD du dossier (v1)">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A4 bis — Modélisation</div>
+  <h2>Le MLD et le MPD du dossier (v1)</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="carousel" data-carousel>
+      <div class="ctabs">
+        <button class="ctab" data-go="0">MLD v1 (dossier)</button>
+        <button class="ctab" data-go="1">MPD v1 (dossier)</button>
+      </div>
+      <div class="cstage">
+        <button class="cnav prev">‹</button>
+        <img src="Jalon3/MLD.png" alt="MLD du dossier, version 1">
+        <img src="Jalon3/MPD.png" alt="MPD du dossier, version 1">
+        <button class="cnav next">›</button>
+      </div>
+    </div>
+    <p class="note">Ce que la v2 corrige. <b>MLD</b> : NOTIFICATION_SMS et identifiant Twilio → NOTIFICATION, comme au MCD ; <code>conversation_ia</code> reçoit sa clé vers le restaurant (CONCERNER) et une clé UNIQUE vers la réservation (ABOUTIR) ; plus de types SQL, et plus de syntaxe MySQL, au niveau logique. <b>MPD</b> : la v1 décrit la cible (CHECK, index métier, ON DELETE) ; la v2 montre le schéma réellement créé par les migrations.</p>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A4 ter — Sitemap du dossier (v1) -->
+<section class="slide" id="ann-sitemap-v1" data-title="Annexe — Sitemap du dossier (v1)">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A4 ter — Conception UI</div>
+  <h2>Le sitemap du dossier (v1, Jalon 2)</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols figside">
+      <div class="fig"><img src="Jalon2/CALENDRIA - Sitemap - Architecture des Ecrans.png" alt="Sitemap du dossier, version 1"></div>
+      <div>
+<pre class="sm"><span class="k">🔐 /login</span>
+│
+└── <span class="k">🏠 /dashboard</span>
+    ├── 📅 /calendar     <span class="c">jour · semaine · mois</span>
+    ├── 🗺️ /floor-plan   <span class="c">temps réel + slider</span>
+    ├── 📋 /reservations <span class="c">liste · détail · CRUD</span>
+    ├── 👥 /clients      <span class="c">fiche + historique</span>
+    ├── 📊 /stats
+    └── ⚙️ /settings     <span class="c">resto · horaires · RGPD</span></pre>
+        <p class="note" style="margin-top:10px">Ce que la v2 corrige. <b>Regroupés</b> sur « / » : <code>/dashboard</code>, <code>/floor-plan</code> et <code>/reservations</code>. <b>Renommé</b> : <code>/settings</code> → <code>/admin</code> (restaurants, horaires, tables ; sans RGPD). <b>Reportés</b> : <code>/calendar</code>, <code>/clients</code>, <code>/stats</code>. <b>Remplacés</b> : WhatsApp et SMS → Telegram et agent vocal. <b>Ajoutés</b> : <code>/register</code> et <code>/widget</code>.</p>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A5 — Jeton JWT -->
+<section class="slide" id="ann-jwt" data-title="Annexe — Jeton JWT">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A5 — Sécurité</div>
+  <h2>Le jeton JWT : stockage, durée de vie, déploiement</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <table class="t-sm">
+      <tr><th style="width:190px">Option</th><th>Protégé contre</th><th>Exposé à</th></tr>
+      <tr><td><b><code>localStorage</code></b> (choix actuel)</td><td class="ok">CSRF : rien n'est envoyé automatiquement</td><td class="ko">XSS : lisible par tout script de la page</td></tr>
+      <tr><td><b>Cookie httpOnly</b> (cible)</td><td class="ok">XSS : invisible pour le JavaScript</td><td class="ko">CSRF : envoyé automatiquement → <code>SameSite</code> + jeton CSRF</td></tr>
+    </table>
+    <div class="cols c3">
+      <div class="card orange"><h4>Écart assumé</h4><p>Le dossier indique un stockage « en mémoire » : le code utilise <code>localStorage</code> (<code>auth.service.ts</code>). Le risque XSS est atténué par l'échappement automatique de React.</p></div>
+      <div class="card"><h4>Durée et révocation</h4><p>Durée de vie <strong>1 h</strong> (défaut Lexik). Un JWT n'est pas révocable avant expiration : la réponse est un jeton court + un <strong>refresh token</strong>, première évolution sécurité prévue.</p></div>
+      <div class="card"><h4>Déconnexion au déploiement</h4><p>Les clés RSA sont générées au <code>docker build</code> : nouvelles clés, anciennes signatures invalides. Correctif : clés stockées en secrets Railway et montées au démarrage.</p></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A6 — bcrypt vs Argon2id -->
+<section class="slide" id="ann-hash" data-title="Annexe — bcrypt ou Argon2id">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A6 — Sécurité</div>
+  <h2>Mots de passe : bcrypt ou Argon2id ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div>
+        <h3>Ce que fait réellement le code</h3>
+        <ul>
+          <li><code>security.yaml</code> : <code>algorithm: auto</code>.</li>
+          <li>Symfony 6.4 construit une chaîne dont le premier maillon est le hasher natif PHP, sans algorithme imposé → <strong>bcrypt, coût 13</strong>.</li>
+          <li>Le sel est inclus dans l'empreinte : d'où l'absence de colonne <code>salt</code>.</li>
+          <li>En test, coût abaissé à 4 pour accélérer PHPUnit.</li>
+        </ul>
+        <div class="card orange" style="margin-top:12px"><h4>Écart assumé</h4><p>Le dossier annonce Argon2id, l'algorithme visé ; <code>auto</code> a retenu bcrypt. Argon2id est le premier choix de l'OWASP, bcrypt reste accepté (coût ≥ 10).</p></div>
+      </div>
+      <div>
+        <h3>Passer à Argon2id sans casser les comptes</h3>
+<pre class="sm"><span class="c"># config/packages/security.yaml</span>
+password_hashers:
+  App\Entity\User:
+    algorithm: argon2id
+    migrate_from: [bcrypt]</pre>
+        <div class="card green" style="margin-top:10px"><h4>Re-hachage transparent</h4><p>Les anciens hash bcrypt restent vérifiables ; à la prochaine connexion réussie, <code>UserRepository::upgradePassword()</code> (<code>PasswordUpgraderInterface</code>, déjà implémentée) réécrit l'empreinte en Argon2id.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A7 — Secrets et configuration -->
+<section class="slide" id="ann-secrets" data-title="Annexe — Secrets">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A7 — Sécurité</div>
+  <h2>Où sont les secrets, et comment arrivent-ils dans le code ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c3">
+      <div class="card green"><h4>Hors de Git</h4><ul>
+        <li><code>backend/.env</code> et <code>config/jwt/*.pem</code> ignorés.</li>
+        <li><code>.env.example</code> : valeurs factices uniquement.</li>
+        <li>Production : variables Railway (<code>DATABASE_URL</code>, <code>APP_SECRET</code>, <code>GEMINI_API_KEY</code>, <code>TELEGRAM_BOT_TOKEN</code>, <code>JWT_PASSPHRASE</code>, <code>CORS_ALLOW_ORIGIN</code>).</li>
+      </ul></div>
+      <div class="card"><h4>Injection dans les services</h4><ul>
+        <li><code>services.yaml</code> : <code>env(GEMINI_API_KEY): ''</code> dans <code>parameters</code>, puis <code>bind</code> vers le constructeur.</li>
+        <li>Le token Telegram reste côté serveur ; seul le <em>username</em> du bot est exposé (<code>/api/chatbot/config</code>).</li>
+        <li><strong>gitleaks</strong> en CI sur tout l'historique, avec des règles Telegram et Gemini.</li>
+      </ul></div>
+      <div class="card orange"><h4>Points à durcir</h4><ul>
+        <li>La clé Gemini passe en paramètre d'URL (<code>?key=</code>) → en-tête <code>x-goog-api-key</code>, pour qu'elle ne finisse pas dans des logs.</li>
+        <li><code>docker-compose.yml</code> contient <code>APP_SECRET</code>, le mot de passe PostgreSQL et <code>APP_ENV: dev</code> : fichier de <strong>développement local uniquement</strong>.</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A8 — Plan RGPD -->
+<section class="slide" id="ann-rgpd" data-title="Annexe — Plan RGPD">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A8 — Conformité</div>
+  <h2>RGPD : état du MVP et plan avant une mise en service réelle</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <table class="t-sm">
+      <tr><th style="width:170px">Exigence</th><th>État du MVP</th><th>Avant mise en service</th></tr>
+      <tr><td><b>Minimisation</b></td><td class="ok">Nom, téléphone, heure, couverts ; email facultatif</td><td>—</td></tr>
+      <tr><td><b>Consentement</b></td><td class="ko">Champ présent, mais forcé à <code>true</code> à la création</td><td>Case à cocher dans le widget, question explicite dans le chatbot et l'appel, horodatage</td></tr>
+      <tr><td><b>Effacement</b></td><td class="ko">Aucune route de suppression de client</td><td>Endpoint de suppression ou d'anonymisation du client et de ses réservations</td></tr>
+      <tr><td><b>Conservation</b></td><td>Politique définie : clients 2 ans, logs 1 an</td><td>Commande Symfony de purge, planifiée</td></tr>
+      <tr><td><b>Sous-traitants</b></td><td>Messages transmis à Google (Gemini) et à Telegram</td><td>Mention d'information aux clients, registre des traitements</td></tr>
+      <tr><td><b>Sécurité</b></td><td class="ok">HTTPS, base sur réseau privé, mots de passe hachés</td><td>—</td></tr>
+    </table>
+    <p class="note">Le MVP ne tourne que sur des données fictives : ces points ont été reportés pour donner la priorité au cœur métier dans le temps imparti.</p>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A9 — Fiabilité de l'IA -->
+<section class="slide" id="ann-ia" data-title="Annexe — Fiabilité de l'IA">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A9 — Intelligence artificielle</div>
+  <h2>Peut-on faire confiance à l'IA ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="quote">« L'IA dialogue et extrait ; elle ne décide jamais. » La disponibilité est calculée par du code PHP déterministe.</div>
+    <div class="cols c2">
+      <div>
+        <div class="card"><h4>Hallucination</h4><p>Gemini renvoie seulement un JSON (<code>responseMimeType: application/json</code>) : date, heure, couverts, nom, téléphone. Il ne peut pas inventer une table libre. Le PHP <strong>revérifie</strong> même la capacité maximale qu'on lui a indiquée dans le prompt.</p></div>
+        <div class="card" style="margin-top:8px"><h4>Gemini en panne</h4><p><code>try/catch</code> dans <code>traiterMessage()</code> : message d'excuse au client. Le dashboard et la saisie manuelle restent pleinement fonctionnels — l'IA est un canal, pas le cœur.</p></div>
+      </div>
+      <div>
+        <div class="card"><h4>Tester un système non déterministe</h4><p>On ne teste pas les réponses de Gemini : on teste la partie déterministe qu'il alimente, <code>DisponibiliteService</code>, avec 4 tests unitaires et des <strong>mocks</strong>.</p></div>
+        <div class="card" style="margin-top:8px"><h4>Injection de prompt</h4><p>Si un client écrit « ignore tes instructions… », le modèle n'a accès ni à la base ni à aucun outil, et chaque valeur extraite repasse par le PHP. Au pire, la conversation dérape ; aucune donnée n'est exposée.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A10 — Agent vocal et Telegram -->
+<section class="slide" id="ann-canaux" data-title="Annexe — Vocal et Telegram">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A10 — Canaux</div>
+  <h2>Comment fonctionnent l'agent vocal et Telegram ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div class="card"><h4>📲 Telegram — webhook</h4><ul>
+        <li>Telegram appelle <code>POST /api/chatbot/telegram?restaurantId=X</code> à chaque message (pas de <em>polling</em>).</li>
+        <li>Session isolée par discussion : <code>telegram_&lt;chatId&gt;</code> ; commandes <code>/start</code> et <code>/reset</code>.</li>
+        <li>Même <code>ChatbotService</code> que le widget ; réponse renvoyée via l'API <code>sendMessage</code>.</li>
+      </ul></div>
+      <div class="card"><h4>📞 Agent vocal Retell — webhook</h4><ul>
+        <li><code>POST /api/chatbot/call</code> avec des données <strong>déjà structurées</strong> : pas de Gemini, appel direct à <code>DisponibiliteService</code>.</li>
+        <li>Noms de champs tolérants (<code>name</code> / <code>nom</code> / <code>clientName</code>…).</li>
+        <li>Créneau complet ou restaurant fermé → <strong>200</strong> avec <code>success: false</code>, un message à lire et les alternatives : l'agent continue la conversation. Réservation créée → 201 ; entrée invalide → 400.</li>
+      </ul></div>
+    </div>
+    <div class="card orange"><h4>Écart et point à durcir</h4><p>Le dossier écrit que <code>/call</code> renvoie « toujours 200 » : seuls les refus métier le font, les erreurs techniques gardent leur code HTTP. Les deux webhooks sont publics sans signature : correctif = <code>secret_token</code> de Telegram vérifié dans l'en-tête, et vérification de la signature fournie par Retell.</p></div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A11 — Tests et couverture -->
+<section class="slide" id="ann-tests" data-title="Annexe — Tests et couverture">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A11 — Qualité</div>
+  <h2>Qu'est-ce qui est testé, et quelle couverture ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <table class="t-sm">
+      <tr><th style="width:250px">Fichier</th><th style="width:110px">Type</th><th>Cas couverts</th></tr>
+      <tr><td><code>DisponibiliteServiceTest</code></td><td>Unitaire · mocks</td><td>Restaurant inexistant · aucun service configuré · service ouvert avec table libre · date invalide</td></tr>
+      <tr><td><code>AuthControllerTest</code></td><td>Fonctionnel</td><td>Health 200 · inscription 201 · email manquant 400 · mot de passe manquant 400 · email dupliqué 409 · mauvais identifiants 401</td></tr>
+      <tr><td><code>ChatbotControllerTest</code></td><td>Fonctionnel</td><td>Webhook vocal : champs manquants 400 · JSON invalide 400</td></tr>
+    </table>
+    <div class="cols c3">
+      <div class="card green"><h4>Pourquoi ces cibles</h4><p>Le cœur métier partagé par les 4 canaux, et les points d'entrée publics. Côté front, <code>tsc -b</code> en mode strict bloque le build.</p></div>
+      <div class="card orange"><h4>Couverture : écart assumé</h4><p>Le dossier annonce plus de 80 % des classes métier : ce taux <strong>n'a pas été mesuré</strong>. Mesure : PCOV + <code>phpunit --coverage-html</code>.</p></div>
+      <div class="card"><h4>Prochains tests</h4><p>Chevauchement de créneaux, génération des alternatives, conflit 409 à la création d'une réservation.</p></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A12 — Écarts dossier ↔ code -->
+<section class="slide" id="ann-ecarts" data-title="Annexe — Écarts dossier / code">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A12 — Méthode</div>
+  <h2>Pourquoi le dossier et le code divergent-ils parfois ?</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c21">
+      <div>
+        <table class="t-sm">
+          <tr><th>Le dossier</th><th>Le code livré</th></tr>
+          <tr><td>Hachage Argon2id</td><td>bcrypt via <code>auto</code></td></tr>
+          <tr><td>JWT « en mémoire »</td><td><code>localStorage</code></td></tr>
+          <tr><td>Image back multi-stage</td><td>Une seule étape (front multi-stage)</td></tr>
+          <tr><td>Séquence « gestion d'une réservation » : API Platform, NotificationService, SMS</td><td><code>ReservationController::updateReservation()</code>, sans notification</td></tr>
+          <tr><td>MPD avec CHECK et index</td><td>Socle : tables, clés, unicité de l'email</td></tr>
+          <tr><td><code>/api/chatbot/call</code> « toujours 200 »</td><td>200 pour les refus métier ; 400, 404 ou 500 sinon</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="card"><h4>D'où viennent les écarts</h4><p>Un MVP mené seul en 6 mois : certaines sections décrivent la <strong>cible</strong> (MPD, RGPD, sitemap), d'autres un <strong>état antérieur</strong> (séquence du Jalon 4, avant le recentrage du périmètre).</p></div>
+        <div class="card green" style="margin-top:8px"><h4>Ma règle</h4><p>Le code fait foi. Chaque écart est identifié, expliqué, et il a son correctif.</p></div>
+        <div class="card" style="margin-top:8px"><h4>Trunk-based et CI</h4><p>Seul sur le projet : une branche <code>main</code>, la CI tient le rôle du relecteur. Une CI rouge se corrige avant tout nouveau commit.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Problématique (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-probleme" data-title="Réserve — Problématique">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section II — Problématique identifiée</div>
+  <h2>7 points de douleur du restaurateur</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c4">
+      <div class="card red"><span class="ico">📞</span><h4>Charge téléphonique</h4><p>Le personnel de salle répond pendant le service, au détriment des clients présents.</p></div>
+      <div class="card red"><span class="ico">🌙</span><h4>Disponibilité limitée</h4><p>Aucune prise de réservation hors ouverture : matin, après-service, jours de fermeture.</p></div>
+      <div class="card red"><span class="ico">💸</span><h4>Perte de clients</h4><p>Sans réponse immédiate, le client réserve chez le concurrent.</p></div>
+      <div class="card red"><span class="ico">⚠️</span><h4>Erreurs de saisie</h4><p>Double réservation, mauvaise estimation des couverts, oubli de rappel.</p></div>
+      <div class="card red"><span class="ico">🪑</span><h4>Remplissage sous-optimal</h4><p>Difficulté à combiner les tables de 2, 4, 6 et 8 personnes.</p></div>
+      <div class="card red"><span class="ico">👻</span><h4>No-show</h4><p>Clients absents sans prévenir : perte sèche de chiffre d'affaires.</p></div>
+      <div class="card red"><span class="ico">👥</span><h4>Coût du personnel</h4><p>Ressource humaine dédiée à une tâche répétitive et automatisable.</p></div>
+      <div class="card green"><span class="ico">💡</span><h4>La réponse</h4><p><strong>Un assistant IA disponible 24/7</strong> qui réserve à la place du restaurateur.</p></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Valeur ajoutée (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-valeur" data-title="Réserve — Valeur ajoutée">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section II — Bénéfices attendus</div>
+  <h2>La valeur ajoutée mesurable</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="kpis">
+      <div class="kpi"><div class="v">24/7</div><div class="l">Réservation possible à toute heure, même à 2h du matin</div></div>
+      <div class="kpi accent"><div class="v">−70%</div><div class="l">de temps consacré à la gestion des appels <span class="note">(réf. OpenTable 2023)</span></div></div>
+      <div class="kpi"><div class="v">&gt;95%</div><div class="l">Taux de complétion visé du dialogue chatbot</div></div>
+      <div class="kpi accent"><div class="v">−25%</div><div class="l">Objectif de réduction des no-show via rappels</div></div>
+    </div>
+    <div class="cols c2" style="margin-top:6px">
+      <div class="card green"><h4>Pour le restaurateur</h4><ul><li>Zéro appel manqué, y compris hors service</li><li>Remplissage optimisé par l'algorithme d'attribution</li><li>Pilotage centralisé dans un dashboard unique</li></ul></div>
+      <div class="card green"><h4>Pour le client</h4><ul><li>Réponse instantanée, sans attente en ligne</li><li>Choix du canal : web, messagerie ou téléphone</li><li>Confirmation immédiate et alternatives proposées</li></ul></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Périmètre IN / OUT (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-perimetre" data-title="Réserve — Périmètre IN / OUT">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section III — Cadrage</div>
+  <h2>Périmètre fonctionnel : ce qui est dans, ce qui est hors</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div class="card green">
+        <h4 style="color:var(--ok)">✅ IN SCOPE</h4>
+        <ul class="check">
+          <li>Module IA conversationnel multi-canal (3 canaux)</li>
+          <li>Algorithme d'attribution intelligente des tables</li>
+          <li>Calcul de disponibilité temps réel + alternatives à 30 min</li>
+          <li>Dashboard React : CRUD réservations, plan de salle interactif</li>
+          <li>Gestion des tables et des services (horaires d'ouverture)</li>
+          <li>Authentification JWT RS256 · rate limiting</li>
+          <li>Containerisation Docker + CI/CD + déploiement cloud</li>
+        </ul>
+      </div>
+      <div class="card red">
+        <h4 style="color:var(--secondary)">❌ OUT OF SCOPE (assumé)</h4>
+        <ul class="cross">
+          <li>Paiement en ligne / acompte de réservation</li>
+          <li>Commande de plats et gestion de menu</li>
+          <li>Application mobile native</li>
+          <li>Multi-langues (français uniquement)</li>
+          <li>Multi-restaurants dans le MVP <span class="note">(données déjà rattachées à un restaurant ; reste à lier les comptes aux établissements)</span></li>
+          <li>Fermetures exceptionnelles <span class="note">(modélisées au MCD, reportées au-delà du MVP)</span></li>
+          <li>Intégration avec les logiciels de caisse</li>
+          <li>Système de fidélité ou d'avis clients</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note">Le hors-scope a été défini dès le Jalon 1 pour sécuriser la tenue du planning : chaque exclusion est une décision de cadrage, pas un abandon.</p>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Planning des 6 jalons (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-planning" data-title="Réserve — Planning des 6 jalons">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section IV — Contraintes temporelles</div>
+  <h2>6 mois, 6 jalons, 6 livrables</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="tl">
+      <div class="j"><div class="m">Janvier</div><div class="t">Jalon 1</div><p>Cahier des charges fonctionnel (CDCF), cadrage du périmètre.</p></div>
+      <div class="j"><div class="m">Février</div><div class="t">Jalon 2</div><p>Méthodologie, sitemap, wireframes et maquettes UI/UX.</p></div>
+      <div class="j"><div class="m">Mars</div><div class="t">Jalon 3</div><p>MERISE : MCD / MLD / MPD + première API REST.</p></div>
+      <div class="j"><div class="m">Avril</div><div class="t">Jalon 4</div><p>Diagrammes UML, chatbot IA et dashboard React.</p></div>
+      <div class="j"><div class="m">Mai</div><div class="t">Jalon 5</div><p>Widget web, tests automatisés et durcissement sécurité.</p></div>
+      <div class="j"><div class="m">Juin</div><div class="t">Jalon 6</div><p>Déploiement Railway, CI/CD, documentation et rapport final.</p></div>
+    </div>
+    <div class="cols c4">
+      <div class="card orange"><h4>⚠️ Risque</h4><p>Complexité de l'algorithme de tables → mocks de scénarios + tests exhaustifs.</p></div>
+      <div class="card orange"><h4>⚠️ Risque</h4><p>Crédits API → Gemini Flash et Telegram en tier gratuit.</p></div>
+      <div class="card orange"><h4>⚠️ Risque</h4><p>Retard planning → canaux secondaires rendus optionnels.</p></div>
+      <div class="card orange"><h4>⚠️ Risque</h4><p>Bugs en production → CI bloquante + recette manuelle par jalon.</p></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Zoning (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-zoning" data-title="Réserve — Zoning">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section V — Étape 1 : zoning</div>
+  <h2>Zoning — découpage des zones fonctionnelles</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="carousel" data-carousel>
+      <div class="ctabs">
+        <button class="ctab" data-go="0">Login</button>
+        <button class="ctab" data-go="1">Dashboard</button>
+        <button class="ctab" data-go="2">Paramètres restaurant</button>
+      </div>
+      <div class="cstage">
+        <button class="cnav prev">‹</button>
+        <img src="Jalon2/zoning - login.png" alt="Zoning — écran de connexion">
+        <img src="Jalon2/zoning - dashboard.png" alt="Zoning — dashboard">
+        <img src="Jalon2/zoning - restaurant settings.png" alt="Zoning — paramètres du restaurant">
+        <button class="cnav next">›</button>
+      </div>
+    </div>
+    <p class="note">Le zoning fixe la <strong>hiérarchie de l'information</strong> avant toute décision graphique : en-tête, navigation latérale, zone de contenu principal et zone d'actions. Objectif : valider les priorités d'écran avec le commanditaire sans le distraire par l'esthétique.</p>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Charte graphique (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-charte" data-title="Réserve — Charte graphique">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section V — Identité visuelle</div>
+  <h2>Charte graphique &amp; code couleur des statuts</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <h3>Couleurs principales</h3>
+    <div class="swatches">
+      <div class="sw"><div class="col" style="background:#1A5276"></div><div class="n">#1A5276<br>Bleu profond</div></div>
+      <div class="sw"><div class="col" style="background:#2E86C1"></div><div class="n">#2E86C1<br>Bleu ciel</div></div>
+      <div class="sw"><div class="col" style="background:#E74C3C"></div><div class="n">#E74C3C<br>Corail chaud</div></div>
+      <div class="sw"><div class="col" style="background:#0E2F44"></div><div class="n">#0E2F44<br>Bleu nuit</div></div>
+    </div>
+    <h3 style="margin-top:10px">Couleurs de statut d'une réservation</h3>
+    <div class="swatches">
+      <div class="sw"><div class="col" style="background:#27AE60"></div><div class="n">🟢 Confirmée</div></div>
+      <div class="sw"><div class="col" style="background:#F39C12"></div><div class="n">🟡 Imminente</div></div>
+      <div class="sw"><div class="col" style="background:#3498DB"></div><div class="n">🔵 Arrivé</div></div>
+      <div class="sw"><div class="col" style="background:#E74C3C"></div><div class="n">🔴 No-show</div></div>
+      <div class="sw"><div class="col" style="background:#7F8C8D"></div><div class="n">⚫ Annulée</div></div>
+    </div>
+    <div class="cols c2" style="margin-top:6px">
+      <div class="card"><h4>Typographie</h4><p><b>Outfit</b> pour les titres · <b>Inter</b> pour le texte courant · <b>JetBrains Mono</b> pour le code et les données.</p></div>
+      <div class="card green"><h4>Accessibilité — WCAG 2.1 AA</h4><p>Contraste ≥ 4.5:1 · navigation clavier complète · cibles ≥ 44×44 px sur mobile · focus visible · <strong>jamais d'information portée par la seule couleur</strong> (icône + libellé systématiques).</p></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Extrait de code commenté (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-code" data-title="Réserve — Extrait de code commenté">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section VIII — Le code derrière l'algorithme</div>
+  <h2>Extrait commenté : <code>DisponibiliteService</code></h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c21">
+<pre class="sm"><span class="c">// 1. Trier les tables par capacité croissante</span>
+usort($tables, <span class="k">function</span> (Table $a, Table $b) {
+    <span class="k">if</span> ($a-&gt;getCapacite() === $b-&gt;getCapacite()) {
+        <span class="k">return</span> $a-&gt;getId() &lt;=&gt; $b-&gt;getId();
+    }
+    <span class="k">return</span> $a-&gt;getCapacite() &lt;=&gt; $b-&gt;getCapacite();
+});
+
+<span class="c">// 2. Ne garder que les tables assez grandes</span>
+$tablesCandidates = array_filter($tables, fn(Table $t) =&gt;
+    $t-&gt;getCapacite() &gt;= $nombrePersonnes);
+
+<span class="c">// 3. Fenêtre d'occupation, paramétrable par restaurant</span>
+$dureeTotale = ($restaurant-&gt;getDureeRepas()
+              + $restaurant-&gt;getBufferNettoyage()) * <span class="n">60</span>;
+$proposedEnd = $proposedStart + $dureeTotale;
+
+<span class="c">// 4. Test de chevauchement de deux intervalles [début, fin[</span>
+<span class="k">if</span> ($resStart &lt; $proposedEnd &amp;&amp; $proposedStart &lt; $resEnd) {
+    $estLibre = <span class="k">false</span>;   <span class="c">// table occupée</span>
+    <span class="k">break</span>;
+}</pre>
+      <div>
+        <h3>Ce que je défends dans ce code</h3>
+        <ul>
+          <li><strong>Le tri croissant est une décision métier</strong>, pas un détail : placer 2 personnes sur une table de 8 gâche 6 couverts pour tout le service.</li>
+          <li><strong>Le test de chevauchement</strong> <code>A.début &lt; B.fin &amp;&amp; B.début &lt; A.fin</code> couvre les 4 cas de recouvrement en une seule condition — plus sûr qu'une cascade de <code>if</code>.</li>
+          <li><strong>Aucun paramètre en dur</strong> : <code>dureeRepas</code> et <code>bufferNettoyage</code> viennent de l'entité RESTAURANT, donc modifiables depuis le dashboard sans redéploiement.</li>
+          <li><strong>Zéro SQL concaténé</strong> : la requête passe par le QueryBuilder Doctrine et <code>setParameter()</code>.</li>
+        </ul>
+        <div class="card green" style="margin-top:10px"><h4>Limite connue</h4><p>La détection de chevauchement se fait en PHP après chargement des réservations du jour. À l'échelle d'un restaurant (quelques dizaines de lignes) c'est négligeable ; en multi-restaurant, je la déplacerais dans la requête SQL.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Jeu d'essai (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-essai" data-title="Réserve — Jeu d'essai">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section X — Jeu d'essai</div>
+  <h2>Le jeu d'essai : des données reproductibles</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c21">
+      <div>
+        <table class="t-sm">
+          <tr><th>Donnée</th><th>Contenu du jeu d'essai</th><th>Pourquoi</th></tr>
+          <tr><td><b>1 compte admin</b></td><td><code>admin@calendria.com</code> / mot de passe haché (bcrypt)</td><td>Tester l'authentification JWT</td></tr>
+          <tr><td><b>1 restaurant</b></td><td>50 couverts · repas 90 min · buffer 15 min</td><td>Paramètres réalistes du turnover</td></tr>
+          <tr><td><b>10 tables</b></td><td>4 tables de 2 · 3 de 4 · 3 de 6 · intérieur et terrasse</td><td><b>Forcer l'algorithme à arbitrer</b> entre plusieurs capacités</td></tr>
+          <tr><td><b>2 services</b></td><td>Midi et soir, avec jours d'ouverture</td><td>Tester le cas « restaurant fermé »</td></tr>
+          <tr><td><b>Clients + réservations</b></td><td>Plusieurs statuts et créneaux</td><td>Tester les chevauchements et le plan de salle</td></tr>
+        </table>
+      </div>
+      <div>
+<pre class="sm"><span class="c"># Rejouer le jeu d'essai à l'identique</span>
+php bin/console doctrine:migrations:migrate
+php bin/console doctrine:fixtures:load</pre>
+        <div class="card" style="margin-top:12px"><h4>Pourquoi des fixtures et non un dump SQL</h4><p>Le jeu d'essai est du <strong>code versionné</strong> : il évolue avec le schéma, se rejoue en une commande et donne le <strong>même état initial</strong> en local et en démo.</p></div>
+        <div class="card green" style="margin-top:8px"><h4>Le choix des 10 tables n'est pas décoratif</h4><p>Les capacités 2 / 4 / 6 sont choisies pour qu'une demande de 3 personnes n'ait <strong>aucune table exacte</strong> : c'est le cas qui prouve que l'algorithme prend bien la capacité immédiatement supérieure.</p></div>
+        <div class="pills" style="margin-top:10px"><span class="pill ok">Données 100% fictives</span><span class="pill ok">Conforme RGPD</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Veille sécurité (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-veillesec" data-title="Réserve — Veille sécurité">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section XIII — Veille sécurité</div>
+  <h2>Veille sécurité &amp; supply chain</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div>
+        <h3>Sources consultées</h3>
+        <table class="t-sm">
+          <tr><th>Source</th><th>Fréquence</th></tr>
+          <tr><td>OWASP Top 10</td><td>Mensuelle</td></tr>
+          <tr><td>Symfony Security Advisories</td><td>À chaque release</td></tr>
+          <tr><td>GitHub Security Advisories / Dependabot</td><td>Automatique</td></tr>
+          <tr><td>CNIL — recommandations sécurité</td><td>Trimestrielle</td></tr>
+        </table>
+        <h3 style="margin-top:12px">Supply chain</h3>
+        <div class="pills"><span class="pill">composer audit</span><span class="pill">npm audit en CI</span><span class="pill">Dependabot</span><span class="pill">Symfony 6.4 LTS</span></div>
+      </div>
+      <div>
+        <h3>Menaces propres à CALENDRIA</h3>
+        <table class="t-sm">
+          <tr><th>Menace</th><th>Contre-mesure</th></tr>
+          <tr><td>Fuite de clé API</td><td>Variables Railway + <code>.gitignore</code> sur <code>.env</code></td></tr>
+          <tr><td>Webhook spoofing</td><td>Firewall public restreint aux actions conversationnelles</td></tr>
+          <tr><td>DoS via le chatbot</td><td>Quotas Gemini côté Google ; le rate limiting ne couvre aujourd'hui que le login — l'étendre au chatbot est la prochaine étape</td></tr>
+          <tr><td>Vol de token JWT</td><td>Expiration 1 h. Écart assumé : stocké en <code>localStorage</code> et non « en mémoire » comme l'indique le dossier — exposé à la XSS (atténuée par l'échappement React), immunisé contre le CSRF ; cible : cookie httpOnly + refresh token</td></tr>
+          <tr><td>Exfiltration en base</td><td>PostgreSQL sur réseau privé, jamais exposée</td></tr>
+        </table>
+        <p class="note" style="margin-top:8px">Pistes suivantes : Content Security Policy, audit OWASP ZAP, centralisation des logs (SIEM), refresh token.</p>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Les 5 difficultés (version complète de la slide de présentation) -->
+<section class="slide" id="ann-res-difficultes" data-title="Réserve — Les 5 difficultés">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section XIV — Retour d'expérience</div>
+  <h2>5 difficultés, 5 solutions documentées</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <table class="t-sm">
+      <tr><th style="width:180px">Problème</th><th>Cause identifiée</th><th>Solution retenue</th></tr>
+      <tr><td><b>1. CORS en production</b></td><td>URL Railway auto-générée, non connue au build ; sous-domaine modifiable.</td><td>Variable <code>CORS_ALLOW_ORIGIN</code> en <b>regex</b>, lue à l'exécution par NelmioCors — configuration sans rebuild.</td></tr>
+      <tr><td><b>2. Déconnexions à chaque déploiement</b></td><td>Clés JWT RSA régénérées au build Docker ⇒ tokens existants invalidés.</td><td>Comportement documenté et accepté pour le MVP ; solution cible : clés en secret Railway montées au démarrage.</td></tr>
+      <tr><td><b>3. Container qui plante au boot</b></td><td><code>services.yaml</code> injectait <code>TELEGRAM_BOT_TOKEN</code> / <code>GEMINI_API_KEY</code> dans tous les services via <code>bind</code>.</td><td>Valeurs par défaut vides dans <code>parameters</code> : <code>env(TELEGRAM_BOT_TOKEN): ''</code>.</td></tr>
+      <tr><td><b>4. CI cassée : base <code>calendria_test_test</code></b></td><td>Symfony ajoute <code>_test</code> quand <code>APP_ENV=test</code>, en plus du suffixe déjà présent dans l'URL.</td><td><code>DATABASE_URL</code> pointe vers <code>calendria</code> sans suffixe — Symfony complète tout seul.</td></tr>
+      <tr><td><b>5. 502 Bad Gateway sur Railway</b></td><td>nginx écoutait un port codé en dur, Railway impose <code>$PORT</code> dynamique.</td><td><code>entrypoint.sh</code> réécrit la conf nginx via <code>sed</code> avant de lancer supervisord.</td></tr>
+    </table>
+    <p class="note">Chaque incident est traçable dans l'historique Git par son commit de correction, puis documenté dans le rapport final — la démarche de diagnostic compte autant que le correctif.</p>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Perspectives (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-perspectives" data-title="Réserve — Perspectives">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section XV — Et ensuite ?</div>
+  <h2>Perspectives d'évolution</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c3">
+      <div class="card red"><h4>1 · Notifications SMS</h4><p>Rappel automatique J-1 — le levier le plus direct sur la réduction des no-show.</p></div>
+      <div class="card red"><h4>2 · Statistiques avancées</h4><p>Graphiques de remplissage, analyse des no-show par période, recettes estimées.</p></div>
+      <div class="card red"><h4>3 · Multi-restaurant</h4><p>Un restaurateur lié à plusieurs établissements — les données portent <strong>déjà leur restaurant</strong> ; reste l'association compte–établissement (une migration).</p></div>
+      <div class="card"><h4>4 · Application React Native</h4><p>Réutilisation de l'API REST et d'une partie des composants existants.</p></div>
+      <div class="card"><h4>5 · WebSockets temps réel</h4><p>Synchronisation instantanée du plan de salle entre plusieurs postes en salle.</p></div>
+      <div class="card"><h4>6 · Refresh token JWT</h4><p>Éviter l'invalidation des sessions à chaque redéploiement.</p></div>
+    </div>
+    <div class="cols c2" style="margin-top:4px">
+      <div class="card green"><h4>Sécurité — priorités suivantes</h4><p>Content Security Policy, audit OWASP ZAP / Burp Suite en production, centralisation des logs (Sentry ou Elastic).</p></div>
+      <div class="card green"><h4>Produit</h4><p>Le MVP est suffisamment abouti pour être présenté à de vrais restaurateurs indépendants.</p></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Compétences CDA couvertes (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-competences" data-title="Réserve — Compétences CDA couvertes">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section XV — Référentiel</div>
+  <h2>Les compétences CDA mobilisées</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <table>
+      <tr><th style="width:250px">Compétence</th><th>Preuve dans CALENDRIA</th></tr>
+      <tr><td><b>Architecture logicielle</b></td><td>API REST Symfony 6.4 + SPA React — séparation stricte back / front, 4 couches, SOLID</td></tr>
+      <tr><td><b>Base de données relationnelle</b></td><td>PostgreSQL 15 + Doctrine ORM + démarche MERISE complète (MCD → MLD → MPD), 3NF</td></tr>
+      <tr><td><b>Sécurité applicative</b></td><td>JWT RS256, bcrypt, rate limiting, CORS, conformité OWASP Top 10 et RGPD</td></tr>
+      <tr><td><b>Intégration d'API externes</b></td><td>Google Gemini 2.5 Flash, Telegram Bot API, webhook générique pour agent vocal (entrants et sortants)</td></tr>
+      <tr><td><b>Containerisation</b></td><td>Docker (nginx + PHP-FPM + supervisord côté back, build multi-stage côté front), Docker Compose en développement</td></tr>
+      <tr><td><b>CI/CD &amp; déploiement continu</b></td><td>GitHub Actions (PHPUnit + build TypeScript), déploiement automatique sur Railway</td></tr>
+      <tr><td><b>Tests automatisés</b></td><td>PHPUnit unitaires et fonctionnels, TypeScript en mode strict</td></tr>
+      <tr><td><b>Gestion de version</b></td><td>Trunk-based development sur <code>main</code>, Conventional Commits, tags de release <code>v0.9-beta</code> et <code>v1.0</code></td></tr>
+    </table>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<div id="bar"></div>
+</div>
+</div>
+
+<div id="timer">00:00</div>
+<div id="lb"><button class="close" type="button" title="Fermer (Échap)">✕</button><img alt="" draggable="false"><div class="lbhint">Clic : zoomer · molette : zoom progressif · glisser : se déplacer · Échap ou fond : fermer</div></div>
+<div id="hint">← → navigation · ↑ ↓ images · <b>Z</b> agrandir · <b>O</b> vue d'ensemble · <b>T</b> chrono · <b>F</b> plein écran</div>
+<div id="overview"></div>
+
+<script>
+(function(){
+  const deck   = document.getElementById('deck');
+  const slides = Array.from(deck.querySelectorAll('.slide'));
+  const bar    = document.getElementById('bar');
+  const ov     = document.getElementById('overview');
+  const timerEl= document.getElementById('timer');
+  let idx = 0;
+
+  /* --- mise à l'échelle de la scène --- */
+  function fit(){
+    const s = Math.min(window.innerWidth / 1280, window.innerHeight / 720) * 0.96;
+    deck.style.transform = 'scale(' + s + ')';
+  }
+  window.addEventListener('resize', fit); fit();
+
+  /* --- navigation --- */
+  function show(i){
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, n) => s.classList.toggle('active', n === idx));
+    bar.style.width = ((idx) / (slides.length - 1) * 100) + '%';
+    const pg = slides[idx].querySelector('.pg');
+    if (pg) pg.textContent = (idx + 1) + ' / ' + slides.length;
+    location.hash = idx + 1;
+  }
+  const next = () => show(idx + 1);
+  const prev = () => show(idx - 1);
+
+  /* --- vue d'ensemble --- */
+  slides.forEach((s, n) => {
+    const t = document.createElement('div');
+    t.className = 'thumb';
+    t.innerHTML = '<div class="tn">' + String(n + 1).padStart(2, '0') + '</div>' +
+                  '<div class="tt">' + (s.dataset.title || '') + '</div>';
+    t.onclick = () => { ov.classList.remove('on'); show(n); };
+    ov.appendChild(t);
+  });
+
+  /* --- carrousels d'images --- */
+  document.querySelectorAll('[data-carousel]').forEach(c => {
+    const imgs = Array.from(c.querySelectorAll('.cstage img'));
+    const tabs = Array.from(c.querySelectorAll('.ctab'));
+    let i = 0;
+    const go = n => {
+      i = (n + imgs.length) % imgs.length;
+      imgs.forEach((im, k) => im.classList.toggle('on', k === i));
+      tabs.forEach((t, k) => t.classList.toggle('on', k === i));
+    };
+    c._step = d => go(i + d);
+    c.addEventListener('click', e => {
+      e.stopPropagation();          /* sinon le clic ferait avancer la slide */
+      const tab = e.target.closest('.ctab');
+      if (tab) return go(+tab.dataset.go);
+      if (e.target.closest('.cnav.prev')) return go(i - 1);
+      go(i + 1);
+    });
+    go(0);
+  });
+
+  /* --- agrandissement d'image --- */
+  const lb = document.getElementById('lb');
+  const lbImg = lb.querySelector('img');
+  let scale = 1, baseW = 0, drag = null, dragged = false;
+
+  /* Zoom autour du point (cx, cy) : ce point reste sous le curseur après le changement d'échelle. */
+  function setScale(s, cx = innerWidth / 2, cy = innerHeight / 2){
+    const r = lbImg.getBoundingClientRect();
+    if (scale === 1) baseW = r.width;                 /* largeur « ajustée à l'écran » de référence */
+    const px = (cx - r.left) / r.width, py = (cy - r.top) / r.height;
+    scale = Math.max(1, Math.min(4, s));
+    if (scale === 1) { lb.classList.remove('zoomed'); lbImg.style.width = ''; return; }
+    lb.classList.add('zoomed');
+    lbImg.style.width = (baseW * scale) + 'px';
+    const n = lbImg.getBoundingClientRect();
+    lb.scrollLeft += n.left + px * n.width - cx;
+    lb.scrollTop  += n.top + py * n.height - cy;
+  }
+  const zoomOut = () => { setScale(1); lb.classList.remove('on'); };
+  const zoomIn = img => { if (!img) return; setScale(1); lbImg.src = img.currentSrc || img.src; lb.classList.add('on'); };
+
+  lb.addEventListener('click', e => { if (e.target !== lbImg) zoomOut(); });   /* fond sombre ou ✕ : fermer */
+  lbImg.addEventListener('click', e => {
+    e.stopPropagation();
+    if (dragged) { dragged = false; return; }        /* fin d'un glisser : ce n'est pas un clic de zoom */
+    setScale(scale >= 3 ? 1 : Math.floor(scale) + 1, e.clientX, e.clientY);
+  });
+  lb.addEventListener('wheel', e => {
+    e.preventDefault();
+    setScale(scale * (e.deltaY < 0 ? 1.25 : 0.8), e.clientX, e.clientY);
+  }, { passive: false });
+  lbImg.addEventListener('mousedown', e => {
+    if (scale === 1) return;
+    e.preventDefault();
+    drag = { x: e.clientX, y: e.clientY, l: lb.scrollLeft, t: lb.scrollTop };
+    dragged = false;
+  });
+  window.addEventListener('mousemove', e => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (Math.abs(dx) + Math.abs(dy) > 4) dragged = true;
+    lb.scrollLeft = drag.l - dx;
+    lb.scrollTop  = drag.t - dy;
+  });
+  window.addEventListener('mouseup', () => { drag = null; });
+
+  document.querySelectorAll('.fig, .cstage').forEach(box => {
+    if (!box.querySelector('img')) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'zoombtn';
+    btn.title = "Agrandir l'image";
+    btn.textContent = '⤢';
+    btn.addEventListener('click', e => {
+      e.stopPropagation();   /* sinon le carrousel changerait d'image */
+      zoomIn(box.querySelector('img.on') || box.querySelector('img'));
+    });
+    box.appendChild(btn);
+  });
+
+  /* --- chrono de soutenance --- */
+  let t0 = null, tick = null;
+  function toggleTimer(){
+    if (tick){ clearInterval(tick); tick = null; timerEl.classList.remove('on'); return; }
+    t0 = Date.now(); timerEl.classList.add('on');
+    tick = setInterval(() => {
+      const d = Math.floor((Date.now() - t0) / 1000);
+      timerEl.textContent = String(Math.floor(d / 60)).padStart(2,'0') + ':' + String(d % 60).padStart(2,'0');
+    }, 500);
+  }
+
+  document.addEventListener('keydown', e => {
+    const k = e.key;
+    if (lb.classList.contains('on')) {
+      e.preventDefault();
+      if (k === '+' || k === '=') setScale(scale * 1.25);
+      else if (k === '-') setScale(scale * 0.8);
+      else zoomOut();                                 /* Échap, Z ou toute autre touche : fermer */
+      return;
+    }
+    if (k === 'ArrowRight' || k === 'PageDown' || k === ' ') { e.preventDefault(); next(); }
+    else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); prev(); }
+    else if (k === 'Home') show(0);
+    else if (k === 'End') show(slides.length - 1);
+    else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      const c = slides[idx].querySelector('[data-carousel]');
+      if (c) { e.preventDefault(); c._step(k === 'ArrowDown' ? 1 : -1); }
+    }
+    else if (k === 'o' || k === 'O') ov.classList.toggle('on');
+    else if (k === 'z' || k === 'Z') {
+      const box = slides[idx].querySelector('.cstage, .fig');
+      if (box) zoomIn(box.querySelector('img.on') || box.querySelector('img'));
+    }
+    else if (k === 'Escape') ov.classList.remove('on');
+    else if (k === 't' || k === 'T') toggleTimer();
+    else if (k === 'f' || k === 'F') {
+      if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen();
+    }
+  });
+
+  /* --- annexes : liens internes vers une slide par son id (sommaire, retour) --- */
+  const slideIndexOf = id => slides.indexOf(document.getElementById(id));
+  document.querySelectorAll('[data-goto] .num').forEach(el => {
+    const n = slideIndexOf(el.parentElement.dataset.goto);
+    if (n >= 0) el.textContent = String(n + 1).padStart(2, '0');
+  });
+
+  deck.addEventListener('click', e => {
+    const link = e.target.closest('[data-goto]');
+    if (link) {               /* lien d'annexe : on saute à la slide visée au lieu d'avancer */
+      const n = slideIndexOf(link.dataset.goto);
+      if (n >= 0) show(n);
+      return;
+    }
+    if (e.clientX > window.innerWidth / 2) next(); else prev();
+  });
+
+  const start = parseInt(location.hash.replace('#',''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+</body>
+</html>

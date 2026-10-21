@@ -7,7 +7,7 @@
 '  La v1 du dossier decrivait la cible physique (CHECK, index metier,
 '  ON DELETE CASCADE / SET NULL) : ces elements ne sont pas implementes.
 ' =====================================================================
-title **CALENDRIA – Modèle Physique de Données réel (MVP) – v2**\nPostgreSQL 15 – schéma généré par les migrations Doctrine
+title **CALENDRIA – Modèle Physique de Données (MVP)**\nPostgreSQL 15 – schéma généré par les migrations Doctrine
 
 skinparam backgroundColor #FEFEFE
 skinparam defaultFontName "JetBrains Mono"

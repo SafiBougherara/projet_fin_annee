@@ -195,7 +195,11 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
 .figside h3{margin-bottom:8px}
 .figside .cap{margin-top:10px}
 
-.ann-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.ann-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.ann-grid .ann-link{font-size:13px;padding:8px 11px;margin-bottom:7px}
+/* lien vers une annexe depuis une slide de la présentation */
+.ann-inline{color:var(--primary-light);text-decoration:underline;cursor:pointer;font-style:normal;white-space:nowrap}
+.ann-inline:hover{color:var(--secondary)}
 .ann-grid h3{margin-bottom:10px}
 .ann-link{display:flex;gap:10px;align-items:center;padding:10px 13px;margin-bottom:9px;background:var(--bg-soft);
           border:1px solid var(--border);border-left:4px solid var(--primary-light);border-radius:8px;
@@ -388,26 +392,6 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="chrome"><span>II — Présentation du projet</span><span class="pg"></span></div>
 </section>
 
-<!-- ═══════════════ 6. PROBLÉMATIQUE ═══════════════ -->
-<section class="slide" data-title="Problématique">
-  <div class="kicker">Section II — Problématique identifiée</div>
-  <h2>7 points de douleur du restaurateur</h2>
-  <div class="rule"></div>
-  <div class="body">
-    <div class="cols c4">
-      <div class="card red"><span class="ico">📞</span><h4>Charge téléphonique</h4><p>Le personnel de salle répond pendant le service, au détriment des clients présents.</p></div>
-      <div class="card red"><span class="ico">🌙</span><h4>Disponibilité limitée</h4><p>Aucune prise de réservation hors ouverture : matin, après-service, jours de fermeture.</p></div>
-      <div class="card red"><span class="ico">💸</span><h4>Perte de clients</h4><p>Sans réponse immédiate, le client réserve chez le concurrent.</p></div>
-      <div class="card red"><span class="ico">⚠️</span><h4>Erreurs de saisie</h4><p>Double réservation, mauvaise estimation des couverts, oubli de rappel.</p></div>
-      <div class="card red"><span class="ico">🪑</span><h4>Remplissage sous-optimal</h4><p>Difficulté à combiner les tables de 2, 4, 6 et 8 personnes.</p></div>
-      <div class="card red"><span class="ico">👻</span><h4>No-show</h4><p>Clients absents sans prévenir : perte sèche de chiffre d'affaires.</p></div>
-      <div class="card red"><span class="ico">👥</span><h4>Coût du personnel</h4><p>Ressource humaine dédiée à une tâche répétitive et automatisable.</p></div>
-      <div class="card green"><span class="ico">💡</span><h4>La réponse</h4><p><strong>Un assistant IA disponible 24/7</strong> qui réserve à la place du restaurateur.</p></div>
-    </div>
-  </div>
-  <div class="chrome"><span>II — Présentation du projet</span><span class="pg"></span></div>
-</section>
-
 <!-- ═══════════════ 7. SOLUTION / PARCOURS ═══════════════ -->
 <section class="slide" data-title="La solution en 5 étapes">
   <div class="kicker">Section II — Fonctionnement global</div>
@@ -473,45 +457,6 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <div class="chrome"><span>III — Cahier des charges</span><span class="pg"></span></div>
 </section>
 
-<!-- ═══════════════ 10. PÉRIMÈTRE ═══════════════ -->
-<section class="slide" data-title="Périmètre IN / OUT">
-  <div class="kicker">Section III — Cadrage</div>
-  <h2>Périmètre fonctionnel : ce qui est dans, ce qui est hors</h2>
-  <div class="rule"></div>
-  <div class="body">
-    <div class="cols c2">
-      <div class="card green">
-        <h4 style="color:var(--ok)">✅ IN SCOPE</h4>
-        <ul class="check">
-          <li>Module IA conversationnel multi-canal (3 canaux)</li>
-          <li>Algorithme d'attribution intelligente des tables</li>
-          <li>Calcul de disponibilité temps réel + alternatives à 30 min</li>
-          <li>Dashboard React : CRUD réservations, plan de salle interactif</li>
-          <li>Gestion des tables et des services (horaires d'ouverture)</li>
-          <li>Mode sombre persistant · fiche client avec historique <span class="note">(reportée : non livrée dans le MVP)</span></li>
-          <li>Authentification JWT RS256 · rate limiting</li>
-          <li>Containerisation Docker + CI/CD + déploiement cloud</li>
-        </ul>
-      </div>
-      <div class="card red">
-        <h4 style="color:var(--secondary)">❌ OUT OF SCOPE (assumé)</h4>
-        <ul class="cross">
-          <li>Paiement en ligne / acompte de réservation</li>
-          <li>Commande de plats et gestion de menu</li>
-          <li>Application mobile native</li>
-          <li>Multi-langues (français uniquement)</li>
-          <li>Multi-restaurants dans le MVP <span class="note">(données déjà rattachées à un restaurant ; reste à lier les comptes aux établissements)</span></li>
-          <li>Fermetures exceptionnelles <span class="note">(modélisées au MCD, reportées au-delà du MVP)</span></li>
-          <li>Intégration avec les logiciels de caisse</li>
-          <li>Système de fidélité ou d'avis clients</li>
-        </ul>
-      </div>
-    </div>
-    <p class="note">Le hors-scope a été défini dès le Jalon 1 pour sécuriser la tenue du planning : chaque exclusion est une décision de cadrage, pas un abandon.</p>
-  </div>
-  <div class="chrome"><span>III — Cahier des charges</span><span class="pg"></span></div>
-</section>
-
 <!-- ═══════════════ 11. STACK TECHNIQUE ═══════════════ -->
 <section class="slide" data-title="Stack technique">
   <div class="kicker">Section III — Exigences techniques</div>
@@ -572,7 +517,6 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
         </table>
       </div>
       <div>
-        <h3>Pourquoi l'agilité plutôt que le cycle en V ?</h3>
         <ul>
           <li><strong>Le périmètre a dû bouger</strong> : WhatsApp Business exigeait 4 à 6 semaines de vérification. En étant agile, j'ai basculé sur Telegram au sprint suivant.</li>
           <li><strong>Les jalons imposés sont déjà des sprints</strong> : un livrable démontrable chaque mois.</li>
@@ -580,8 +524,8 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
         <div class="card orange" style="margin-top:12px">
           <h4>Le backlog MoSCoW</h4>
           <p><b>M</b>ust (indispensable, sinon pas de produit) : réserver via le chatbot · dashboard du jour · configuration tables &amp; horaires · confirmation immédiate.<br>
-          <b>S</b>hould (important, si le temps le permet) : multi-canal · statistiques de remplissage.<br>
-          <b>C</b>ould (confort) : mode sombre · fiche client.<br>
+          <b>S</b>hould (important, si le temps le permet) : multi-canal<br>
+          <b>C</b>ould (confort) : mode sombre.<br>
           <b>W</b>on't (explicitement hors périmètre) : paiement, commande, multi-langues, mobile natif.</p>
         </div>
       </div>
@@ -670,54 +614,25 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
 </section>
 
 <!-- ═══════════════ 17. SITEMAP ═══════════════ -->
-<section class="slide" data-title="Sitemap">
-  <div class="kicker">Section V — Architecture des écrans</div>
-  <h2>Sitemap du dashboard restaurateur</h2>
+<section class="slide" data-title="Sitemap (v2)">
+  <div class="kicker">Section V — Architecture des écrans · version corrigée</div>
+  <h2>Sitemap de l'application livrée — v2</h2>
   <div class="rule"></div>
   <div class="body">
-    <div class="cols c21" style="min-height:0">
-      <div class="fig"><img src="Jalon2/CALENDRIA - Sitemap - Architecture des Ecrans.png" alt="Sitemap CALENDRIA" onerror="this.parentNode.innerHTML='<pre class=sm>voir documentation/Jalon2/sitemap.puml</pre>'"></div>
+    <div class="cols figside">
+      <div class="fig"><img src="Jalon2/sitemap_v2.png" alt="Sitemap CALENDRIA, version 2"></div>
       <div>
-<pre class="sm"><span class="k">🔐 /login</span>
-│
-└── <span class="k">🏠 /dashboard</span>
-    ├── 📅 /calendar     <span class="c">jour · semaine · mois</span>
-    ├── 🗺️ /floor-plan   <span class="c">temps réel + slider</span>
-    ├── 📋 /reservations <span class="c">liste · détail · CRUD</span>
-    ├── 👥 /clients      <span class="c">fiche + historique</span>
-    ├── 📊 /stats
-    └── ⚙️ /settings     <span class="c">resto · horaires · RGPD</span></pre>
-        <div class="card" style="margin-top:12px"><h4>Règle des 3 clics</h4><p>Toute information critique est accessible en <strong>3 clics maximum</strong> depuis le dashboard, affiché par défaut après connexion.</p></div>
+<pre class="sm"><span class="c"># 5 routes (frontend/src/App.tsx)</span>
+<span class="k">Public</span>
+├── 🔐 /login
+├── ✍️ /register
+└── 💬 /widget?restaurantId=X  <span class="c">iframe</span>
+<span class="k">Restaurateur (JWT)</span>
+├── 🏠 /        <span class="c">plan de salle · réservations</span>
+└── ⚙️ /admin   <span class="c">restaurants · horaires · tables</span></pre>
+        <div class="card" style="margin-top:10px"><h4>Règle des 3 clics</h4><p>Plan de salle, création et liste des réservations sont sur l'écran <strong>«&nbsp;/&nbsp;»</strong>, affiché dès la connexion.</p></div>
+        <div class="cap">Écart assumé : le sitemap du dossier (Jalon 2) décrivait la cible — 8 écrans dont <code>/calendar</code>, <code>/clients</code>, <code>/stats</code> et des canaux WhatsApp / SMS. Le MVP regroupe plan de salle et réservations sur un seul écran ; calendrier, fiches clients et statistiques sont reportés. Version du dossier en annexe.</div>
       </div>
-    </div>
-  </div>
-  <div class="chrome"><span>V — Conception UI/UX</span><span class="pg"></span></div>
-</section>
-
-<!-- ═══════════════ 18. CHARTE GRAPHIQUE ═══════════════ -->
-<section class="slide" data-title="Charte graphique">
-  <div class="kicker">Section V — Identité visuelle</div>
-  <h2>Charte graphique &amp; code couleur des statuts</h2>
-  <div class="rule"></div>
-  <div class="body">
-    <h3>Couleurs principales</h3>
-    <div class="swatches">
-      <div class="sw"><div class="col" style="background:#1A5276"></div><div class="n">#1A5276<br>Bleu profond</div></div>
-      <div class="sw"><div class="col" style="background:#2E86C1"></div><div class="n">#2E86C1<br>Bleu ciel</div></div>
-      <div class="sw"><div class="col" style="background:#E74C3C"></div><div class="n">#E74C3C<br>Corail chaud</div></div>
-      <div class="sw"><div class="col" style="background:#0E2F44"></div><div class="n">#0E2F44<br>Bleu nuit</div></div>
-    </div>
-    <h3 style="margin-top:10px">Couleurs de statut d'une réservation</h3>
-    <div class="swatches">
-      <div class="sw"><div class="col" style="background:#27AE60"></div><div class="n">🟢 Confirmée</div></div>
-      <div class="sw"><div class="col" style="background:#F39C12"></div><div class="n">🟡 Imminente</div></div>
-      <div class="sw"><div class="col" style="background:#3498DB"></div><div class="n">🔵 Arrivé</div></div>
-      <div class="sw"><div class="col" style="background:#E74C3C"></div><div class="n">🔴 No-show</div></div>
-      <div class="sw"><div class="col" style="background:#7F8C8D"></div><div class="n">⚫ Annulée</div></div>
-    </div>
-    <div class="cols c2" style="margin-top:6px">
-      <div class="card"><h4>Typographie</h4><p><b>Outfit</b> pour les titres · <b>Inter</b> pour le texte courant · <b>JetBrains Mono</b> pour le code et les données.</p></div>
-      <div class="card green"><h4>Accessibilité — WCAG 2.1 AA</h4><p>Contraste ≥ 4.5:1 · navigation clavier complète · cibles ≥ 44×44 px sur mobile · focus visible · <strong>jamais d'information portée par la seule couleur</strong> (icône + libellé systématiques).</p></div>
     </div>
   </div>
   <div class="chrome"><span>V — Conception UI/UX</span><span class="pg"></span></div>
@@ -1019,80 +934,6 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
   <p>OWASP Top 10, conformité RGPD, politique de tests, containerisation et mise en production.</p>
 </section>
 
-<!-- ═══════════════ 34b. EXTRAIT DE CODE ═══════════════ -->
-<section class="slide" data-title="Extrait de code commenté">
-  <div class="kicker">Section VIII — Le code derrière l'algorithme</div>
-  <h2>Extrait commenté : <code>DisponibiliteService</code></h2>
-  <div class="rule"></div>
-  <div class="body">
-    <div class="cols c21">
-<pre class="sm"><span class="c">// 1. Trier les tables par capacité croissante</span>
-usort($tables, <span class="k">function</span> (Table $a, Table $b) {
-    <span class="k">if</span> ($a-&gt;getCapacite() === $b-&gt;getCapacite()) {
-        <span class="k">return</span> $a-&gt;getId() &lt;=&gt; $b-&gt;getId();
-    }
-    <span class="k">return</span> $a-&gt;getCapacite() &lt;=&gt; $b-&gt;getCapacite();
-});
-
-<span class="c">// 2. Ne garder que les tables assez grandes</span>
-$tablesCandidates = array_filter($tables, fn(Table $t) =&gt;
-    $t-&gt;getCapacite() &gt;= $nombrePersonnes);
-
-<span class="c">// 3. Fenêtre d'occupation, paramétrable par restaurant</span>
-$dureeTotale = ($restaurant-&gt;getDureeRepas()
-              + $restaurant-&gt;getBufferNettoyage()) * <span class="n">60</span>;
-$proposedEnd = $proposedStart + $dureeTotale;
-
-<span class="c">// 4. Test de chevauchement de deux intervalles [début, fin[</span>
-<span class="k">if</span> ($resStart &lt; $proposedEnd &amp;&amp; $proposedStart &lt; $resEnd) {
-    $estLibre = <span class="k">false</span>;   <span class="c">// table occupée</span>
-    <span class="k">break</span>;
-}</pre>
-      <div>
-        <h3>Ce que je défends dans ce code</h3>
-        <ul>
-          <li><strong>Le tri croissant est une décision métier</strong>, pas un détail : placer 2 personnes sur une table de 8 gâche 6 couverts pour tout le service.</li>
-          <li><strong>Le test de chevauchement</strong> <code>A.début &lt; B.fin &amp;&amp; B.début &lt; A.fin</code> couvre les 4 cas de recouvrement en une seule condition — plus sûr qu'une cascade de <code>if</code>.</li>
-          <li><strong>Aucun paramètre en dur</strong> : <code>dureeRepas</code> et <code>bufferNettoyage</code> viennent de l'entité RESTAURANT, donc modifiables depuis le dashboard sans redéploiement.</li>
-          <li><strong>Zéro SQL concaténé</strong> : la requête passe par le QueryBuilder Doctrine et <code>setParameter()</code>.</li>
-        </ul>
-        <div class="card green" style="margin-top:10px"><h4>Limite connue</h4><p>La détection de chevauchement se fait en PHP après chargement des réservations du jour. À l'échelle d'un restaurant (quelques dizaines de lignes) c'est négligeable ; en multi-restaurant, je la déplacerais dans la requête SQL.</p></div>
-      </div>
-    </div>
-  </div>
-  <div class="chrome"><span>VIII — Architecture multi-couches</span><span class="pg"></span></div>
-</section>
-
-<!-- ═══════════════ 34c. JEU D'ESSAI ═══════════════ -->
-<section class="slide" data-title="Jeu d'essai">
-  <div class="kicker">Section X — Jeu d'essai</div>
-  <h2>Le jeu d'essai : des données reproductibles</h2>
-  <div class="rule"></div>
-  <div class="body">
-    <div class="cols c21">
-      <div>
-        <table class="t-sm">
-          <tr><th>Donnée</th><th>Contenu du jeu d'essai</th><th>Pourquoi</th></tr>
-          <tr><td><b>1 compte admin</b></td><td><code>admin@calendria.com</code> / mot de passe haché (bcrypt)</td><td>Tester l'authentification JWT</td></tr>
-          <tr><td><b>1 restaurant</b></td><td>50 couverts · repas 90 min · buffer 15 min</td><td>Paramètres réalistes du turnover</td></tr>
-          <tr><td><b>10 tables</b></td><td>4 tables de 2 · 3 de 4 · 3 de 6 · intérieur et terrasse</td><td><b>Forcer l'algorithme à arbitrer</b> entre plusieurs capacités</td></tr>
-          <tr><td><b>2 services</b></td><td>Midi et soir, avec jours d'ouverture</td><td>Tester le cas « restaurant fermé »</td></tr>
-          <tr><td><b>Clients + réservations</b></td><td>Plusieurs statuts et créneaux</td><td>Tester les chevauchements et le plan de salle</td></tr>
-        </table>
-      </div>
-      <div>
-<pre class="sm"><span class="c"># Rejouer le jeu d'essai à l'identique</span>
-php bin/console doctrine:migrations:migrate
-php bin/console doctrine:fixtures:load</pre>
-        <div class="card" style="margin-top:12px"><h4>Pourquoi des fixtures et non un dump SQL</h4><p>Le jeu d'essai est du <strong>code versionné</strong> : il évolue avec le schéma, se rejoue en une commande et donne le <strong>même état initial</strong> en local et en démo.</p></div>
-        <div class="card green" style="margin-top:8px"><h4>Le choix des 10 tables n'est pas décoratif</h4><p>Les capacités 2 / 4 / 6 sont choisies pour qu'une demande de 3 personnes n'ait <strong>aucune table exacte</strong> : c'est le cas qui prouve que l'algorithme prend bien la capacité immédiatement supérieure.</p></div>
-        <div class="pills" style="margin-top:10px"><span class="pill ok">Données 100% fictives</span><span class="pill ok">Conforme RGPD</span></div>
-      </div>
-    </div>
-  </div>
-  <div class="chrome"><span>X — Politique de tests</span><span class="pg"></span></div>
-</section>
-
 <!-- ═══════════════ 35. OWASP ═══════════════ -->
 <section class="slide" data-title="Sécurité OWASP">
   <div class="kicker">Section IX — Sécurité applicative</div>
@@ -1282,46 +1123,10 @@ nginx:alpine
     <div class="cols c3">
       <div class="card"><h4>3 décisions majeures issues de la veille</h4><p>GPT-4o-mini → Gemini 2.5 Flash · Twilio → Telegram · Heroku → Railway (fin du tier gratuit Heroku en 2022).</p></div>
       <div class="card"><h4>Tendances suivies</h4><p>PHP 8.4 (property hooks) · Symfony 7 vs LTS 6.4 · React 19 (adopté en cours de projet) · Vite 7 · enums PHP 8.1 pour les statuts métier.</p></div>
-      <div class="card"><h4>Outils de veille</h4><p>Docs officielles hebdo · release notes GitHub via Dependabot · blogs Symfony/React/PHP.Watch · SymfonyWorld &amp; ReactConf.</p></div>
+      <div class="card"><h4>Outils de veille</h4><p>Docs officielles hebdo · release notes GitHub via Dependabot · blogs Symfony/React/PHP.Watch · SymfonyWorld &amp; ReactConf.</p><p style="margin-top:6px"><b>Sécurité</b> : OWASP Top 10 · Symfony Security Advisories · Dependabot · <code>composer audit</code> / <code>npm audit</code> en CI · CNIL. <span class="ann-inline" data-goto="ann-res-veillesec">détail ↗</span></p></div>
     </div>
   </div>
   <div class="chrome"><span>XII — Veille technologique</span><span class="pg"></span></div>
-</section>
-
-<!-- ═══════════════ 42. VEILLE SÉCURITÉ ═══════════════ -->
-<section class="slide" data-title="Veille sécurité">
-  <div class="kicker">Section XIII — Veille sécurité</div>
-  <h2>Veille sécurité &amp; supply chain</h2>
-  <div class="rule"></div>
-  <div class="body">
-    <div class="cols c2">
-      <div>
-        <h3>Sources consultées</h3>
-        <table class="t-sm">
-          <tr><th>Source</th><th>Fréquence</th></tr>
-          <tr><td>OWASP Top 10</td><td>Mensuelle</td></tr>
-          <tr><td>Symfony Security Advisories</td><td>À chaque release</td></tr>
-          <tr><td>GitHub Security Advisories / Dependabot</td><td>Automatique</td></tr>
-          <tr><td>CNIL — recommandations sécurité</td><td>Trimestrielle</td></tr>
-        </table>
-        <h3 style="margin-top:12px">Supply chain</h3>
-        <div class="pills"><span class="pill">composer audit</span><span class="pill">npm audit en CI</span><span class="pill">Dependabot</span><span class="pill">Symfony 6.4 LTS</span></div>
-      </div>
-      <div>
-        <h3>Menaces propres à CALENDRIA</h3>
-        <table class="t-sm">
-          <tr><th>Menace</th><th>Contre-mesure</th></tr>
-          <tr><td>Fuite de clé API</td><td>Variables Railway + <code>.gitignore</code> sur <code>.env</code></td></tr>
-          <tr><td>Webhook spoofing</td><td>Firewall public restreint aux actions conversationnelles</td></tr>
-          <tr><td>DoS via le chatbot</td><td>Quotas Gemini côté Google ; le rate limiting ne couvre aujourd'hui que le login — l'étendre au chatbot est la prochaine étape</td></tr>
-          <tr><td>Vol de token JWT</td><td>Expiration 1 h. Écart assumé : stocké en <code>localStorage</code> et non « en mémoire » comme l'indique le dossier — exposé à la XSS (atténuée par l'échappement React), immunisé contre le CSRF ; cible : cookie httpOnly + refresh token</td></tr>
-          <tr><td>Exfiltration en base</td><td>PostgreSQL sur réseau privé, jamais exposée</td></tr>
-        </table>
-        <p class="note" style="margin-top:8px">Pistes suivantes : Content Security Policy, audit OWASP ZAP, centralisation des logs (SIEM), refresh token.</p>
-      </div>
-    </div>
-  </div>
-  <div class="chrome"><span>XIII — Veille sécurité</span><span class="pg"></span></div>
 </section>
 
 <!-- ═══════════════ 43. DIFFICULTÉS ═══════════════ -->
@@ -1359,7 +1164,7 @@ nginx:alpine
       <div class="card green"><h4>✅ Livré — métier</h4><ul class="check"><li>Dashboard CRUD complet</li><li>Plan de salle interactif</li><li>Algorithme d'attribution des tables</li><li>Disponibilité + alternatives à 30 min</li><li>Chatbot IA Gemini (widget web)</li><li>Widget embarquable en iframe</li><li>Bot Telegram</li></ul></div>
       <div class="card green"><h4>✅ Livré — technique</h4><ul class="check"><li>JWT RS256 + bcrypt</li><li>Rate limiting login</li><li>Gestion tables &amp; services</li><li>Docker (front multi-stage)</li><li>CI/CD GitHub Actions</li><li>Déploiement Railway</li><li>Mode sombre persistant</li></ul></div>
       <div class="card orange"><h4>❌ Non livré (3)</h4><ul class="cross"><li><b>Fermetures exceptionnelles</b> — modélisées au MCD, non implémentées</li><li><b>Notifications SMS</b> — remplaçables par Telegram, coût Twilio non soutenable</li><li><b>Statistiques avancées</b> — indicateurs présents, pas de module graphique</li></ul>
-        <p class="note" style="margin-top:8px">Aucune de ces 3 absences n'est un échec technique : ce sont des arbitrages de périmètre assumés.</p></div>
+        <p class="note" style="margin-top:8px">Aucune de ces 3 absences n'est un échec technique : ce sont des arbitrages de périmètre assumés, fixés dès le Jalon 1. <span class="ann-inline" data-goto="ann-res-perimetre">Périmètre IN / OUT ↗</span></p></div>
     </div>
   </div>
   <div class="chrome"><span>XV — Conclusion</span><span class="pg"></span></div>
@@ -1386,28 +1191,6 @@ nginx:alpine
   <div class="chrome"><span>XV — Conclusion</span><span class="pg"></span></div>
 </section>
 
-<!-- ═══════════════ 46. PERSPECTIVES ═══════════════ -->
-<section class="slide" data-title="Perspectives">
-  <div class="kicker">Section XV — Et ensuite ?</div>
-  <h2>Perspectives d'évolution</h2>
-  <div class="rule"></div>
-  <div class="body">
-    <div class="cols c3">
-      <div class="card red"><h4>1 · Notifications SMS</h4><p>Rappel automatique J-1 — le levier le plus direct sur la réduction des no-show.</p></div>
-      <div class="card red"><h4>2 · Statistiques avancées</h4><p>Graphiques de remplissage, analyse des no-show par période, recettes estimées.</p></div>
-      <div class="card red"><h4>3 · Multi-restaurant</h4><p>Un restaurateur lié à plusieurs établissements — les données portent <strong>déjà leur restaurant</strong> ; reste l'association compte–établissement (une migration).</p></div>
-      <div class="card"><h4>4 · Application React Native</h4><p>Réutilisation de l'API REST et d'une partie des composants existants.</p></div>
-      <div class="card"><h4>5 · WebSockets temps réel</h4><p>Synchronisation instantanée du plan de salle entre plusieurs postes en salle.</p></div>
-      <div class="card"><h4>6 · Refresh token JWT</h4><p>Éviter l'invalidation des sessions à chaque redéploiement.</p></div>
-    </div>
-    <div class="cols c2" style="margin-top:4px">
-      <div class="card green"><h4>Sécurité — priorités suivantes</h4><p>Content Security Policy, audit OWASP ZAP / Burp Suite en production, centralisation des logs (Sentry ou Elastic).</p></div>
-      <div class="card green"><h4>Produit</h4><p>Le MVP est suffisamment abouti pour être présenté à de vrais restaurateurs indépendants.</p></div>
-    </div>
-  </div>
-  <div class="chrome"><span>XV — Conclusion et perspectives</span><span class="pg"></span></div>
-</section>
-
 <!-- ═══════════════ 47. CONCLUSION ═══════════════ -->
 <section class="slide" data-title="Conclusion">
   <div class="kicker">Section XV — Conclusion</div>
@@ -1423,6 +1206,7 @@ nginx:alpine
           <li><strong>Piloter un projet en autonomie</strong> sur 6 mois, avec une méthode, un backlog, des jalons et des arbitrages assumés.</li>
           <li><strong>Documenter et justifier chaque choix</strong> — condition pour qu'un projet reste maintenable après son auteur.</li>
         </ul>
+        <p class="note" style="margin-top:12px"><b>Et ensuite</b> : rappels SMS J-1 contre les no-show, statistiques avancées, passage en multi-restaurant. <span class="ann-inline" data-goto="ann-res-perspectives">Perspectives ↗</span></p>
       </div>
       <div class="card green">
         <h4>En une phrase</h4>
@@ -1490,6 +1274,7 @@ nginx:alpine
         <div class="ann-link" data-goto="ann-multi"><span class="num"></span>Passer en multi-restaurant</div>
         <div class="ann-link" data-goto="ann-algo"><span class="num"></span>Algorithme : complexité et cas limites</div>
         <div class="ann-link" data-goto="ann-v1"><span class="num"></span>MLD et MPD du dossier (v1)</div>
+        <div class="ann-link" data-goto="ann-sitemap-v1"><span class="num"></span>Sitemap du dossier (v1)</div>
       </div>
       <div>
         <h3>Sécurité</h3>
@@ -1504,6 +1289,16 @@ nginx:alpine
         <div class="ann-link" data-goto="ann-canaux"><span class="num"></span>Agent vocal et Telegram</div>
         <div class="ann-link" data-goto="ann-tests"><span class="num"></span>Tests et couverture</div>
         <div class="ann-link" data-goto="ann-ecarts"><span class="num"></span>Écarts entre le dossier et le code</div>
+      </div>
+      <div>
+        <h3>Slides de réserve</h3>
+        <div class="ann-link" data-goto="ann-res-probleme"><span class="num"></span>Problématique : 7 points de douleur</div>
+        <div class="ann-link" data-goto="ann-res-perimetre"><span class="num"></span>Périmètre IN / OUT</div>
+        <div class="ann-link" data-goto="ann-res-charte"><span class="num"></span>Charte graphique</div>
+        <div class="ann-link" data-goto="ann-res-code"><span class="num"></span>Extrait de code commenté</div>
+        <div class="ann-link" data-goto="ann-res-essai"><span class="num"></span>Jeu d'essai</div>
+        <div class="ann-link" data-goto="ann-res-veillesec"><span class="num"></span>Veille sécurité</div>
+        <div class="ann-link" data-goto="ann-res-perspectives"><span class="num"></span>Perspectives d'évolution</div>
       </div>
     </div>
     <p class="note"> « ↩ Sommaire » ramène ici.</p>
@@ -1626,6 +1421,32 @@ nginx:alpine
       </div>
     </div>
     <p class="note">Ce que la v2 corrige. <b>MLD</b> : NOTIFICATION_SMS et identifiant Twilio → NOTIFICATION, comme au MCD ; <code>conversation_ia</code> reçoit sa clé vers le restaurant (CONCERNER) et une clé UNIQUE vers la réservation (ABOUTIR) ; plus de types SQL, et plus de syntaxe MySQL, au niveau logique. <b>MPD</b> : la v1 décrit la cible (CHECK, index métier, ON DELETE) ; la v2 montre le schéma réellement créé par les migrations.</p>
+  </div>
+  <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- A4 ter — Sitemap du dossier (v1) -->
+<section class="slide" id="ann-sitemap-v1" data-title="Annexe — Sitemap du dossier (v1)">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Annexe A4 ter — Conception UI</div>
+  <h2>Le sitemap du dossier (v1, Jalon 2)</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols figside">
+      <div class="fig"><img src="Jalon2/CALENDRIA - Sitemap - Architecture des Ecrans.png" alt="Sitemap du dossier, version 1"></div>
+      <div>
+<pre class="sm"><span class="k">🔐 /login</span>
+│
+└── <span class="k">🏠 /dashboard</span>
+    ├── 📅 /calendar     <span class="c">jour · semaine · mois</span>
+    ├── 🗺️ /floor-plan   <span class="c">temps réel + slider</span>
+    ├── 📋 /reservations <span class="c">liste · détail · CRUD</span>
+    ├── 👥 /clients      <span class="c">fiche + historique</span>
+    ├── 📊 /stats
+    └── ⚙️ /settings     <span class="c">resto · horaires · RGPD</span></pre>
+        <p class="note" style="margin-top:10px">Ce que la v2 corrige. <b>Regroupés</b> sur « / » : <code>/dashboard</code>, <code>/floor-plan</code> et <code>/reservations</code>. <b>Renommé</b> : <code>/settings</code> → <code>/admin</code> (restaurants, horaires, tables ; sans RGPD). <b>Reportés</b> : <code>/calendar</code>, <code>/clients</code>, <code>/stats</code>. <b>Remplacés</b> : WhatsApp et SMS → Telegram et agent vocal. <b>Ajoutés</b> : <code>/register</code> et <code>/widget</code>.</p>
+      </div>
+    </div>
   </div>
   <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
 </section>
@@ -1826,6 +1647,232 @@ password_hashers:
     </div>
   </div>
   <div class="chrome"><span>Annexe — hors présentation</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Problématique (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-probleme" data-title="Réserve — Problématique">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section II — Problématique identifiée</div>
+  <h2>7 points de douleur du restaurateur</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c4">
+      <div class="card red"><span class="ico">📞</span><h4>Charge téléphonique</h4><p>Le personnel de salle répond pendant le service, au détriment des clients présents.</p></div>
+      <div class="card red"><span class="ico">🌙</span><h4>Disponibilité limitée</h4><p>Aucune prise de réservation hors ouverture : matin, après-service, jours de fermeture.</p></div>
+      <div class="card red"><span class="ico">💸</span><h4>Perte de clients</h4><p>Sans réponse immédiate, le client réserve chez le concurrent.</p></div>
+      <div class="card red"><span class="ico">⚠️</span><h4>Erreurs de saisie</h4><p>Double réservation, mauvaise estimation des couverts, oubli de rappel.</p></div>
+      <div class="card red"><span class="ico">🪑</span><h4>Remplissage sous-optimal</h4><p>Difficulté à combiner les tables de 2, 4, 6 et 8 personnes.</p></div>
+      <div class="card red"><span class="ico">👻</span><h4>No-show</h4><p>Clients absents sans prévenir : perte sèche de chiffre d'affaires.</p></div>
+      <div class="card red"><span class="ico">👥</span><h4>Coût du personnel</h4><p>Ressource humaine dédiée à une tâche répétitive et automatisable.</p></div>
+      <div class="card green"><span class="ico">💡</span><h4>La réponse</h4><p><strong>Un assistant IA disponible 24/7</strong> qui réserve à la place du restaurateur.</p></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Périmètre IN / OUT (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-perimetre" data-title="Réserve — Périmètre IN / OUT">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section III — Cadrage</div>
+  <h2>Périmètre fonctionnel : ce qui est dans, ce qui est hors</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div class="card green">
+        <h4 style="color:var(--ok)">✅ IN SCOPE</h4>
+        <ul class="check">
+          <li>Module IA conversationnel multi-canal (3 canaux)</li>
+          <li>Algorithme d'attribution intelligente des tables</li>
+          <li>Calcul de disponibilité temps réel + alternatives à 30 min</li>
+          <li>Dashboard React : CRUD réservations, plan de salle interactif</li>
+          <li>Gestion des tables et des services (horaires d'ouverture)</li>
+          <li>Authentification JWT RS256 · rate limiting</li>
+          <li>Containerisation Docker + CI/CD + déploiement cloud</li>
+        </ul>
+      </div>
+      <div class="card red">
+        <h4 style="color:var(--secondary)">❌ OUT OF SCOPE (assumé)</h4>
+        <ul class="cross">
+          <li>Paiement en ligne / acompte de réservation</li>
+          <li>Commande de plats et gestion de menu</li>
+          <li>Application mobile native</li>
+          <li>Multi-langues (français uniquement)</li>
+          <li>Multi-restaurants dans le MVP <span class="note">(données déjà rattachées à un restaurant ; reste à lier les comptes aux établissements)</span></li>
+          <li>Fermetures exceptionnelles <span class="note">(modélisées au MCD, reportées au-delà du MVP)</span></li>
+          <li>Intégration avec les logiciels de caisse</li>
+          <li>Système de fidélité ou d'avis clients</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note">Le hors-scope a été défini dès le Jalon 1 pour sécuriser la tenue du planning : chaque exclusion est une décision de cadrage, pas un abandon.</p>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Charte graphique (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-charte" data-title="Réserve — Charte graphique">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section V — Identité visuelle</div>
+  <h2>Charte graphique &amp; code couleur des statuts</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <h3>Couleurs principales</h3>
+    <div class="swatches">
+      <div class="sw"><div class="col" style="background:#1A5276"></div><div class="n">#1A5276<br>Bleu profond</div></div>
+      <div class="sw"><div class="col" style="background:#2E86C1"></div><div class="n">#2E86C1<br>Bleu ciel</div></div>
+      <div class="sw"><div class="col" style="background:#E74C3C"></div><div class="n">#E74C3C<br>Corail chaud</div></div>
+      <div class="sw"><div class="col" style="background:#0E2F44"></div><div class="n">#0E2F44<br>Bleu nuit</div></div>
+    </div>
+    <h3 style="margin-top:10px">Couleurs de statut d'une réservation</h3>
+    <div class="swatches">
+      <div class="sw"><div class="col" style="background:#27AE60"></div><div class="n">🟢 Confirmée</div></div>
+      <div class="sw"><div class="col" style="background:#F39C12"></div><div class="n">🟡 Imminente</div></div>
+      <div class="sw"><div class="col" style="background:#3498DB"></div><div class="n">🔵 Arrivé</div></div>
+      <div class="sw"><div class="col" style="background:#E74C3C"></div><div class="n">🔴 No-show</div></div>
+      <div class="sw"><div class="col" style="background:#7F8C8D"></div><div class="n">⚫ Annulée</div></div>
+    </div>
+    <div class="cols c2" style="margin-top:6px">
+      <div class="card"><h4>Typographie</h4><p><b>Outfit</b> pour les titres · <b>Inter</b> pour le texte courant · <b>JetBrains Mono</b> pour le code et les données.</p></div>
+      <div class="card green"><h4>Accessibilité — WCAG 2.1 AA</h4><p>Contraste ≥ 4.5:1 · navigation clavier complète · cibles ≥ 44×44 px sur mobile · focus visible · <strong>jamais d'information portée par la seule couleur</strong> (icône + libellé systématiques).</p></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Extrait de code commenté (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-code" data-title="Réserve — Extrait de code commenté">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section VIII — Le code derrière l'algorithme</div>
+  <h2>Extrait commenté : <code>DisponibiliteService</code></h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c21">
+<pre class="sm"><span class="c">// 1. Trier les tables par capacité croissante</span>
+usort($tables, <span class="k">function</span> (Table $a, Table $b) {
+    <span class="k">if</span> ($a-&gt;getCapacite() === $b-&gt;getCapacite()) {
+        <span class="k">return</span> $a-&gt;getId() &lt;=&gt; $b-&gt;getId();
+    }
+    <span class="k">return</span> $a-&gt;getCapacite() &lt;=&gt; $b-&gt;getCapacite();
+});
+
+<span class="c">// 2. Ne garder que les tables assez grandes</span>
+$tablesCandidates = array_filter($tables, fn(Table $t) =&gt;
+    $t-&gt;getCapacite() &gt;= $nombrePersonnes);
+
+<span class="c">// 3. Fenêtre d'occupation, paramétrable par restaurant</span>
+$dureeTotale = ($restaurant-&gt;getDureeRepas()
+              + $restaurant-&gt;getBufferNettoyage()) * <span class="n">60</span>;
+$proposedEnd = $proposedStart + $dureeTotale;
+
+<span class="c">// 4. Test de chevauchement de deux intervalles [début, fin[</span>
+<span class="k">if</span> ($resStart &lt; $proposedEnd &amp;&amp; $proposedStart &lt; $resEnd) {
+    $estLibre = <span class="k">false</span>;   <span class="c">// table occupée</span>
+    <span class="k">break</span>;
+}</pre>
+      <div>
+        <h3>Ce que je défends dans ce code</h3>
+        <ul>
+          <li><strong>Le tri croissant est une décision métier</strong>, pas un détail : placer 2 personnes sur une table de 8 gâche 6 couverts pour tout le service.</li>
+          <li><strong>Le test de chevauchement</strong> <code>A.début &lt; B.fin &amp;&amp; B.début &lt; A.fin</code> couvre les 4 cas de recouvrement en une seule condition — plus sûr qu'une cascade de <code>if</code>.</li>
+          <li><strong>Aucun paramètre en dur</strong> : <code>dureeRepas</code> et <code>bufferNettoyage</code> viennent de l'entité RESTAURANT, donc modifiables depuis le dashboard sans redéploiement.</li>
+          <li><strong>Zéro SQL concaténé</strong> : la requête passe par le QueryBuilder Doctrine et <code>setParameter()</code>.</li>
+        </ul>
+        <div class="card green" style="margin-top:10px"><h4>Limite connue</h4><p>La détection de chevauchement se fait en PHP après chargement des réservations du jour. À l'échelle d'un restaurant (quelques dizaines de lignes) c'est négligeable ; en multi-restaurant, je la déplacerais dans la requête SQL.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Jeu d'essai (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-essai" data-title="Réserve — Jeu d'essai">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section X — Jeu d'essai</div>
+  <h2>Le jeu d'essai : des données reproductibles</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c21">
+      <div>
+        <table class="t-sm">
+          <tr><th>Donnée</th><th>Contenu du jeu d'essai</th><th>Pourquoi</th></tr>
+          <tr><td><b>1 compte admin</b></td><td><code>admin@calendria.com</code> / mot de passe haché (bcrypt)</td><td>Tester l'authentification JWT</td></tr>
+          <tr><td><b>1 restaurant</b></td><td>50 couverts · repas 90 min · buffer 15 min</td><td>Paramètres réalistes du turnover</td></tr>
+          <tr><td><b>10 tables</b></td><td>4 tables de 2 · 3 de 4 · 3 de 6 · intérieur et terrasse</td><td><b>Forcer l'algorithme à arbitrer</b> entre plusieurs capacités</td></tr>
+          <tr><td><b>2 services</b></td><td>Midi et soir, avec jours d'ouverture</td><td>Tester le cas « restaurant fermé »</td></tr>
+          <tr><td><b>Clients + réservations</b></td><td>Plusieurs statuts et créneaux</td><td>Tester les chevauchements et le plan de salle</td></tr>
+        </table>
+      </div>
+      <div>
+<pre class="sm"><span class="c"># Rejouer le jeu d'essai à l'identique</span>
+php bin/console doctrine:migrations:migrate
+php bin/console doctrine:fixtures:load</pre>
+        <div class="card" style="margin-top:12px"><h4>Pourquoi des fixtures et non un dump SQL</h4><p>Le jeu d'essai est du <strong>code versionné</strong> : il évolue avec le schéma, se rejoue en une commande et donne le <strong>même état initial</strong> en local et en démo.</p></div>
+        <div class="card green" style="margin-top:8px"><h4>Le choix des 10 tables n'est pas décoratif</h4><p>Les capacités 2 / 4 / 6 sont choisies pour qu'une demande de 3 personnes n'ait <strong>aucune table exacte</strong> : c'est le cas qui prouve que l'algorithme prend bien la capacité immédiatement supérieure.</p></div>
+        <div class="pills" style="margin-top:10px"><span class="pill ok">Données 100% fictives</span><span class="pill ok">Conforme RGPD</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Veille sécurité (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-veillesec" data-title="Réserve — Veille sécurité">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section XIII — Veille sécurité</div>
+  <h2>Veille sécurité &amp; supply chain</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c2">
+      <div>
+        <h3>Sources consultées</h3>
+        <table class="t-sm">
+          <tr><th>Source</th><th>Fréquence</th></tr>
+          <tr><td>OWASP Top 10</td><td>Mensuelle</td></tr>
+          <tr><td>Symfony Security Advisories</td><td>À chaque release</td></tr>
+          <tr><td>GitHub Security Advisories / Dependabot</td><td>Automatique</td></tr>
+          <tr><td>CNIL — recommandations sécurité</td><td>Trimestrielle</td></tr>
+        </table>
+        <h3 style="margin-top:12px">Supply chain</h3>
+        <div class="pills"><span class="pill">composer audit</span><span class="pill">npm audit en CI</span><span class="pill">Dependabot</span><span class="pill">Symfony 6.4 LTS</span></div>
+      </div>
+      <div>
+        <h3>Menaces propres à CALENDRIA</h3>
+        <table class="t-sm">
+          <tr><th>Menace</th><th>Contre-mesure</th></tr>
+          <tr><td>Fuite de clé API</td><td>Variables Railway + <code>.gitignore</code> sur <code>.env</code></td></tr>
+          <tr><td>Webhook spoofing</td><td>Firewall public restreint aux actions conversationnelles</td></tr>
+          <tr><td>DoS via le chatbot</td><td>Quotas Gemini côté Google ; le rate limiting ne couvre aujourd'hui que le login — l'étendre au chatbot est la prochaine étape</td></tr>
+          <tr><td>Vol de token JWT</td><td>Expiration 1 h. Écart assumé : stocké en <code>localStorage</code> et non « en mémoire » comme l'indique le dossier — exposé à la XSS (atténuée par l'échappement React), immunisé contre le CSRF ; cible : cookie httpOnly + refresh token</td></tr>
+          <tr><td>Exfiltration en base</td><td>PostgreSQL sur réseau privé, jamais exposée</td></tr>
+        </table>
+        <p class="note" style="margin-top:8px">Pistes suivantes : Content Security Policy, audit OWASP ZAP, centralisation des logs (SIEM), refresh token.</p>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
+</section>
+
+<!-- Réserve — Perspectives (sortie de la présentation, accessible depuis le sommaire des annexes) -->
+<section class="slide" id="ann-res-perspectives" data-title="Réserve — Perspectives">
+  <div class="ann-back" data-goto="ann-index">↩ Sommaire</div>
+  <div class="kicker">Section XV — Et ensuite ?</div>
+  <h2>Perspectives d'évolution</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols c3">
+      <div class="card red"><h4>1 · Notifications SMS</h4><p>Rappel automatique J-1 — le levier le plus direct sur la réduction des no-show.</p></div>
+      <div class="card red"><h4>2 · Statistiques avancées</h4><p>Graphiques de remplissage, analyse des no-show par période, recettes estimées.</p></div>
+      <div class="card red"><h4>3 · Multi-restaurant</h4><p>Un restaurateur lié à plusieurs établissements — les données portent <strong>déjà leur restaurant</strong> ; reste l'association compte–établissement (une migration).</p></div>
+      <div class="card"><h4>4 · Application React Native</h4><p>Réutilisation de l'API REST et d'une partie des composants existants.</p></div>
+      <div class="card"><h4>5 · WebSockets temps réel</h4><p>Synchronisation instantanée du plan de salle entre plusieurs postes en salle.</p></div>
+      <div class="card"><h4>6 · Refresh token JWT</h4><p>Éviter l'invalidation des sessions à chaque redéploiement.</p></div>
+    </div>
+    <div class="cols c2" style="margin-top:4px">
+      <div class="card green"><h4>Sécurité — priorités suivantes</h4><p>Content Security Policy, audit OWASP ZAP / Burp Suite en production, centralisation des logs (Sentry ou Elastic).</p></div>
+      <div class="card green"><h4>Produit</h4><p>Le MVP est suffisamment abouti pour être présenté à de vrais restaurateurs indépendants.</p></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Annexe — slide de réserve</span><span class="pg"></span></div>
 </section>
 
 <div id="bar"></div>
