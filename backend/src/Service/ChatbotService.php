@@ -309,12 +309,13 @@ PROMPT;
                         $client = $this->clientRepository->findOneBy(['telephone' => $tel]);
                         if (!$client) {
                             $client = new Client();
-                            $client->setNom($nom);
                             $client->setTelephone($tel);
                             $client->setConsentementRgpd(true);
                             $client->setCreatedAt(new \DateTimeImmutable());
                             $this->entityManager->persist($client);
                         }
+                        // Le nom donné au chatbot fait foi, même pour un client déjà connu
+                        $client->setNom($nom);
 
                         // Créer Réservation
                         $reservation = new Reservation();
