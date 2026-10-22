@@ -5,7 +5,7 @@
 '
 '  Regles respectees a ce niveau :
 '   - on parle d'ENTITES et de PROPRIETES, jamais de tables ni de colonnes
-'   - l'identifiant est souligne ; aucune cle primaire ni cle etrangere
+'   - l'identifiant est un numero metier souligne (num_...) ; aucune cle primaire ni cle etrangere
 '     n'apparait : les cles sont introduites au niveau LOGIQUE (MLD)
 '   - les associations sont representees par des OVALES portant un verbe
 '   - les cardinalites (min,max) sont portees par chaque patte,
@@ -45,7 +45,7 @@ skinparam usecase {
 ' ─────────────────────────────────────────────
 
 entity RESTAURANT {
-  __id_restaurant__
+  <u>num_restaurant</u>
   ..
   nom
   adresse
@@ -58,7 +58,7 @@ entity RESTAURANT {
 }
 
 entity UTILISATEUR {
-  __id_utilisateur__
+  <u>num_utilisateur</u>
   ..
   email
   mot_de_passe
@@ -66,7 +66,7 @@ entity UTILISATEUR {
 }
 
 entity TABLE_RESTAURANT {
-  __id_table__
+  <u>num_table</u>
   ..
   numero_table
   capacite
@@ -75,7 +75,7 @@ entity TABLE_RESTAURANT {
 }
 
 entity SERVICE {
-  __id_service__
+  <u>num_service</u>
   ..
   type
   heure_debut
@@ -84,14 +84,14 @@ entity SERVICE {
 }
 
 entity FERMETURE_EXCEPTIONNELLE {
-  __id_fermeture__
+  <u>num_fermeture</u>
   ..
   date_fermeture
   motif
 }
 
 entity CLIENT {
-  __id_client__
+  <u>num_client</u>
   ..
   nom
   telephone
@@ -102,7 +102,7 @@ entity CLIENT {
 }
 
 entity RESERVATION {
-  __id_reservation__
+  <u>num_reservation</u>
   ..
   date_reservation
   heure_reservation
@@ -112,7 +112,7 @@ entity RESERVATION {
 }
 
 entity CONVERSATION_IA {
-  __id_conversation__
+  <u>num_conversation</u>
   ..
   telephone_appelant
   canal
@@ -124,7 +124,7 @@ entity CONVERSATION_IA {
 }
 
 entity NOTIFICATION {
-  __id_notification__
+  <u>num_notification</u>
   ..
   destinataire
   message
@@ -204,6 +204,7 @@ legend bottom
   0,N = zero ou plusieurs occurrences
   ----
   Aucune cle primaire ni etrangere a ce niveau : elles apparaissent au MLD.
+  L'identifiant num_x devient la cle primaire id_x au MLD.
 endlegend
 
 note bottom of CLIENT

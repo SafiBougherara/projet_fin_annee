@@ -12,6 +12,7 @@
 '
 '  Notation : PK = cle primaire, FK = cle etrangere,
 '  (NULL) = FK optionnelle issue d'une cardinalite minimale 0
+'  Pas de multiplicites sur les traits : FK, NULL et UNIQUE portent les cardinalites
 ' =====================================================================
 title **CALENDRIA – Modèle Logique de Données (MLD)**\nTransformation du MCD : tables, clés primaires et clés étrangères
 
@@ -138,17 +139,17 @@ class "notification" as notification {
 }
 
 ' Une ligne = une cle etrangere ; le libelle rappelle l'association du MCD
-restaurant "1" -- "1..*" table_rest : POSSEDER
-restaurant "1" -- "1..*" service : DEFINIR
-restaurant "1" -- "0..*" fermeture : PLANIFIER
-restaurant "0..1" -- "0..*" utilisateur : EMPLOYER
-restaurant "1" -- "0..*" reservation : RECEVOIR
-client "1" -- "0..*" reservation : EFFECTUER
-table_rest "0..1" - "0..*" reservation : ATTRIBUER
-reservation "1" -- "0..*" notification : GENERER
-restaurant "1" -- "0..*" conversation : CONCERNER
-client "0..1" -- "0..*" conversation : PARTICIPER
-reservation "0..1" - "0..1" conversation : ABOUTIR
+restaurant -- table_rest : POSSEDER
+restaurant -- service : DEFINIR
+restaurant -- fermeture : PLANIFIER
+restaurant -- utilisateur : EMPLOYER
+restaurant -- reservation : RECEVOIR
+client -- reservation : EFFECTUER
+table_rest - reservation : ATTRIBUER
+reservation -- notification : GENERER
+restaurant -- conversation : CONCERNER
+client -- conversation : PARTICIPER
+reservation - conversation : ABOUTIR
 
 ' Legende : reprise dans la slide de soutenance, a cote du diagramme.
 @enduml

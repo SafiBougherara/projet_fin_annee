@@ -314,21 +314,21 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
 </section>
 
 <!-- ═══════════════ 2. SOMMAIRE ═══════════════ -->
-<section class="slide airy" data-title="Sommaire">
+<section class="slide" data-title="Sommaire">
   <div class="kicker">Déroulé de la présentation</div>
   <h2>Sommaire</h2>
   <div class="rule"></div>
   <div class="body">
     <div class="cols c3">
-      <div class="card"><span class="ico">🎯</span><h4>1. Le projet</h4></div>
-      <div class="card"><span class="ico">🗂️</span><h4>2. Gestion de projet</h4></div>
-      <div class="card"><span class="ico">🎨</span><h4>3. Conception UI/UX</h4></div>
-      <div class="card"><span class="ico">🗄️</span><h4>4. Modélisation des données</h4></div>
-      <div class="card"><span class="ico">🏛️</span><h4>5. Architecture &amp; UML</h4></div>
-      <div class="card"><span class="ico">🔐</span><h4>6. Sécurité, tests, déploiement</h4></div>
-      <div class="card"><span class="ico">🔭</span><h4>7. Veille</h4></div>
-      <div class="card green"><span class="ico">✅</span><h4>8. Bilan</h4></div>
-      <div class="card red"><span class="ico">🚀</span><h4>9. Démonstration live</h4></div>
+      <div class="card"><span class="ico">🎯</span><h4>1. Le projet</h4><p>Présentation, contexte métier, problématique, cahier des charges et objectifs SMART.</p></div>
+      <div class="card"><span class="ico">🗂️</span><h4>2. Gestion de projet</h4><p>Méthode agile adaptée au travail seul, trunk-based development, planning des 6 jalons.</p></div>
+      <div class="card"><span class="ico">🎨</span><h4>3. Conception UI/UX</h4><p>Sitemap, wireframes, charte graphique, maquettes et accessibilité.</p></div>
+      <div class="card"><span class="ico">🗄️</span><h4>4. Modélisation données</h4><p>Démarche MERISE : MCD, MLD et MPD.</p></div>
+      <div class="card"><span class="ico">🏛️</span><h4>5. Architecture &amp; UML</h4><p>Cas d'utilisation, séquences, classes, architecture N-tiers et 4 couches.</p></div>
+      <div class="card"><span class="ico">🔐</span><h4>6. Sécurité &amp; tests</h4><p>OWASP Top 10, RGPD, politique de tests PHPUnit, pipeline CI/CD.</p></div>
+      <div class="card"><span class="ico">🔭</span><h4>7. Veille</h4><p>Veille technologique et veille sécurité menées pendant 6 mois.</p></div>
+      <div class="card green"><span class="ico">✅</span><h4>8. Bilan</h4><p>Difficultés rencontrées, taux de couverture fonctionnelle, perspectives.</p></div>
+      <div class="card red"><span class="ico">🚀</span><h4>9. Démonstration</h4><p>Application en production : dashboard, plan de salle, chatbot IA, widget en iframe et Telegram.</p></div>
     </div>
   </div>
   <div class="chrome"><span>CALENDRIA — Soutenance CDA</span><span class="pg"></span></div>
@@ -367,19 +367,32 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
 </section>
 
 <!-- ═══════════════ 5. CONTEXTE / COMMANDITAIRE ═══════════════ -->
-<section class="slide airy" data-title="Contexte & commanditaire">
+<section class="slide" data-title="Contexte & commanditaire">
   <div class="kicker">Section II — Contexte métier</div>
-  <h2>Un restaurateur qui passe 2 h par jour au téléphone</h2>
+  <h2>Le commanditaire et son besoin</h2>
   <div class="rule"></div>
   <div class="body">
     <div class="cols c21">
       <div>
-        <div class="quote">« Je passe <strong>2 heures par jour</strong> à gérer les appels de réservation, dont une partie arrive hors service. Je veux automatiser sans perdre la main sur mon planning. »</div>
-        <p class="note" style="margin-top:10px">M. Gilles Morel, « Le Gourmet Parisien » — commanditaire fictif, profil-type du client visé.</p>
+        <table>
+          <tr><th colspan="2">Fiche commanditaire (fictif — profil-type du client visé)</th></tr>
+          <tr><td><b>Commanditaire</b></td><td>M. Gilles MOREL, gérant</td></tr>
+          <tr><td><b>Établissement</b></td><td>« Le Gourmet Parisien » — gastronomique</td></tr>
+          <tr><td><b>Capacité</b></td><td>10 tables · 40 couverts</td></tr>
+          <tr><td><b>Adresse</b></td><td>15 rue de la Paix, 75001 Paris</td></tr>
+          <tr><td><b>Rôle projet</b></td><td>Validation fonctionnelle, retours maquettes, recette finale</td></tr>
+        </table>
+        <div class="quote" style="margin-top:14px">
+          « Je passe <strong>2 heures par jour</strong> à gérer les appels de réservation, dont une partie arrive hors service. Je veux automatiser sans perdre la main sur mon planning. »
+        </div>
       </div>
-      <div class="kpis" style="grid-template-columns:1fr">
-        <div class="kpi accent"><div class="v">2 h / jour</div><div class="l">au téléphone</div></div>
-        <div class="kpi"><div class="v">24/7</div><div class="l">objectif : réserver à toute heure</div></div>
+      <div>
+        <h3>Secteur visé</h3>
+        <p>Restauration — restaurants indépendants, brasseries, bistrots et établissements gastronomiques.</p>
+        <div class="kpis" style="grid-template-columns:1fr 1fr;margin-top:14px">
+          <div class="kpi accent"><div class="v">2h</div><div class="l">par jour passées au téléphone</div></div>
+          <div class="kpi accent"><div class="v">40</div><div class="l">couverts à optimiser chaque service</div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -387,7 +400,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
 </section>
 
 <!-- ═══════════════ 7. SOLUTION / PARCOURS ═══════════════ -->
-<section class="slide airy" data-title="La solution en 5 étapes">
+<section class="slide" data-title="La solution en 5 étapes">
   <div class="kicker">Section II — Fonctionnement global</div>
   <h2>Le parcours d'une réservation</h2>
   <div class="rule"></div>
@@ -399,7 +412,12 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       <div class="box">4 · Validation<small>Auto ou alternatives</small></div><span class="arw">→</span>
       <div class="box">5 · Dashboard<small>Restaurateur</small></div>
     </div>
-    <div class="quote" style="margin-top:18px">3 canaux, <strong>une seule API</strong> et <strong>un seul algorithme</strong> de disponibilité : aucun code métier dupliqué.</div>
+    <div class="cols c3" style="margin-top:8px">
+      <div class="card"><h4>🌐 Widget Web</h4><p>Chatbot intégrable en iframe sur le site du restaurant — <code>/widget?restaurantId=X</code>.</p></div>
+      <div class="card"><h4>📲 Bot Telegram</h4><p>Webhook <code>/api/chatbot/telegram</code>, gestion de session, confirmation immédiate.</p></div>
+      <div class="card"><h4>📞 Agent vocal IA</h4><p>Retell AI appelle <code>/api/chatbot/call</code> et lit les alternatives horaires à voix haute.</p></div>
+    </div>
+    <p class="note">Les 3 canaux partagent la <strong>même API REST</strong>, la <strong>même logique conversationnelle</strong> et le <strong>même algorithme de disponibilité</strong> — pas de duplication de code métier.</p>
   </div>
   <div class="chrome"><span>II — Présentation du projet</span><span class="pg"></span></div>
 </section>
@@ -445,16 +463,37 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
 </section>
 
 <!-- ═══════════════ 13. SCRUM SOLO ═══════════════ -->
-<section class="slide airy" data-title="Méthodologie agile">
+<section class="slide" data-title="Méthodologie agile">
   <div class="kicker">Section IV — Méthodologie</div>
-  <h2>Scrum, adapté au travail seul</h2>
+  <h2>Une méthode agile adaptée au travail seul</h2>
   <div class="rule"></div>
   <div class="body">
-    <div class="cols c2">
-      <div class="card green"><h4>Gardé</h4><p><b>1 jalon = 1 sprint</b> d'un mois · backlog <b>MoSCoW</b> · revue avec le référent · rétrospective écrite</p></div>
-      <div class="card orange"><h4>Abandonné</h4><p>Rôles Product Owner et Scrum Master, mêlée quotidienne : des rituels d'équipe, sans destinataire en solo</p></div>
+    <div class="cols c21">
+      <div>
+        <h3>Ce que j'ai gardé de Scrum</h3>
+        <table class="t-sm">
+          <tr><th>Pratique</th><th>Comment je l'ai appliquée</th></tr>
+          <tr><td><b>Sprint</b></td><td><b>1 mois = 1 jalon</b> — 6 sprints de janvier à juin</td></tr>
+          <tr><td><b>Backlog priorisé</b></td><td>Liste de fonctionnalités classées en <b>MoSCoW</b>, figée au Jalon 1 et révisée à chaque jalon</td></tr>
+          <tr><td><b>Incrément livrable</b></td><td>Chaque jalon produit un livrable démontrable, pas un document isolé</td></tr>
+          <tr><td><b>Revue de sprint</b></td><td>Présentation au référent à la fin de chaque jalon</td></tr>
+          <tr><td><b>Rétrospective</b></td><td>Bilan écrit en fin de jalon — c'est ce qui a déclenché le passage de WhatsApp à Telegram</td></tr>
+        </table>
+      </div>
+      <div>
+        <ul>
+          <li><strong>Le périmètre a dû bouger</strong> : WhatsApp Business exigeait 4 à 6 semaines de vérification. En étant agile, j'ai basculé sur Telegram au sprint suivant.</li>
+          <li><strong>Les jalons imposés sont déjà des sprints</strong> : un livrable démontrable chaque mois.</li>
+        </ul>
+        <div class="card orange" style="margin-top:12px">
+          <h4>Le backlog MoSCoW</h4>
+          <p><b>M</b>ust (indispensable, sinon pas de produit) : réserver via le chatbot · dashboard du jour · configuration tables &amp; horaires · confirmation immédiate.<br>
+          <b>S</b>hould (important, si le temps le permet) : multi-canal<br>
+          <b>C</b>ould (confort) : mode sombre.<br>
+          <b>W</b>on't (explicitement hors périmètre) : paiement, commande, multi-langues, mobile natif.</p>
+        </div>
+      </div>
     </div>
-    <div class="quote">L'agilité en pratique : WhatsApp Business exigeait 4 à 6 semaines de vérification → <strong>bascule sur Telegram au sprint suivant</strong>.</div>
   </div>
   <div class="chrome"><span>IV — Méthodologie et organisation</span><span class="pg"></span></div>
 </section>
@@ -531,17 +570,32 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
 </section>
 
 <!-- ═══════════════ 22. DÉMARCHE MERISE ═══════════════ -->
-<section class="slide airy" data-title="Démarche MERISE">
+<section class="slide" data-title="Démarche MERISE">
   <div class="kicker">Section VI — Méthode</div>
-  <h2>MERISE : du besoin à la base, en 3 niveaux</h2>
+  <h2>Une démarche MERISE en 3 niveaux</h2>
   <div class="rule"></div>
   <div class="body">
-    <div class="flow">
-      <div class="box">MCD · conceptuel<small>le besoin métier — sans clé</small></div><span class="arw">→</span>
-      <div class="box">MLD · logique<small>les tables et leurs clés</small></div><span class="arw">→</span>
-      <div class="box">MPD · physique<small>le SQL de PostgreSQL 15</small></div>
+    <div class="cols c3">
+      <div class="card"><span class="ico">🧠</span><h4>MCD — Conceptuel</h4><p>Entités, propriétés, associations en <strong>ovales</strong> et cardinalités. <strong>Ni table, ni clé.</strong></p></div>
+      <div class="card"><span class="ico">🔗</span><h4>MLD — Logique</h4><p>C'est <strong>ici seulement</strong> qu'apparaissent tables, clés primaires et clés étrangères.</p></div>
+      <div class="card"><span class="ico">🗄️</span><h4>MPD — Physique</h4><p>Types SQL PostgreSQL 15, index et contraintes d'unicité, normalisation 3NF.</p></div>
     </div>
-    <div class="quote"><strong>9 entités modélisées, 6 implémentées</strong> dans le MVP : fermetures, conversations IA et notifications restent la cible.</div>
+    <h3 style="margin-top:6px">9 entités modélisées — <span style="color:var(--secondary)">6 implémentées dans le MVP</span></h3>
+    <div class="cols c3">
+      <table class="t-sm"><tr><th>Entité</th><th>Rôle</th><th>MVP</th></tr>
+        <tr><td><b>RESTAURANT</b></td><td>Établissement racine</td><td>✅</td></tr>
+        <tr><td><b>UTILISATEUR</b></td><td>Compte dashboard (JWT)</td><td>✅</td></tr>
+        <tr><td><b>TABLE_RESTAURANT</b></td><td>Table physique</td><td>✅</td></tr></table>
+      <table class="t-sm"><tr><th>Entité</th><th>Rôle</th><th>MVP</th></tr>
+        <tr><td><b>SERVICE</b></td><td>Midi / soir + jours d'ouverture</td><td>✅</td></tr>
+        <tr><td><b>CLIENT</b></td><td>Personne qui réserve</td><td>✅</td></tr>
+        <tr><td><b>RESERVATION</b></td><td>Entité centrale</td><td>✅</td></tr></table>
+      <table class="t-sm"><tr><th>Entité</th><th>Rôle</th><th>MVP</th></tr>
+        <tr><td>FERMETURE_EXCEPT.</td><td>Dates de fermeture</td><td>❌</td></tr>
+        <tr><td>CONVERSATION_IA</td><td>Historique multi-canal</td><td>❌</td></tr>
+        <tr><td>NOTIFICATION</td><td>Confirmation / rappel</td><td>❌</td></tr></table>
+    </div>
+    <p class="note">Le MCD décrit la <strong>cible fonctionnelle</strong> ; le MVP en implémente 6 entités sur 9. Les sessions de dialogue vivent aujourd'hui dans le <strong>cache Symfony</strong> plutôt qu'en base — suffisant pour une conversation éphémère, à persister le jour où l'on voudra analyser les échanges. Choix structurants retenus : <code>jours_ouverture</code> en <b>JSON</b> (souplesse sans table de jonction), <code>consentement_rgpd</code> porté par CLIENT, <code>table_id</code> nullable sur RESERVATION (en attente d'attribution).</p>
   </div>
   <div class="chrome"><span>VI — Modélisation de la base de données</span><span class="pg"></span></div>
 </section>
@@ -570,7 +624,7 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
       <div class="fig"><img src="Jalon3/MLD_v2.png" alt="Modèle Logique de Données"></div>
       <div>
         <ul>
-          <li>La clé étrangère va du côté <b>« plusieurs »</b> (*)</li>
+          <li>La clé étrangère va du côté <b>« plusieurs »</b> de l'association</li>
           <li>Minimum à 0 → clé <b>optionnelle</b> : <code>id_table (NULL)</code></li>
           <li>Lien 1 pour 1 → clé <b>UNIQUE</b></li>
         </ul>
@@ -684,21 +738,33 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
 </section>
 
 <!-- ═══════════════ 32. 4 COUCHES + SOLID ═══════════════ -->
-<section class="slide airy" data-title="Architecture logique & SOLID">
+<section class="slide" data-title="Architecture logique & SOLID">
   <div class="kicker">Section VIII — Architecture logique</div>
-  <h2>4 couches, une seule responsabilité chacune</h2>
+  <h2>4 couches backend &amp; principes SOLID</h2>
   <div class="rule"></div>
   <div class="body">
     <div class="flow">
-      <div class="box">Controller<small>HTTP</small></div><span class="arw">→</span>
-      <div class="box">Service<small>Métier</small></div><span class="arw">→</span>
-      <div class="box">Repository<small>Requêtes</small></div><span class="arw">→</span>
-      <div class="box">Entity<small>Données</small></div>
+      <div class="box">Controller<small>Couche HTTP</small></div><span class="arw">→</span>
+      <div class="box">Service<small>Couche métier</small></div><span class="arw">→</span>
+      <div class="box">Repository<small>Persistance</small></div><span class="arw">→</span>
+      <div class="box">Entity<small>Modèle Doctrine</small></div>
     </div>
-    <div class="cols c3">
-      <div class="card"><h4>S — responsabilité unique</h4><p>Une couche, une raison de changer</p></div>
-      <div class="card"><h4>O — ouvert / fermé</h4><p>Telegram et le vocal ajoutés sans toucher au service</p></div>
-      <div class="card"><h4>D — inversion des dépendances</h4><p>Symfony injecte les services</p></div>
+    <div class="cols c2">
+      <div>
+        <h3>Responsabilités</h3>
+        <ul>
+          <li><strong>Controller</strong> : désérialise le JSON, délègue, renvoie un code HTTP typé (201, 400, 401…). La logique métier lourde vit dans les services.</li>
+          <li><strong>Service</strong> : <code>DisponibiliteService</code> et <code>ChatbotService</code> — indépendants du contexte HTTP, donc testables unitairement.</li>
+          <li><strong>Repository</strong> : toutes les requêtes DQL complexes, jamais dans le contrôleur.</li>
+          <li><strong>Entity</strong> : POPO Doctrine, propriétés et accesseurs.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Principes SOLID appliqués</h3>
+        <div class="card"><h4>SRP</h4><p>La séparation Controller / Service / Repository garantit qu'une classe n'a qu'une seule raison de changer.</p></div>
+        <div class="card" style="margin-top:8px"><h4>OCP</h4><p>Ajouter un canal (Telegram, agent vocal) n'a demandé <strong>aucune modification</strong> de <code>DisponibiliteService</code> : seul un nouveau point d'entrée a été ajouté dans le contrôleur, qui réutilise le même service.</p></div>
+        <div class="card" style="margin-top:8px"><h4>DIP</h4><p>Injection de dépendances Symfony : le conteneur fournit les services, par constructeur (services métier, <code>AuthController</code>) ou en paramètre d'action (<code>ChatbotController</code>, <code>ReservationController</code>, <code>RestaurantAdminController</code>) — jamais d'instanciation en dur.</p></div>
+      </div>
     </div>
   </div>
   <div class="chrome"><span>VIII — Architecture multi-couches</span><span class="pg"></span></div>
@@ -826,18 +892,20 @@ pre .k{color:#7FD1F5}.c{color:#7c98a8}.s{color:#9BE7A8}.n{color:#F0B37E}
 </section>
 
 <!-- ═══════════════ 43. DIFFICULTÉS ═══════════════ -->
-<section class="slide airy" data-title="Difficultés rencontrées">
+<section class="slide" data-title="Difficultés rencontrées">
   <div class="kicker">Section XIV — Retour d'expérience</div>
-  <h2>Des difficultés, chacune résolue et documentée</h2>
+  <h2>5 difficultés, 5 solutions documentées</h2>
   <div class="rule"></div>
   <div class="body">
-    <table>
-      <tr><th style="width:250px">Problème</th><th>Solution</th></tr>
-      <tr><td><b>CORS en production</b></td><td>Origine autorisée en regex, lue à l'exécution</td></tr>
-      <tr><td><b>502 sur Railway</b></td><td><code>entrypoint.sh</code> réécrit le port de nginx</td></tr>
-      <tr><td><b>Déconnexions au déploiement</b></td><td>Clés JWT régénérées au build : accepté pour le MVP, clés en secret à terme</td></tr>
+    <table class="t-sm">
+      <tr><th style="width:180px">Problème</th><th>Cause identifiée</th><th>Solution retenue</th></tr>
+      <tr><td><b>1. CORS en production</b></td><td>URL Railway auto-générée, non connue au build ; sous-domaine modifiable.</td><td>Variable <code>CORS_ALLOW_ORIGIN</code> en <b>regex</b>, lue à l'exécution par NelmioCors — configuration sans rebuild.</td></tr>
+      <tr><td><b>2. Déconnexions à chaque déploiement</b></td><td>Clés JWT RSA régénérées au build Docker ⇒ tokens existants invalidés.</td><td>Comportement documenté et accepté pour le MVP ; solution cible : clés en secret Railway montées au démarrage.</td></tr>
+      <tr><td><b>3. Container qui plante au boot</b></td><td><code>services.yaml</code> injectait <code>TELEGRAM_BOT_TOKEN</code> / <code>GEMINI_API_KEY</code> dans tous les services via <code>bind</code>.</td><td>Valeurs par défaut vides dans <code>parameters</code> : <code>env(TELEGRAM_BOT_TOKEN): ''</code>.</td></tr>
+      <tr><td><b>4. CI cassée : base <code>calendria_test_test</code></b></td><td>Symfony ajoute <code>_test</code> quand <code>APP_ENV=test</code>, en plus du suffixe déjà présent dans l'URL.</td><td><code>DATABASE_URL</code> pointe vers <code>calendria</code> sans suffixe — Symfony complète tout seul.</td></tr>
+      <tr><td><b>5. 502 Bad Gateway sur Railway</b></td><td>nginx écoutait un port codé en dur, Railway impose <code>$PORT</code> dynamique.</td><td><code>entrypoint.sh</code> réécrit la conf nginx via <code>sed</code> avant de lancer supervisord.</td></tr>
     </table>
-    <p class="note"><span class="ann-inline" data-goto="ann-res-difficultes">Les 5 difficultés ↗</span></p>
+    <p class="note">Chaque incident est traçable dans l'historique Git par son commit de correction — la démarche de diagnostic compte autant que le correctif.</p>
   </div>
   <div class="chrome"><span>XIV — Difficultés rencontrées</span><span class="pg"></span></div>
 </section>
